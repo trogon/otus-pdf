@@ -2,6 +2,20 @@
 
 class BaseObject
 {
+    public function __construct($config = [])
+    {
+        if (!empty($config)) {
+            foreach ($config as $name => $value) {
+                $this->$name = $value;
+            }
+        }
+        $this->init();
+    }
+
+    public function init()
+    {
+    }
+
     public function __get($name)
     {
         $getter = 'get' . $name;
@@ -9,8 +23,9 @@ class BaseObject
             return $this->$getter();
         } elseif (method_exists($this, 'set' . $name)) {
             throw new InvalidCallException('Getting write-only property: ' . get_class($this) . '::' . $name);
+        } else {
+            throw new UnknownPropertyException('Getting unknown property: ' . get_class($this) . '::' . $name);
         }
-        throw new UnknownPropertyException('Getting unknown property: ' . get_class($this) . '::' . $name);
     }
 
     public function __set($name, $value)
@@ -20,8 +35,9 @@ class BaseObject
             $this->$setter($value);
         } elseif (method_exists($this, 'get' . $name)) {
             throw new InvalidCallException('Setting read-only property: ' . get_class($this) . '::' . $name);
+        } else {
+            throw new UnknownPropertyException('Setting unknown property: ' . get_class($this) . '::' . $name);
         }
-        throw new UnknownPropertyException('Setting unknown property: ' . get_class($this) . '::' . $name);
     }
 
     public function __isset($name)
