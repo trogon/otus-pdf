@@ -121,7 +121,7 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
         $objects[6] = $this->objectFactory->create();
         $objects[6]->content = new PdfDictionary();
         $objects[6]->stream = new PdfStream();
-        $objects[6]->stream->value = \gzcompress("");
+        $objects[6]->stream->value = '';
         $objects[6]->content->addItem(
             new PdfName(['value' => 'Length']),
             new PdfNumber(['value' => $objects[6]->stream->length])
@@ -172,7 +172,8 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
         }
 
         $fp = fopen($filepath, 'w');
-        fwrite($fp, $this->content);
+        $encodedContent = $this->encodeContent($this->content);
+        fwrite($fp, $encodedContent);
         fclose($fp);
     }
 
@@ -182,7 +183,8 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
             $this->generatePdfContent();
         }
 
-        echo $this->content;
+        $encodedContent = $this->encodeContent($this->content);
+        echo($encodedContent);
     }
 
     private function writeHeader()
@@ -231,5 +233,14 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
     private function writeLine($line)
     {
         $this->content .= $line. "\n";
+    }
+
+    private function encodeContent($data)
+    {
+        $encodedData = \iconv(\mb_detect_encoding($data), 'ISO-8859-1//TRANSLIT', $data);
+        if ($encodedData === false) {
+            throw new \Exception('Convesion failed');
+        }
+        return $encodedData;
     }
 }
