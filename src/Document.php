@@ -1,10 +1,18 @@
-<?php
+<?php namespace insma\otuspdf;
 
-namespace insma\otuspdf;
+use insma\otuspdf\meta\DocumentInfo;
 
-use insma\otuspdf\base\BaseObject;
-
-class Document extends BaseObject
+class Document extends \insma\otuspdf\base\BaseObject
 {
+    private $info;
 
+    public function __construct($config = [])
+    {
+        $this->info = new DocumentInfo($config);
+    }
+
+    public function getInfo()
+    {
+        return $this->info;
+    }
 }
