@@ -9,6 +9,7 @@ use insma\otuspdf\io\pdf\PdfObject;
 use insma\otuspdf\io\pdf\PdfObjectFactory;
 use insma\otuspdf\io\pdf\PdfObjectReference;
 use insma\otuspdf\io\pdf\PdfStream;
+use insma\otuspdf\io\pdf\PdfString;
 use insma\otuspdf\io\pdf\PdfTrailer;
 
 class DocumentWriter extends \insma\otuspdf\base\BaseObject
@@ -130,10 +131,38 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
             new PdfObjectReference(['object' => $objects[6]])
         );
 
+        $docInfoObject = null;
+        if (!empty($this->document->info)) {
+            $infoDict = new PdfDictionary();
+            $this->setInfoTextIfNotEmpty($infoDict, 'title', 'Title');
+            $this->setInfoTextIfNotEmpty($infoDict, 'author', 'Author');
+            $this->setInfoTextIfNotEmpty($infoDict, 'subject', 'Subject');
+            $this->setInfoTextIfNotEmpty($infoDict, 'keywords', 'Keywords');
+            $this->setInfoTextIfNotEmpty($infoDict, 'creator', 'Creator');
+            $this->setInfoTextIfNotEmpty($infoDict, 'producer', 'Producer');
+            $this->setInfoTextIfNotEmpty($infoDict, 'creationDate', 'CreationDate');
+            $this->setInfoTextIfNotEmpty($infoDict, 'modificationDate', 'ModDate');
+            if (!empty($infoDict->items)) {
+                $objects[4] = $this->objectFactory->create();
+                $objects[4]->content = $infoDict;
+                $docInfoObject = $objects[4];
+            }
+        }
+
         $this->writeHeader();
         $this->writeBody($objects);
         $this->writeCrossReference();
-        $this->writeTrailer($objects[0]);
+        $this->writeTrailer($objects[0], $docInfoObject);
+    }
+
+    private function setInfoTextIfNotEmpty($dictionary, $property, $pdfKey)
+    {
+        if (!empty($this->document->info->$property)) {
+            $dictionary->addItem(
+                new PdfName(['value' => $pdfKey]),
+                new PdfString(['value' => $this->document->info->$property])
+            );
+        }
     }
 
     public function save(String $filepath)
@@ -178,7 +207,7 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
         $this->writeLine($this->crossReference->toString());
     }
 
-    private function writeTrailer($rootObject)
+    private function writeTrailer($rootObject, $docInfoObject = null)
     {
         $this->trailer->content->addItem(
             new PdfName(['value' => 'Size']),
@@ -188,6 +217,12 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
             new PdfName(['value' => 'Root']),
             new PdfObjectReference(['object' => $rootObject])
         );
+        if ($docInfoObject instanceof PdfObject) {
+            $this->trailer->content->addItem(
+                new PdfName(['value' => 'Info']),
+                new PdfObjectReference(['object' => $docInfoObject])
+            );
+        }
 
         $this->writeLine($this->trailer->toString());
         $this->writeLine('%%EOF');
