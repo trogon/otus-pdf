@@ -17,4 +17,7 @@ Contributing
 
 Please read before submitting issues and pull requests the [CONTRIBUTING.md](https://github.com/insma/otus-pdf/blob/development/.github/CONTRIBUTING.md) file.
 
+Notice
+============
 
+PHPUnit 9.0 will break compatibility with PHP 5.4 and 5.5.
