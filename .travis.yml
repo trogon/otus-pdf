@@ -7,9 +7,8 @@ php:
   - '7.1'
   - '7.2'
   - '7.3'
-  - hhvm # on Trusty only
-  - nightly
 install:
+   - rm composer.lock
    - composer install
 script:
    - vendor/bin/phpunit --verbose tests
