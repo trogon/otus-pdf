@@ -31,17 +31,19 @@ final class DocumentTest extends TestCase
         );
     }
 
+    /**
+     * @expectedException insma\otuspdf\base\InvalidCallException
+     */
     public function testCannotBeCreatedFromCreationDate()
     {
-        $this->expectException($this->invalidCallExceptionClass);
-
         new Document(['creationDate' => '2018-02-01']);
     }
 
+    /**
+     * @expectedException insma\otuspdf\base\InvalidCallException
+     */
     public function testCannotBeCreatedFromModificationDate()
     {
-        $this->expectException($this->invalidCallExceptionClass);
-
         new Document(['modificationDate' => '2018-02-01']);
     }
 }
