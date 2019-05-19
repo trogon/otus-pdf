@@ -31,7 +31,7 @@ $ composer require insma/otus-pdf
 Contributing
 ============
 
-Please read before submitting issues and pull requests the [CONTRIBUTING.md](https://github.com/insma/otus-pdf/blob/development/.github/CONTRIBUTING.md) file.
+Please read before submitting issues and pull requests the [CONTRIBUTING.md](https://github.com/insma/otus-pdf/blob/develop/README.md) file.
 
 Notice
 ============
