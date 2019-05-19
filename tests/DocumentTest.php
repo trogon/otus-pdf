@@ -1,24 +1,27 @@
 <?php
-declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
 use insma\otuspdf\Document;
+use insma\otuspdf\base\InvalidCallException;
 
 final class DocumentTest extends TestCase
 {
-    public function testCanBeCreatedFromEmptyConfig(): void
+    private $documentClass = 'insma\otuspdf\Document';
+    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+
+    public function testCanBeCreatedFromEmptyConfig()
     {
         $this->assertInstanceOf(
-            Document::class,
+            $this->documentClass,
             new Document()
         );
     }
 
-    public function testCanBeCreatedFromAllConfig(): void
+    public function testCanBeCreatedFromAllConfig()
     {
         $this->assertInstanceOf(
-            Document::class,
+            $this->documentClass,
             new Document([
                 'title' => 'Test title',
                 'author' => 'Test author',
@@ -28,16 +31,16 @@ final class DocumentTest extends TestCase
         );
     }
 
-    public function testCannotBeCreatedFromCreationDate(): void
+    public function testCannotBeCreatedFromCreationDate()
     {
-        $this->expectException(\insma\otuspdf\base\InvalidCallException::class);
+        $this->expectException($this->invalidCallExceptionClass);
 
         new Document(['creationDate' => '2018-02-01']);
     }
 
-    public function testCannotBeCreatedFromModificationDate(): void
+    public function testCannotBeCreatedFromModificationDate()
     {
-        $this->expectException(\insma\otuspdf\base\InvalidCallException::class);
+        $this->expectException($this->invalidCallExceptionClass);
 
         new Document(['modificationDate' => '2018-02-01']);
     }
