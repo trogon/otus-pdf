@@ -28,6 +28,8 @@ Official installation method is via composer and its packagist package [insma/ot
 $ composer require insma/otus-pdf
 ```
 
+Documentation available on [https://insma.github.io/otus-pdf/](https://insma.github.io/otus-pdf/)
+
 Contributing
 ============
 
