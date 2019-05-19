@@ -11,7 +11,7 @@ php:
 
 cache:
   directories:
-     - vendor
+     - $COMPOSER_CACHE_DIR
 
 install:
    - rm composer.lock
@@ -22,3 +22,7 @@ script:
 
 after_success:
    - bash <(curl -s https://codecov.io/bash)
+
+env:
+  global:
+     - COMPOSER_CACHE_DIR=$HOME/.composer_cache
