@@ -33,7 +33,7 @@ Documentation available on [https://insma.github.io/otus-pdf/](https://insma.git
 Contributing
 ============
 
-Please read before submitting issues and pull requests the [CONTRIBUTING.md](https://github.com/insma/otus-pdf/blob/development/.github/CONTRIBUTING.md) file.
+Please read before submitting issues and pull requests the [CONTRIBUTING.md](https://github.com/insma/otus-pdf/blob/develop/README.md) file.
 
 Notice
 ============
