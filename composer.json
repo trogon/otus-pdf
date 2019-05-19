@@ -1,0 +1,32 @@
+{
+    "name": "insma/otus-pdf",
+    "description": "Object oriented PDF document generation library.",
+    "keywords": [
+        "Otus PDF",
+        "pdf",
+        "pdf generation",
+        "document generator",
+        "pdf creator"
+    ],
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "support": {
+        "issues": "https://github.com/insma/otus-pdf/issues?state=open",
+        "wiki": "https://github.com/insma/otus-pdf/wiki",
+        "source": "https://github.com/insma/otus-pdf"
+    },
+    "authors": [
+        {
+            "name": "Insma Software",
+            "email": "m.klemarczyk+insma@live.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "insma\\otuspdf\\": "src/"
+        }
+    }
+}
