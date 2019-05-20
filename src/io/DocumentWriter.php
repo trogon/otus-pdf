@@ -18,6 +18,7 @@
  */
 namespace insma\otuspdf\io;
 
+use insma\otuspdf\base\InvalidCallException;
 use insma\otuspdf\io\pdf\PdfArray;
 use insma\otuspdf\io\pdf\PdfCrossReference;
 use insma\otuspdf\io\pdf\PdfDictionary;
@@ -54,58 +55,65 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
         $objects = [];
 
         // PDF Catalog
-        $objects[0] = $this->objectFactory->create();
-        $objects[0]->content = new PdfDictionary();
-        $objects[0]->content->addItem(
+        $catalogObj = $this->objectFactory->create();
+        $catalogObj->content = new PdfDictionary();
+        $catalogObj->content->addItem(
             new PdfName(['value' => 'Type']),
             new PdfName(['value' => 'Catalog'])
         );
+        $objects[] = $catalogObj;
 
         // PDF Outlines
-        $objects[1] = $this->objectFactory->create();
-        $objects[1]->content = new PdfDictionary();
-        $objects[1]->content->addItem(
+        $outlinesObj = $this->objectFactory->create();
+        $outlinesObj->content = new PdfDictionary();
+        $outlinesObj->content->addItem(
             new PdfName(['value' => 'Type']),
             new PdfName(['value' => 'Outlines'])
         );
-        $objects[1]->content->addItem(
+        $outlinesObj->content->addItem(
             new PdfName(['value' => 'Count']),
             new PdfNumber(['value' => 0])
         );
-        $objects[0]->content->addItem(
+        $objects[] = $outlinesObj;
+        $catalogObj->content->addItem(
             new PdfName(['value' => 'Outlines']),
-            new PdfObjectReference(['object' => $objects[1]])
+            new PdfObjectReference(['object' => $outlinesObj])
         );
 
         // PDF Pages collection
-        $objects[2] = $this->objectFactory->create();
-        $objects[2]->content = new PdfDictionary();
-        $objects[2]->content->addItem(
+        if (count($this->document->pages) === 0) {
+            throw new InvalidCallException('Document does not contain pages.');
+        }
+
+        $pageCollectionObj = $this->objectFactory->create();
+        $pageCollectionObj->content = new PdfDictionary();
+        $pageCollectionObj->content->addItem(
             new PdfName(['value' => 'Type']),
             new PdfName(['value' => 'Pages'])
         );
         $pageRefs = new PdfArray();
-        $objects[2]->content->addItem(
+        $pageCollectionObj->content->addItem(
             new PdfName(['value' => 'Kids']),
             $pageRefs
         );
-        $objects[2]->content->addItem(
+        $pageCollectionObj->content->addItem(
             new PdfName(['value' => 'Count']),
-            new PdfNumber(['value' => 1])
+            new PdfNumber(['value' => \count($this->document->pages)])
         );
         $resourcesDict = new PdfDictionary();
-        $objects[2]->content->addItem(
+        $pageCollectionObj->content->addItem(
             new PdfName(['value' => 'Resources']),
             $resourcesDict
         );
         $pageSizeArray = new PdfArray();
-        $objects[2]->content->addItem(
+        $pageCollectionObj->content->addItem(
             new PdfName(['value' => 'MediaBox']),
             $pageSizeArray
         );
-        $objects[0]->content->addItem(
+        $objects[] = $pageCollectionObj;
+        $catalogObj->content->addItem(
             new PdfName(['value' => 'Pages']),
-            new PdfObjectReference(['object' => $objects[2]])
+            new PdfObjectReference(['object' => $pageCollectionObj])
         );
 
         $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
@@ -114,39 +122,13 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
         $pageSizeArray->addItem(new PdfNumber(['value' => (11.7 * 72)]));
 
         // PDF Proc Set
-        $objects[3] = $this->objectFactory->create();
-        $objects[3]->content = new PdfArray();
-        $objects[3]->content->addItem(new PdfName(['value' => 'PDF']));
+        $procSetObj = $this->objectFactory->create();
+        $procSetObj->content = new PdfArray();
+        $procSetObj->content->addItem(new PdfName(['value' => 'PDF']));
+        $objects[] = $procSetObj;
         $resourcesDict->addItem(
             new PdfName(['value' => 'ProcSet']),
-            new PdfObjectReference(['object' => $objects[3]])
-        );
-
-        // PDF Page 1
-        $objects[5] = $this->objectFactory->create();
-        $objects[5]->content = new PdfDictionary();
-        $objects[5]->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Page'])
-        );
-        $objects[5]->content->addItem(
-            new PdfName(['value' => 'Parent']),
-            new PdfObjectReference(['object' => $objects[2]])
-        );
-        $pageRefs->addItem(new PdfObjectReference(['object' => $objects[5]]));
-
-        // PDF Page 1 content
-        $objects[6] = $this->objectFactory->create();
-        $objects[6]->content = new PdfDictionary();
-        $objects[6]->stream = new PdfStream();
-        $objects[6]->stream->value = '';
-        $objects[6]->content->addItem(
-            new PdfName(['value' => 'Length']),
-            new PdfNumber(['value' => $objects[6]->stream->length])
-        );
-        $objects[5]->content->addItem(
-            new PdfName(['value' => 'Contents']),
-            new PdfObjectReference(['object' => $objects[6]])
+            new PdfObjectReference(['object' => $procSetObj])
         );
 
         $docInfoObject = null;
@@ -161,16 +143,47 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
             $this->setInfoTextIfNotEmpty($infoDict, 'creationDate', 'CreationDate');
             $this->setInfoTextIfNotEmpty($infoDict, 'modificationDate', 'ModDate');
             if (!empty($infoDict->items)) {
-                $objects[4] = $this->objectFactory->create();
-                $objects[4]->content = $infoDict;
-                $docInfoObject = $objects[4];
+                $docInfoObject = $this->objectFactory->create();
+                $docInfoObject->content = $infoDict;
+                $objects[] = $docInfoObject;
             }
+        }
+
+        foreach ($this->document->pages as $n => $page) {
+            // PDF Page <n>
+            $pageObj = $this->objectFactory->create();
+            $pageObj->content = new PdfDictionary();
+            $pageObj->content->addItem(
+                new PdfName(['value' => 'Type']),
+                new PdfName(['value' => 'Page'])
+            );
+            $pageObj->content->addItem(
+                new PdfName(['value' => 'Parent']),
+                new PdfObjectReference(['object' => $pageCollectionObj])
+            );
+            $objects[] = $pageObj;
+            $pageRefs->addItem(new PdfObjectReference(['object' => $pageObj]));
+
+            // PDF Page <n> content
+            $pageContentObj = $this->objectFactory->create();
+            $pageContentObj->content = new PdfDictionary();
+            $pageContentObj->stream = new PdfStream();
+            $pageContentObj->stream->value = '';
+            $pageContentObj->content->addItem(
+                new PdfName(['value' => 'Length']),
+                new PdfNumber(['value' => $pageContentObj->stream->length])
+            );
+            $objects[] = $pageContentObj;
+            $pageObj->content->addItem(
+                new PdfName(['value' => 'Contents']),
+                new PdfObjectReference(['object' => $pageContentObj])
+            );
         }
 
         $this->writeHeader();
         $this->writeBody($objects);
         $this->writeCrossReference();
-        $this->writeTrailer($objects[0], $docInfoObject);
+        $this->writeTrailer($catalogObj, $docInfoObject);
     }
 
     private function setInfoTextIfNotEmpty($dictionary, $property, $pdfKey)
