@@ -18,7 +18,72 @@
  */
 namespace insma\otuspdf;
 
-class PageCollection extends \insma\otuspdf\base\BaseObject
+class PageCollection extends \insma\otuspdf\base\BaseObject implements \ArrayAccess, \Countable, \Iterator
 {
+    private $container;
+    private $position;
 
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+        $this->container = [];
+        $this->rewind();
+    }
+
+    /* ArrayAccess Methods */
+    public function offsetExists($offset)
+    {
+        return isset($this->container[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->container[$offset]);
+    }
+
+    /* Countable Methods */
+    public function count()
+    {
+        return count($this->container);
+    }
+
+    /* Iterator Methods */
+    public function current()
+    {
+        return $this->container[$this->position];
+    }
+
+    public function key()
+    {
+        return $this->position;
+    }
+
+    public function next()
+    {
+        ++$this->position;
+    }
+
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+
+    public function valid()
+    {
+        return isset($this->container[$this->position]);
+    }
 }
