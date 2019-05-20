@@ -18,6 +18,8 @@
  */
 namespace insma\otuspdf;
 
+use insma\otuspdf\Page;
+
 class PageCollection extends \insma\otuspdf\base\BaseObject implements \ArrayAccess, \Countable, \Iterator
 {
     private $container;
@@ -28,6 +30,13 @@ class PageCollection extends \insma\otuspdf\base\BaseObject implements \ArrayAcc
         parent::__construct($config);
         $this->container = [];
         $this->rewind();
+    }
+
+    public function add($config = [])
+    {
+        $page = new Page($config);
+        $this->container[] = $page;
+        return $page;
     }
 
     /* ArrayAccess Methods */
