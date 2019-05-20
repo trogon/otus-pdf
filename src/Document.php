@@ -19,18 +19,26 @@
 namespace insma\otuspdf;
 
 use insma\otuspdf\meta\DocumentInfo;
+use insma\otuspdf\PageCollection;
 
 class Document extends \insma\otuspdf\base\BaseObject
 {
     private $info;
+    private $pages;
 
     public function __construct($config = [])
     {
         $this->info = new DocumentInfo($config);
+        $this->pages = new PageCollection();
     }
 
     public function getInfo()
     {
         return $this->info;
+    }
+
+    public function getPages()
+    {
+        return $this->pages;
     }
 }
