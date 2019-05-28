@@ -20,5 +20,42 @@ namespace insma\otuspdf\meta;
 
 class PageOrientationInfo extends \insma\otuspdf\base\BaseObject
 {
+    private const PORTRAIT = 1;
+    private const LANDSCAPE = 2;
 
+    private $orientation;
+
+    private function __construct($orientation)
+    {
+        $this->orientation = $orientation;
+    }
+
+    public function isPortrait()
+    {
+        return $this->orientation === self::PORTRAIT;
+    }
+
+    public function isLandscape()
+    {
+        return $this->orientation === self::LANDSCAPE;
+    }
+
+    private static $portraitOrientationInfo;
+    private static $landscapeOrientationInfo;
+
+    public static function getPortrait()
+    {
+        if (empty(self::$portraitOrientationInfo)) {
+            self::$portraitOrientationInfo = new PageOrientationInfo(self::PORTRAIT);
+        }
+        return self::$portraitOrientationInfo;
+    }
+
+    public static function getLandscape()
+    {
+        if (empty(self::$landscapeOrientationInfo)) {
+            self::$landscapeOrientationInfo = new PageOrientationInfo(self::LANDSCAPE);
+        }
+        return self::$landscapeOrientationInfo;
+    }
 }
