@@ -82,4 +82,9 @@ class BaseObject
     {
         throw new UnknownMethodException('Calling unknown method: ' . get_class($this) . "::$name()");
     }
+
+    public static function __callStatic($name, $params)
+    {
+        throw new UnknownMethodException('Calling unknown static method: ' . get_class() . "::$name()");
+    }
 }
