@@ -18,7 +18,19 @@
  */
 namespace insma\otuspdf;
 
+use insma\otuspdf\meta\PageInfo;
+
 class Page extends \insma\otuspdf\base\BaseObject
 {
+    private $info;
 
+    public function __construct($config = [])
+    {
+        $this->info = new PageInfo($config);
+    }
+
+    public function getInfo()
+    {
+        return $this->info;
+    }
 }
