@@ -12,7 +12,7 @@ Object oriented PDF library (for PHP)
 [![Pre Release Date](https://img.shields.io/github/release-date-pre/insma/otus-pdf.svg?style=flat-square&logo=github)](https://github.com/insma/otus-pdf/releases)
 [![Open Issues](https://img.shields.io/github/issues/insma/otus-pdf.svg?style=flat-square&logo=github)](https://github.com/insma/otus-pdf/issues)
 
-[![Build Status](https://img.shields.io/travis/com/insma/otus-pdf/develop.svg?style=flat-square&logo=travis)](https://travis-ci.org/insma/otus-pdf)
+[![Build Status](https://img.shields.io/travis/com/insma/otus-pdf/develop.svg?style=flat-square&logo=travis)](https://travis-ci.com/insma/otus-pdf)
 [![Code Coverage](https://img.shields.io/codecov/c/github/insma/otus-pdf/develop.svg?style=flat-square&logo=codecov)](https://codecov.io/gh/insma/otus-pdf)
 [![Pull Requests](https://img.shields.io/github/issues-pr/insma/otus-pdf.svg?style=flat-square&logo=github)](https://github.com/insma/otus-pdf/pulls)
 [![Required PHP Version](https://img.shields.io/packagist/php-v/insma/otus-pdf.svg?style=flat-square&logo=php)](https://php.net/)
