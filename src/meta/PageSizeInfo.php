@@ -22,5 +22,25 @@ use insma\otuspdf\base\InvalidCallException;
 
 class PageSizeInfo extends \insma\otuspdf\base\BaseObject
 {
+    private $height;
+    private $width;
 
+    public function __construct($width, $height)
+    {
+        if ($width < $height) {
+            throw new InvalidCallException('Width is shorter than height. Page size defines a size for landscape orientation.');
+        }
+        $this->height = $height;
+        $this->width = $width;
+    }
+
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    public function getWidth()
+    {
+        return $this->width;
+    }
 }

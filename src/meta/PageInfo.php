@@ -21,4 +21,5 @@ namespace insma\otuspdf\meta;
 class PageInfo extends \insma\otuspdf\base\BaseObject
 {
     public $orientation;
+    public $size;
 }
