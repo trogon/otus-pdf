@@ -30,6 +30,8 @@ use insma\otuspdf\io\pdf\PdfObjectReference;
 use insma\otuspdf\io\pdf\PdfStream;
 use insma\otuspdf\io\pdf\PdfString;
 use insma\otuspdf\io\pdf\PdfTrailer;
+use insma\otuspdf\meta\PageOrientationInfo;
+use insma\otuspdf\meta\PageSizeInfo;
 
 class DocumentWriter extends \insma\otuspdf\base\BaseObject
 {
@@ -52,6 +54,10 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
 
     private function generatePdfContent()
     {
+        $defaultOrientation = PageOrientationInfo::getPortrait();
+        $defaultSize = PageSizeInfo::getA4();
+        $defaultArraySize = $this->createArraySize($defaultOrientation, $defaultSize, null, null);
+
         $objects = [];
 
         // PDF Catalog
@@ -105,21 +111,15 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
             new PdfName(['value' => 'Resources']),
             $resourcesDict
         );
-        $pageSizeArray = new PdfArray();
         $pageCollectionObj->content->addItem(
             new PdfName(['value' => 'MediaBox']),
-            $pageSizeArray
+            $defaultArraySize
         );
         $objects[] = $pageCollectionObj;
         $catalogObj->content->addItem(
             new PdfName(['value' => 'Pages']),
             new PdfObjectReference(['object' => $pageCollectionObj])
         );
-
-        $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => (8.27 * 72)]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => (11.7 * 72)]));
 
         // PDF Proc Set
         $procSetObj = $this->objectFactory->create();
@@ -161,6 +161,13 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
                 new PdfName(['value' => 'Parent']),
                 new PdfObjectReference(['object' => $pageCollectionObj])
             );
+            $arraySize = $this->createArraySize($page->info->orientation, $page->info->size, $defaultOrientation, $defaultSize);
+            if (!empty($arraySize)) {
+                $pageObj->content->addItem(
+                    new PdfName(['value' => 'MediaBox']),
+                    $arraySize
+                );
+            }
             $objects[] = $pageObj;
             $pageRefs->addItem(new PdfObjectReference(['object' => $pageObj]));
 
@@ -194,6 +201,31 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
                 new PdfString(['value' => $this->document->info->$property])
             );
         }
+    }
+
+    private function createArraySize($orientation, $size, $defautOrientation, $defaultSize)
+    {
+        $isOrientationDefined = ($orientation instanceof PageOrientationInfo);
+        $isSizeDefined = ($size instanceof PageSizeInfo);
+
+        if (($isOrientationDefined && $orientation != $defautOrientation)
+         || ($size && $orientation != $defaultSize)) {
+            $orientation = $isOrientationDefined ? $orientation: $defautOrientation;
+            $size = $isSizeDefined ? $size : $defaultSize;
+
+            $pageSizeArray = new PdfArray();
+            $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
+            $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
+            if ($orientation->isLandscape()) {
+                $pageSizeArray->addItem(new PdfNumber(['value' => ($size->width * 72)]));
+                $pageSizeArray->addItem(new PdfNumber(['value' => ($size->height * 72)]));
+            } else {
+                $pageSizeArray->addItem(new PdfNumber(['value' => ($size->height * 72)]));
+                $pageSizeArray->addItem(new PdfNumber(['value' => ($size->width * 72)]));
+            }
+            return $pageSizeArray;
+        }
+        return null;
     }
 
     public function save(String $filepath)
