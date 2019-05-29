@@ -18,7 +18,7 @@ install:
    - composer install
 
 script:
-   - vendor/bin/phpunit --coverage-clover=coverage.xml --verbose tests
+   - vendor/bin/phpunit --verbose
 
 after_success:
    - bash <(curl -s https://codecov.io/bash)
