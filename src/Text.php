@@ -18,7 +18,26 @@
  */
 namespace insma\otuspdf;
 
+use insma\otuspdf\meta\TextInfo;
+
 class Text extends \insma\otuspdf\base\BaseObject
 {
+    private $info;
+    private $text;
 
+    public function __construct($text, $config = [])
+    {
+        $this->text = $text;
+        $this->info = new TextInfo($config);
+    }
+
+    public function getInfo()
+    {
+        return $this->info;
+    }
+
+    public function getText()
+    {
+        return $this->text;
+    }
 }
