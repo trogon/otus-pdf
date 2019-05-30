@@ -18,7 +18,7 @@
  */
 namespace insma\otuspdf\meta;
 
-class PageOrientationInfo extends \insma\otuspdf\base\BaseObject
+class PageOrientationInfo
 {
     const PORTRAIT = 1;
     const LANDSCAPE = 2;
