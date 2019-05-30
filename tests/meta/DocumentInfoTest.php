@@ -9,7 +9,7 @@ final class DocumentInfoTest extends TestCase
 {
     private $documentInfoClass = 'insma\otuspdf\meta\DocumentInfo';
     private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
-    private $pdfDateFormat = "/D:[0-9]{4}[0-1][0-9][0-2][0-9][0-2][0-9][0-5][0-9][0-5][0-9]\+\d{2}'\d{2}'/";
+    private $pdfDateFormat = "/D:([0-9]{4})([0-1][0-9])([0-2][0-9]|3[0-1])([0-2][0-9])([0-5][0-9])([0-5][0-9])([\+\-]\d{2}'\d{2})'/";
 
     public function testCanBeCreatedFromEmptyConfig()
     {
