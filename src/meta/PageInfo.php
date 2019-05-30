@@ -16,29 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf;
+namespace insma\otuspdf\meta;
 
-use insma\otuspdf\meta\DocumentInfo;
-use insma\otuspdf\PageCollection;
-
-class Document extends \insma\otuspdf\base\BaseObject
+class PageInfo extends \insma\otuspdf\base\BaseObject
 {
-    private $info;
-    private $pages;
-
-    public function __construct($config = [])
-    {
-        $this->info = new DocumentInfo($config);
-        $this->pages = new PageCollection();
-    }
-
-    public function getInfo()
-    {
-        return $this->info;
-    }
-
-    public function getPages()
-    {
-        return $this->pages;
-    }
+    public $orientation;
+    public $size;
 }

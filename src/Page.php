@@ -16,43 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\io\pdf;
+namespace insma\otuspdf;
 
-class PdfString extends \insma\otuspdf\base\BaseObject
+use insma\otuspdf\meta\PageInfo;
+
+class Page extends \insma\otuspdf\base\BaseObject
 {
-    const TYPE_LITERAL = 0;
-    const TYPE_HEX = 1;
+    private $info;
 
-    private $type = self::TYPE_LITERAL;
-    private $value;
-
-    public function getType()
+    public function __construct($config = [])
     {
-        return $this->type;
+        $this->info = new PageInfo($config);
     }
 
-    public function setType($type)
+    public function getInfo()
     {
-        $this->type = $type;
-    }
-
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
-
-    public function toString()
-    {
-        if ($this->type === self::TYPE_HEX) {
-            $content = '<' . $this->value . '>';
-        } else {
-            $content = '(' . $this->value . ')';
-        }
-        return $content;
+        return $this->info;
     }
 }

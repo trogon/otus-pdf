@@ -27,11 +27,6 @@ class DocumentInfo extends \insma\otuspdf\base\BaseObject
     private $creationDate;
     private $modificationDate;
 
-    public function __construct($config = [])
-    {
-        parent::__construct($config);
-    }
-
     public function getCreator()
     {
         return 'Otus PDF by Insma';
