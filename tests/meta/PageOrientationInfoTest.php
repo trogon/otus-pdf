@@ -15,6 +15,11 @@ final class PageOrientationInfoTest extends TestCase
      */
     public function testCanNotBeCreated()
     {
+        if (!version_compare(PHP_VERSION, '7.1.0', '>=')) {
+            $this->markTestSkipped(
+              'PHP treats it as PHP Fatal error. Can not be tested until PHP 7.1.'
+            );
+        }
         new PageOrientationInfo();
     }
 
