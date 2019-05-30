@@ -20,8 +20,8 @@ namespace insma\otuspdf\io\pdf;
 
 class PdfString extends \insma\otuspdf\base\BaseObject
 {
-    public const TYPE_LITERAL = 0;
-    public const TYPE_HEX = 1;
+    const TYPE_LITERAL = 0;
+    const TYPE_HEX = 1;
 
     private $type = self::TYPE_LITERAL;
     private $value;
