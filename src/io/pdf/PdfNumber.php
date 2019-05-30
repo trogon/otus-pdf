@@ -34,7 +34,7 @@ class PdfNumber extends \insma\otuspdf\base\BaseObject
 
     public function toString()
     {
-        $content = $this->value;
+        $content = strval($this->value);
         return $content;
     }
 }
