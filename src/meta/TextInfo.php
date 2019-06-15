@@ -16,34 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf;
+namespace insma\otuspdf\meta;
 
-use insma\otuspdf\meta\PageInfo;
-use insma\otuspdf\Text;
-
-class Page extends \insma\otuspdf\base\BaseObject
+class TextInfo extends \insma\otuspdf\base\BaseObject
 {
-    private $info;
-    private $items;
 
-    public function __construct($config = [])
-    {
-        $this->info = new PageInfo($config);
-        $this->items = [];
-    }
-
-    public function getInfo()
-    {
-        return $this->info;
-    }
-
-    public function getItems()
-    {
-        return $this->items;
-    }
-
-    public function addText($text)
-    {
-        return $this->items[] = new Text($text);
-    }
 }

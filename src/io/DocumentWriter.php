@@ -32,6 +32,7 @@ use insma\otuspdf\io\pdf\PdfString;
 use insma\otuspdf\io\pdf\PdfTrailer;
 use insma\otuspdf\meta\PageOrientationInfo;
 use insma\otuspdf\meta\PageSizeInfo;
+use insma\otuspdf\meta\PositionInfo;
 
 class DocumentWriter extends \insma\otuspdf\base\BaseObject
 {
@@ -54,10 +55,6 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
 
     private function generatePdfContent()
     {
-        $defaultOrientation = PageOrientationInfo::getPortrait();
-        $defaultSize = PageSizeInfo::getA4();
-        $defaultArraySize = $this->createArraySize($defaultOrientation, $defaultSize, null, null);
-
         $objects = [];
 
         // PDF Catalog
@@ -91,35 +88,9 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
             throw new InvalidCallException('Document does not contain pages.');
         }
 
-        $pageCollectionObj = $this->objectFactory->create();
-        $pageCollectionObj->content = new PdfDictionary();
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Pages'])
-        );
-        $pageRefs = new PdfArray();
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'Kids']),
-            $pageRefs
-        );
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'Count']),
-            new PdfNumber(['value' => \count($this->document->pages)])
-        );
         $resourcesDict = new PdfDictionary();
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'Resources']),
-            $resourcesDict
-        );
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'MediaBox']),
-            $defaultArraySize
-        );
-        $objects[] = $pageCollectionObj;
-        $catalogObj->content->addItem(
-            new PdfName(['value' => 'Pages']),
-            new PdfObjectReference(['object' => $pageCollectionObj])
-        );
+        $pageWriter = new PageRender($this->objectFactory, $resourcesDict);
+        $objects[] = $pageWriter->renderPageCollection($this->document->pages, $catalogObj);
 
         // PDF Proc Set
         $procSetObj = $this->objectFactory->create();
@@ -150,42 +121,43 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
         }
 
         foreach ($this->document->pages as $n => $page) {
-            // PDF Page <n>
-            $pageObj = $this->objectFactory->create();
-            $pageObj->content = new PdfDictionary();
-            $pageObj->content->addItem(
-                new PdfName(['value' => 'Type']),
-                new PdfName(['value' => 'Page'])
-            );
-            $pageObj->content->addItem(
-                new PdfName(['value' => 'Parent']),
-                new PdfObjectReference(['object' => $pageCollectionObj])
-            );
-            $arraySize = $this->createArraySize($page->info->orientation, $page->info->size, $defaultOrientation, $defaultSize);
-            if (!empty($arraySize)) {
-                $pageObj->content->addItem(
-                    new PdfName(['value' => 'MediaBox']),
-                    $arraySize
-                );
-            }
-            $objects[] = $pageObj;
-            $pageRefs->addItem(new PdfObjectReference(['object' => $pageObj]));
-
-            // PDF Page <n> content
-            $pageContentObj = $this->objectFactory->create();
-            $pageContentObj->content = new PdfDictionary();
-            $pageContentObj->stream = new PdfStream();
-            $pageContentObj->stream->value = '';
-            $pageContentObj->content->addItem(
-                new PdfName(['value' => 'Length']),
-                new PdfNumber(['value' => $pageContentObj->stream->length])
-            );
-            $objects[] = $pageContentObj;
-            $pageObj->content->addItem(
-                new PdfName(['value' => 'Contents']),
-                new PdfObjectReference(['object' => $pageContentObj])
-            );
+            $pageObjects = $pageWriter->renderPage($page);
+            $objects = array_merge($objects, $pageObjects);
         }
+
+        // Simple font F1
+        $fontObj1 = $this->objectFactory->create();
+        $fontObj1->content = new PdfDictionary();
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'Type']),
+            new PdfName(['value' => 'Font'])
+        );
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'Subtype']),
+            new PdfName(['value' => 'Type1'])
+        );
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'Name']),
+            new PdfName(['value' => 'F1'])
+        );
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'BaseFont']),
+            new PdfName(['value' => 'Times-Roman'])
+        );
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'Encoding']),
+            new PdfName(['value' => 'WinAnsiEncoding'])
+        );
+        $objects[] = $fontObj1;
+        $fontsDict = new PdfDictionary();
+        $fontsDict->addItem(
+            new PdfName(['value' => 'F1']),
+            new PdfObjectReference(['object' => $fontObj1])
+        );
+        $resourcesDict->addItem(
+            new PdfName(['value' => 'Font']),
+            $fontsDict
+        );
 
         $this->writeHeader();
         $this->writeBody($objects);
@@ -201,31 +173,6 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
                 new PdfString(['value' => $this->document->info->$property])
             );
         }
-    }
-
-    private function createArraySize($orientation, $size, $defautOrientation, $defaultSize)
-    {
-        $isOrientationDefined = ($orientation instanceof PageOrientationInfo);
-        $isSizeDefined = ($size instanceof PageSizeInfo);
-
-        if (($isOrientationDefined && $orientation != $defautOrientation)
-         || ($size && $orientation != $defaultSize)) {
-            $orientation = $isOrientationDefined ? $orientation: $defautOrientation;
-            $size = $isSizeDefined ? $size : $defaultSize;
-
-            $pageSizeArray = new PdfArray();
-            $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-            $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-            if ($orientation->isLandscape()) {
-                $pageSizeArray->addItem(new PdfNumber(['value' => ($size->width * 72)]));
-                $pageSizeArray->addItem(new PdfNumber(['value' => ($size->height * 72)]));
-            } else {
-                $pageSizeArray->addItem(new PdfNumber(['value' => ($size->height * 72)]));
-                $pageSizeArray->addItem(new PdfNumber(['value' => ($size->width * 72)]));
-            }
-            return $pageSizeArray;
-        }
-        return null;
     }
 
     public function save(String $filepath)
@@ -300,10 +247,6 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
 
     private function encodeContent($data)
     {
-        $encodedData = \iconv(\mb_detect_encoding($data), 'ISO-8859-1//TRANSLIT', $data);
-        if ($encodedData === false) {
-            throw new \Exception('Convesion failed');
-        }
-        return $encodedData;
+        return $data;
     }
 }

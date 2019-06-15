@@ -18,7 +18,7 @@
  */
 namespace insma\otuspdf\base;
 
-class BaseObject
+abstract class BaseObject
 {
     public function __construct($config = [])
     {

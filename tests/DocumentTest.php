@@ -8,6 +8,8 @@ use insma\otuspdf\base\InvalidCallException;
 final class DocumentTest extends TestCase
 {
     private $documentClass = 'insma\otuspdf\Document';
+    private $documentInfoClass = 'insma\otuspdf\meta\DocumentInfo';
+    private $pageCollectionClass = 'insma\otuspdf\PageCollection';
     private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
@@ -45,5 +47,34 @@ final class DocumentTest extends TestCase
     public function testCannotBeCreatedFromModificationDate()
     {
         new Document(['modificationDate' => '2018-02-01']);
+    }
+
+    public function testReturnsInfoWhenNotConfigured()
+    {
+        $this->assertInstanceOf(
+            $this->documentInfoClass,
+            (new Document())->info
+        );
+    }
+
+    public function testReturnsInfoWhenConfigured()
+    {
+        $this->assertInstanceOf(
+            $this->documentInfoClass,
+            (new Document([
+                'title' => 'Test title',
+                'author' => 'Test author',
+                'subject' => 'Test subject',
+                'keywords' => 'Test, test keyword'
+            ]))->info
+        );
+    }
+
+    public function testReturnPageCollection()
+    {
+        $this->assertInstanceOf(
+            $this->pageCollectionClass,
+            (new Document())->pages
+        );
     }
 }
