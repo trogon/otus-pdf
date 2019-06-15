@@ -2,13 +2,13 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\io\pdf\PdfArray;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\pdf\PdfArray;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class PdfArrayTest extends TestCase
 {
-    private $pdfArrayClass = 'insma\otuspdf\io\pdf\PdfArray';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $pdfArrayClass = 'trogon\otuspdf\io\pdf\PdfArray';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf;
+namespace trogon\otuspdf;
 
-use insma\otuspdf\meta\TextInfo;
+use trogon\otuspdf\meta\TextInfo;
 
-class Text extends \insma\otuspdf\base\BaseObject
+class Text extends \trogon\otuspdf\base\BaseObject
 {
     private $info;
     private $text;

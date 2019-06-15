@@ -2,13 +2,13 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\meta\DocumentInfo;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\meta\DocumentInfo;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class DocumentInfoTest extends TestCase
 {
-    private $documentInfoClass = 'insma\otuspdf\meta\DocumentInfo';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $documentInfoClass = 'trogon\otuspdf\meta\DocumentInfo';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
     private $pdfDateFormat = "/D:([0-9]{4})([0-1][0-9])([0-2][0-9]|3[0-1])([0-2][0-9])([0-5][0-9])([0-5][0-9])([\+\-]\d{2}'\d{2})'/";
 
     public function testCanBeCreatedFromEmptyConfig()
@@ -33,7 +33,7 @@ final class DocumentInfoTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCannotBeCreatedFromCreationDate()
     {
@@ -41,7 +41,7 @@ final class DocumentInfoTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCannotBeCreatedFromModificationDate()
     {
@@ -53,7 +53,7 @@ final class DocumentInfoTest extends TestCase
         $info = new DocumentInfo();
 
         $this->assertEquals(
-            'Otus PDF by Insma',
+            'Otus PDF by trogon',
             $info->creator
         );
     }
@@ -63,7 +63,7 @@ final class DocumentInfoTest extends TestCase
         $info = new DocumentInfo();
 
         $this->assertEquals(
-            'Otus PDF by Insma',
+            'Otus PDF by trogon',
             $info->producer
         );
     }

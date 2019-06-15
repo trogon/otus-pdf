@@ -2,13 +2,13 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\io\pdf\PdfName;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\pdf\PdfName;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class PdfNameTest extends TestCase
 {
-    private $pdfNameClass = 'insma\otuspdf\io\pdf\PdfName';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $pdfNameClass = 'trogon\otuspdf\io\pdf\PdfName';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

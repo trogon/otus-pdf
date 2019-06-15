@@ -2,13 +2,13 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\io\pdf\PdfDictionary;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\pdf\PdfDictionary;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class PdfDictionaryTest extends TestCase
 {
-    private $pdfDictionaryClass = 'insma\otuspdf\io\pdf\PdfDictionary';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $pdfDictionaryClass = 'trogon\otuspdf\io\pdf\PdfDictionary';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

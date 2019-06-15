@@ -2,15 +2,15 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\Document;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\Document;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class DocumentTest extends TestCase
 {
-    private $documentClass = 'insma\otuspdf\Document';
-    private $documentInfoClass = 'insma\otuspdf\meta\DocumentInfo';
-    private $pageCollectionClass = 'insma\otuspdf\PageCollection';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $documentClass = 'trogon\otuspdf\Document';
+    private $documentInfoClass = 'trogon\otuspdf\meta\DocumentInfo';
+    private $pageCollectionClass = 'trogon\otuspdf\PageCollection';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
@@ -34,7 +34,7 @@ final class DocumentTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCannotBeCreatedFromCreationDate()
     {
@@ -42,7 +42,7 @@ final class DocumentTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCannotBeCreatedFromModificationDate()
     {

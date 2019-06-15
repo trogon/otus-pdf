@@ -16,25 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\io;
+namespace trogon\otuspdf\io;
 
-use insma\otuspdf\base\InvalidCallException;
-use insma\otuspdf\io\pdf\PdfArray;
-use insma\otuspdf\io\pdf\PdfCrossReference;
-use insma\otuspdf\io\pdf\PdfDictionary;
-use insma\otuspdf\io\pdf\PdfName;
-use insma\otuspdf\io\pdf\PdfNumber;
-use insma\otuspdf\io\pdf\PdfObject;
-use insma\otuspdf\io\pdf\PdfObjectFactory;
-use insma\otuspdf\io\pdf\PdfObjectReference;
-use insma\otuspdf\io\pdf\PdfStream;
-use insma\otuspdf\io\pdf\PdfString;
-use insma\otuspdf\io\pdf\PdfTrailer;
-use insma\otuspdf\meta\PageOrientationInfo;
-use insma\otuspdf\meta\PageSizeInfo;
-use insma\otuspdf\meta\PositionInfo;
+use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\pdf\PdfArray;
+use trogon\otuspdf\io\pdf\PdfCrossReference;
+use trogon\otuspdf\io\pdf\PdfDictionary;
+use trogon\otuspdf\io\pdf\PdfName;
+use trogon\otuspdf\io\pdf\PdfNumber;
+use trogon\otuspdf\io\pdf\PdfObject;
+use trogon\otuspdf\io\pdf\PdfObjectFactory;
+use trogon\otuspdf\io\pdf\PdfObjectReference;
+use trogon\otuspdf\io\pdf\PdfStream;
+use trogon\otuspdf\io\pdf\PdfString;
+use trogon\otuspdf\io\pdf\PdfTrailer;
+use trogon\otuspdf\meta\PageOrientationInfo;
+use trogon\otuspdf\meta\PageSizeInfo;
+use trogon\otuspdf\meta\PositionInfo;
 
-class DocumentWriter extends \insma\otuspdf\base\BaseObject
+class DocumentWriter extends \trogon\otuspdf\base\BaseObject
 {
     private $document;
     private $objectFactory;
@@ -43,7 +43,7 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
     private $offset;
     private $content;
 
-    public function __construct(\insma\otuspdf\Document $document)
+    public function __construct(\trogon\otuspdf\Document $document)
     {
         $this->document = $document;
         $this->objectFactory = new PdfObjectFactory();

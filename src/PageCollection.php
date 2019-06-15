@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf;
+namespace trogon\otuspdf;
 
-use insma\otuspdf\Page;
+use trogon\otuspdf\Page;
 
-class PageCollection extends \insma\otuspdf\base\BaseObject implements \ArrayAccess, \Countable, \Iterator
+class PageCollection extends \trogon\otuspdf\base\BaseObject implements \ArrayAccess, \Countable, \Iterator
 {
     private $container;
     private $position;

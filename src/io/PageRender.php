@@ -16,20 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\io;
+namespace trogon\otuspdf\io;
 
-use insma\otuspdf\base\InvalidCallException;
-use insma\otuspdf\io\pdf\PdfArray;
-use insma\otuspdf\io\pdf\PdfDictionary;
-use insma\otuspdf\io\pdf\PdfName;
-use insma\otuspdf\io\pdf\PdfNumber;
-use insma\otuspdf\io\pdf\PdfObject;
-use insma\otuspdf\io\pdf\PdfObjectReference;
-use insma\otuspdf\io\pdf\PdfStream;
-use insma\otuspdf\meta\PageOrientationInfo;
-use insma\otuspdf\meta\PageSizeInfo;
+use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\pdf\PdfArray;
+use trogon\otuspdf\io\pdf\PdfDictionary;
+use trogon\otuspdf\io\pdf\PdfName;
+use trogon\otuspdf\io\pdf\PdfNumber;
+use trogon\otuspdf\io\pdf\PdfObject;
+use trogon\otuspdf\io\pdf\PdfObjectReference;
+use trogon\otuspdf\io\pdf\PdfStream;
+use trogon\otuspdf\meta\PageOrientationInfo;
+use trogon\otuspdf\meta\PageSizeInfo;
 
-class PageRender extends \insma\otuspdf\base\BaseObject
+class PageRender extends \trogon\otuspdf\base\BaseObject
 {
     private $objectFactory;
     private $resourcesDict;

@@ -2,8 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\base\BaseObject;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\BaseObject;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class Dummy extends BaseObject
 {
@@ -15,8 +15,8 @@ final class Dummy extends BaseObject
 
 final class BaseObjectTest extends TestCase
 {
-    private $baseObjectClass = 'insma\otuspdf\base\BaseObject';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $baseObjectClass = 'trogon\otuspdf\base\BaseObject';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
@@ -27,7 +27,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\UnknownPropertyException
+     * @expectedException trogon\otuspdf\base\UnknownPropertyException
      */
     public function testCanNotGetValueOnNotExistingProperty()
     {
@@ -47,7 +47,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\UnknownPropertyException
+     * @expectedException trogon\otuspdf\base\UnknownPropertyException
      */
     public function testCanNotUnsetOnNotExistingProperty()
     {
@@ -57,7 +57,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\UnknownPropertyException
+     * @expectedException trogon\otuspdf\base\UnknownPropertyException
      */
     public function testCanNotSetValueOnNotExistingProperty()
     {
@@ -67,7 +67,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\UnknownMethodException
+     * @expectedException trogon\otuspdf\base\UnknownMethodException
      */
     public function testCanNotCallOnNotExistingFunction()
     {
@@ -77,7 +77,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\UnknownMethodException
+     * @expectedException trogon\otuspdf\base\UnknownMethodException
      */
     public function testCanNotCallStaticOnNotExistingFunction()
     {
@@ -105,7 +105,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCanNotUnsetOnReadOnlyProperty()
     {
@@ -115,7 +115,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCanNotSetValueOnReadOnlyProperty()
     {
@@ -125,7 +125,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCanNotGetValueOnWriteOnlyProperty()
     {
@@ -145,7 +145,7 @@ final class BaseObjectTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\UnknownPropertyException
+     * @expectedException trogon\otuspdf\base\UnknownPropertyException
      */
     public function testCanNotUnsetOnWriteOnlyProperty()
     {

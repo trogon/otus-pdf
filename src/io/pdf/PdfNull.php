@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\io\pdf;
+namespace trogon\otuspdf\io\pdf;
 
-class PdfNull extends \insma\otuspdf\base\BaseObject
+class PdfNull extends \trogon\otuspdf\base\BaseObject
 {
 
 }

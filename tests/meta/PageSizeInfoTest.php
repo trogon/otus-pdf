@@ -2,13 +2,13 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\meta\PageSizeInfo;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\meta\PageSizeInfo;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class PageSizeInfoTest extends TestCase
 {
-    private $pageSizeInfoClass = 'insma\otuspdf\meta\PageSizeInfo';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $pageSizeInfoClass = 'trogon\otuspdf\meta\PageSizeInfo';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromWidthAndHeight()
     {
@@ -19,7 +19,7 @@ final class PageSizeInfoTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCanNotBeCreatedForPortraitOrientation()
     {

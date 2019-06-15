@@ -2,14 +2,14 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\PageCollection;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\PageCollection;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class PageCollectionTest extends TestCase
 {
-    private $pageCollectionClass = 'insma\otuspdf\PageCollection';
-    private $pageClass = 'insma\otuspdf\Page';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $pageCollectionClass = 'trogon\otuspdf\PageCollection';
+    private $pageClass = 'trogon\otuspdf\Page';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

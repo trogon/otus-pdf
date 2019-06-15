@@ -1,5 +1,5 @@
 {
-    "name": "insma/otus-pdf",
+    "name": "trogon/otus-pdf",
     "description": "Object oriented PDF document generation library.",
     "keywords": [
         "Otus PDF",
@@ -11,14 +11,14 @@
     "type": "library",
     "license": "GPL-3.0-or-later",
     "support": {
-        "issues": "https://github.com/insma/otus-pdf/issues?state=open",
-        "wiki": "https://github.com/insma/otus-pdf/wiki",
-        "source": "https://github.com/insma/otus-pdf"
+        "issues": "https://github.com/trogon/otus-pdf/issues?state=open",
+        "wiki": "https://github.com/trogon/otus-pdf/wiki",
+        "source": "https://github.com/trogon/otus-pdf"
     },
     "authors": [
         {
-            "name": "Insma Software",
-            "email": "m.klemarczyk+insma@live.com"
+            "name": "trogon Software",
+            "email": "m.klemarczyk+trogon@live.com"
         }
     ],
     "require": {
@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "insma\\otuspdf\\": "src/"
+            "trogon\\otuspdf\\": "src/"
         }
     },
     "require-dev": {

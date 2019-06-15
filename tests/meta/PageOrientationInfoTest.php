@@ -2,13 +2,13 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\meta\PageOrientationInfo;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\meta\PageOrientationInfo;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class PageOrientationInfoTest extends TestCase
 {
-    private $pageOrientationInfoClass = 'insma\otuspdf\meta\PageOrientationInfo';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $pageOrientationInfoClass = 'trogon\otuspdf\meta\PageOrientationInfo';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     /**
      * @expectedException Error

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\meta;
+namespace trogon\otuspdf\meta;
 
-class DocumentInfo extends \insma\otuspdf\base\BaseObject
+class DocumentInfo extends \trogon\otuspdf\base\BaseObject
 {
     public $title;
     public $author;
@@ -29,12 +29,12 @@ class DocumentInfo extends \insma\otuspdf\base\BaseObject
 
     public function getCreator()
     {
-        return 'Otus PDF by Insma';
+        return 'Otus PDF by Trogon Software';
     }
 
     public function getProducer()
     {
-        return 'Otus PDF by Insma';
+        return 'Otus PDF by Trogon Software';
     }
 
     public function getCreationDate()

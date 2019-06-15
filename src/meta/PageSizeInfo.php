@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\meta;
+namespace trogon\otuspdf\meta;
 
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidCallException;
 
-class PageSizeInfo extends \insma\otuspdf\base\BaseObject
+class PageSizeInfo extends \trogon\otuspdf\base\BaseObject
 {
     private $height;
     private $width;

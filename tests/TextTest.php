@@ -2,14 +2,14 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\Text;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\Text;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class TextTest extends TestCase
 {
-    private $textClass = 'insma\otuspdf\Text';
-    private $textInfoClass = 'insma\otuspdf\meta\TextInfo';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $textClass = 'trogon\otuspdf\Text';
+    private $textInfoClass = 'trogon\otuspdf\meta\TextInfo';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
