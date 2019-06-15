@@ -16,25 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace trogon\otuspdf\io\pdf;
+namespace trogon\otuspdf\meta;
 
-class PdfName extends \trogon\otuspdf\base\BaseObject
+class TextInfo extends \trogon\otuspdf\base\BaseObject
 {
-    private $value;
 
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
-
-    public function toString()
-    {
-        $content = '/' . $this->value;
-        return $content;
-    }
 }

@@ -16,21 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\io;
+namespace trogon\otuspdf\io;
 
-use insma\otuspdf\io\pdf\PdfArray;
-use insma\otuspdf\io\pdf\PdfCrossReference;
-use insma\otuspdf\io\pdf\PdfDictionary;
-use insma\otuspdf\io\pdf\PdfName;
-use insma\otuspdf\io\pdf\PdfNumber;
-use insma\otuspdf\io\pdf\PdfObject;
-use insma\otuspdf\io\pdf\PdfObjectFactory;
-use insma\otuspdf\io\pdf\PdfObjectReference;
-use insma\otuspdf\io\pdf\PdfStream;
-use insma\otuspdf\io\pdf\PdfString;
-use insma\otuspdf\io\pdf\PdfTrailer;
+use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\pdf\PdfArray;
+use trogon\otuspdf\io\pdf\PdfCrossReference;
+use trogon\otuspdf\io\pdf\PdfDictionary;
+use trogon\otuspdf\io\pdf\PdfName;
+use trogon\otuspdf\io\pdf\PdfNumber;
+use trogon\otuspdf\io\pdf\PdfObject;
+use trogon\otuspdf\io\pdf\PdfObjectFactory;
+use trogon\otuspdf\io\pdf\PdfObjectReference;
+use trogon\otuspdf\io\pdf\PdfStream;
+use trogon\otuspdf\io\pdf\PdfString;
+use trogon\otuspdf\io\pdf\PdfTrailer;
+use trogon\otuspdf\meta\PageOrientationInfo;
+use trogon\otuspdf\meta\PageSizeInfo;
+use trogon\otuspdf\meta\PositionInfo;
 
-class DocumentWriter extends \insma\otuspdf\base\BaseObject
+class DocumentWriter extends \trogon\otuspdf\base\BaseObject
 {
     private $document;
     private $objectFactory;
@@ -39,7 +43,7 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
     private $offset;
     private $content;
 
-    public function __construct(\insma\otuspdf\Document $document)
+    public function __construct(\trogon\otuspdf\Document $document)
     {
         $this->document = $document;
         $this->objectFactory = new PdfObjectFactory();
@@ -54,99 +58,48 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
         $objects = [];
 
         // PDF Catalog
-        $objects[0] = $this->objectFactory->create();
-        $objects[0]->content = new PdfDictionary();
-        $objects[0]->content->addItem(
+        $catalogObj = $this->objectFactory->create();
+        $catalogObj->content = new PdfDictionary();
+        $catalogObj->content->addItem(
             new PdfName(['value' => 'Type']),
             new PdfName(['value' => 'Catalog'])
         );
+        $objects[] = $catalogObj;
 
         // PDF Outlines
-        $objects[1] = $this->objectFactory->create();
-        $objects[1]->content = new PdfDictionary();
-        $objects[1]->content->addItem(
+        $outlinesObj = $this->objectFactory->create();
+        $outlinesObj->content = new PdfDictionary();
+        $outlinesObj->content->addItem(
             new PdfName(['value' => 'Type']),
             new PdfName(['value' => 'Outlines'])
         );
-        $objects[1]->content->addItem(
+        $outlinesObj->content->addItem(
             new PdfName(['value' => 'Count']),
             new PdfNumber(['value' => 0])
         );
-        $objects[0]->content->addItem(
+        $objects[] = $outlinesObj;
+        $catalogObj->content->addItem(
             new PdfName(['value' => 'Outlines']),
-            new PdfObjectReference(['object' => $objects[1]])
+            new PdfObjectReference(['object' => $outlinesObj])
         );
 
         // PDF Pages collection
-        $objects[2] = $this->objectFactory->create();
-        $objects[2]->content = new PdfDictionary();
-        $objects[2]->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Pages'])
-        );
-        $pageRefs = new PdfArray();
-        $objects[2]->content->addItem(
-            new PdfName(['value' => 'Kids']),
-            $pageRefs
-        );
-        $objects[2]->content->addItem(
-            new PdfName(['value' => 'Count']),
-            new PdfNumber(['value' => 1])
-        );
-        $resourcesDict = new PdfDictionary();
-        $objects[2]->content->addItem(
-            new PdfName(['value' => 'Resources']),
-            $resourcesDict
-        );
-        $pageSizeArray = new PdfArray();
-        $objects[2]->content->addItem(
-            new PdfName(['value' => 'MediaBox']),
-            $pageSizeArray
-        );
-        $objects[0]->content->addItem(
-            new PdfName(['value' => 'Pages']),
-            new PdfObjectReference(['object' => $objects[2]])
-        );
+        if (count($this->document->pages) === 0) {
+            throw new InvalidCallException('Document does not contain pages.');
+        }
 
-        $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => (8.27 * 72)]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => (11.7 * 72)]));
+        $resourcesDict = new PdfDictionary();
+        $pageWriter = new PageRender($this->objectFactory, $resourcesDict);
+        $objects[] = $pageWriter->renderPageCollection($this->document->pages, $catalogObj);
 
         // PDF Proc Set
-        $objects[3] = $this->objectFactory->create();
-        $objects[3]->content = new PdfArray();
-        $objects[3]->content->addItem(new PdfName(['value' => 'PDF']));
+        $procSetObj = $this->objectFactory->create();
+        $procSetObj->content = new PdfArray();
+        $procSetObj->content->addItem(new PdfName(['value' => 'PDF']));
+        $objects[] = $procSetObj;
         $resourcesDict->addItem(
             new PdfName(['value' => 'ProcSet']),
-            new PdfObjectReference(['object' => $objects[3]])
-        );
-
-        // PDF Page 1
-        $objects[5] = $this->objectFactory->create();
-        $objects[5]->content = new PdfDictionary();
-        $objects[5]->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Page'])
-        );
-        $objects[5]->content->addItem(
-            new PdfName(['value' => 'Parent']),
-            new PdfObjectReference(['object' => $objects[2]])
-        );
-        $pageRefs->addItem(new PdfObjectReference(['object' => $objects[5]]));
-
-        // PDF Page 1 content
-        $objects[6] = $this->objectFactory->create();
-        $objects[6]->content = new PdfDictionary();
-        $objects[6]->stream = new PdfStream();
-        $objects[6]->stream->value = '';
-        $objects[6]->content->addItem(
-            new PdfName(['value' => 'Length']),
-            new PdfNumber(['value' => $objects[6]->stream->length])
-        );
-        $objects[5]->content->addItem(
-            new PdfName(['value' => 'Contents']),
-            new PdfObjectReference(['object' => $objects[6]])
+            new PdfObjectReference(['object' => $procSetObj])
         );
 
         $docInfoObject = null;
@@ -161,16 +114,55 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
             $this->setInfoTextIfNotEmpty($infoDict, 'creationDate', 'CreationDate');
             $this->setInfoTextIfNotEmpty($infoDict, 'modificationDate', 'ModDate');
             if (!empty($infoDict->items)) {
-                $objects[4] = $this->objectFactory->create();
-                $objects[4]->content = $infoDict;
-                $docInfoObject = $objects[4];
+                $docInfoObject = $this->objectFactory->create();
+                $docInfoObject->content = $infoDict;
+                $objects[] = $docInfoObject;
             }
         }
+
+        foreach ($this->document->pages as $n => $page) {
+            $pageObjects = $pageWriter->renderPage($page);
+            $objects = array_merge($objects, $pageObjects);
+        }
+
+        // Simple font F1
+        $fontObj1 = $this->objectFactory->create();
+        $fontObj1->content = new PdfDictionary();
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'Type']),
+            new PdfName(['value' => 'Font'])
+        );
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'Subtype']),
+            new PdfName(['value' => 'Type1'])
+        );
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'Name']),
+            new PdfName(['value' => 'F1'])
+        );
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'BaseFont']),
+            new PdfName(['value' => 'Times-Roman'])
+        );
+        $fontObj1->content->addItem(
+            new PdfName(['value' => 'Encoding']),
+            new PdfName(['value' => 'WinAnsiEncoding'])
+        );
+        $objects[] = $fontObj1;
+        $fontsDict = new PdfDictionary();
+        $fontsDict->addItem(
+            new PdfName(['value' => 'F1']),
+            new PdfObjectReference(['object' => $fontObj1])
+        );
+        $resourcesDict->addItem(
+            new PdfName(['value' => 'Font']),
+            $fontsDict
+        );
 
         $this->writeHeader();
         $this->writeBody($objects);
         $this->writeCrossReference();
-        $this->writeTrailer($objects[0], $docInfoObject);
+        $this->writeTrailer($catalogObj, $docInfoObject);
     }
 
     private function setInfoTextIfNotEmpty($dictionary, $property, $pdfKey)
@@ -255,10 +247,6 @@ class DocumentWriter extends \insma\otuspdf\base\BaseObject
 
     private function encodeContent($data)
     {
-        $encodedData = \iconv(\mb_detect_encoding($data), 'ISO-8859-1//TRANSLIT', $data);
-        if ($encodedData === false) {
-            throw new \Exception('Convesion failed');
-        }
-        return $encodedData;
+        return $data;
     }
 }

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\io\pdf;
+namespace trogon\otuspdf\io\pdf;
 
-class PdfNumber extends \insma\otuspdf\base\BaseObject
+class PdfNumber extends \trogon\otuspdf\base\BaseObject
 {
     private $value;
 
@@ -34,7 +34,7 @@ class PdfNumber extends \insma\otuspdf\base\BaseObject
 
     public function toString()
     {
-        $content = $this->value;
+        $content = strval($this->value);
         return $content;
     }
 }

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\io\pdf;
+namespace trogon\otuspdf\io\pdf;
 
-use insma\otuspdf\io\pdf\PdfDictionary;
+use trogon\otuspdf\io\pdf\PdfDictionary;
 
-class PdfTrailer extends \insma\otuspdf\base\BaseObject
+class PdfTrailer extends \trogon\otuspdf\base\BaseObject
 {
     private $xrefOffset;
     private $content;

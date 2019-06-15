@@ -2,13 +2,15 @@
 
 use PHPUnit\Framework\TestCase;
 
-use insma\otuspdf\Document;
-use insma\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\Document;
+use trogon\otuspdf\base\InvalidCallException;
 
 final class DocumentTest extends TestCase
 {
-    private $documentClass = 'insma\otuspdf\Document';
-    private $invalidCallExceptionClass = 'insma\otuspdf\base\InvalidCallException';
+    private $documentClass = 'trogon\otuspdf\Document';
+    private $documentInfoClass = 'trogon\otuspdf\meta\DocumentInfo';
+    private $pageCollectionClass = 'trogon\otuspdf\PageCollection';
+    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
@@ -32,7 +34,7 @@ final class DocumentTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCannotBeCreatedFromCreationDate()
     {
@@ -40,10 +42,39 @@ final class DocumentTest extends TestCase
     }
 
     /**
-     * @expectedException insma\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidCallException
      */
     public function testCannotBeCreatedFromModificationDate()
     {
         new Document(['modificationDate' => '2018-02-01']);
+    }
+
+    public function testReturnsInfoWhenNotConfigured()
+    {
+        $this->assertInstanceOf(
+            $this->documentInfoClass,
+            (new Document())->info
+        );
+    }
+
+    public function testReturnsInfoWhenConfigured()
+    {
+        $this->assertInstanceOf(
+            $this->documentInfoClass,
+            (new Document([
+                'title' => 'Test title',
+                'author' => 'Test author',
+                'subject' => 'Test subject',
+                'keywords' => 'Test, test keyword'
+            ]))->info
+        );
+    }
+
+    public function testReturnPageCollection()
+    {
+        $this->assertInstanceOf(
+            $this->pageCollectionClass,
+            (new Document())->pages
+        );
     }
 }

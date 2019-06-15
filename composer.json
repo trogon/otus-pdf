@@ -1,5 +1,5 @@
 {
-    "name": "insma/otus-pdf",
+    "name": "trogon/otus-pdf",
     "description": "Object oriented PDF document generation library.",
     "keywords": [
         "Otus PDF",
@@ -11,25 +11,34 @@
     "type": "library",
     "license": "GPL-3.0-or-later",
     "support": {
-        "issues": "https://github.com/insma/otus-pdf/issues?state=open",
-        "wiki": "https://github.com/insma/otus-pdf/wiki",
-        "source": "https://github.com/insma/otus-pdf"
+        "issues": "https://github.com/trogon/otus-pdf/issues?state=open",
+        "wiki": "https://github.com/trogon/otus-pdf/wiki",
+        "source": "https://github.com/trogon/otus-pdf",
+        "docs": "https://trogon.github.io/otus-pdf"
     },
     "authors": [
         {
-            "name": "Insma Software",
-            "email": "m.klemarczyk+insma@live.com"
+            "name": "Trogon Software",
+            "email": "software@trogon.eu",
+            "homepage": "http://www.trogon.eu",
+            "role": "Publisher"
+        },
+        {
+            "name": "Maciej Klemarczyk",
+            "email": "m.klemarczyk@live.com",
+            "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=5.4.0"
+        "php": "^7.3 || ^7.2 || ^7.1 || ^7.0 || ^5.6 || ^5.5 || ^5.4",
+        "phenx/php-font-lib": "^0.5.1"
     },
     "autoload": {
         "psr-4": {
-            "insma\\otuspdf\\": "src/"
+            "trogon\\otuspdf\\": "src/"
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "<9.0"
+        "phpunit/phpunit": "^7.0 || ^6.0 || ^5.0 || ^4.0"
     }
 }

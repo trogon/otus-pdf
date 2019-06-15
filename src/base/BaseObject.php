@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace insma\otuspdf\base;
+namespace trogon\otuspdf\base;
 
-class BaseObject
+abstract class BaseObject
 {
     public function __construct($config = [])
     {
@@ -81,5 +81,10 @@ class BaseObject
     public function __call($name, $params)
     {
         throw new UnknownMethodException('Calling unknown method: ' . get_class($this) . "::$name()");
+    }
+
+    public static function __callStatic($name, $params)
+    {
+        throw new UnknownMethodException('Calling unknown static method: ' . get_class() . "::$name()");
     }
 }
