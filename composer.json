@@ -13,12 +13,20 @@
     "support": {
         "issues": "https://github.com/trogon/otus-pdf/issues?state=open",
         "wiki": "https://github.com/trogon/otus-pdf/wiki",
-        "source": "https://github.com/trogon/otus-pdf"
+        "source": "https://github.com/trogon/otus-pdf",
+        "docs": "https://trogon.github.io/otus-pdf"
     },
     "authors": [
         {
-            "name": "trogon Software",
-            "email": "m.klemarczyk+trogon@live.com"
+            "name": "Trogon Software",
+            "email": "software@trogon.eu",
+            "homepage": "http://www.trogon.eu",
+            "role": "Publisher"
+        },
+        {
+            "name": "Maciej Klemarczyk",
+            "email": "m.klemarczyk@live.com",
+            "role": "Developer"
         }
     ],
     "require": {
