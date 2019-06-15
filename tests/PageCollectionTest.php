@@ -56,7 +56,10 @@ final class PageCollectionTest extends TestCase
             );
         }
 
-        $this->assertIsObject($collection);
+        $this->assertInstanceOf(
+            $this->pageCollectionClass,
+            new PageCollection()
+        );
     }
 
     public function testForeachPagesOnNotEmpty()
