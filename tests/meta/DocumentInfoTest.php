@@ -53,7 +53,7 @@ final class DocumentInfoTest extends TestCase
         $info = new DocumentInfo();
 
         $this->assertEquals(
-            'Otus PDF by trogon',
+            'Otus PDF by Trogon Software',
             $info->creator
         );
     }
@@ -63,7 +63,7 @@ final class DocumentInfoTest extends TestCase
         $info = new DocumentInfo();
 
         $this->assertEquals(
-            'Otus PDF by trogon',
+            'Otus PDF by Trogon Software',
             $info->producer
         );
     }
