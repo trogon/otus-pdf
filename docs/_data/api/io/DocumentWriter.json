@@ -1,0 +1,19 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "DocumentWriter",
+    "description": "Transform document object into PDF document",
+    "introduced": "0.1.0",
+    "properties": [],
+    "methods": [
+        {
+            "name": "save",
+            "type": "void",
+            "description": "Transform document into PDF document and saves as file in given location"
+        },
+        {
+            "name": "toString",
+            "type": "string",
+            "description": "Transform document into PDF document and returns as binary string"
+        }
+    ]
+}
