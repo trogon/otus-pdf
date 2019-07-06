@@ -1,0 +1,45 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "DocumentInfo",
+    "description": "Describes single document information",
+    "introduced": "0.1.0",
+    "properties": [
+        {
+            "name": "title",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores document title"
+        },
+        {
+            "name": "author",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores document author"
+        },
+        {
+            "name": "subject",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores document subject"
+        },
+        {
+            "name": "keywords",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores document keywords, comma-separated list"
+        },
+        {
+            "name": "creationDate",
+            "type": "string",
+            "access": "Read Only",
+            "description": "Stores document creation date and time"
+        },
+        {
+            "name": "modificationDate",
+            "type": "string",
+            "access": "Read Only",
+            "description": "Stores document modification date and time"
+        }
+    ],
+    "methods": []
+}

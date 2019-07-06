@@ -1,0 +1,15 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "Document",
+    "description": "Describes single document",
+    "introduced": "0.1.0",
+    "properties": [
+        {
+            "name": "info",
+            "type": "DocumentInfo",
+            "access": "Read Only",
+            "description": "Stores document meta informations"
+        }
+    ],
+    "methods": []
+}
