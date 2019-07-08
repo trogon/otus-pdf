@@ -1,0 +1,21 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "Text",
+    "description": "Describes single text block (immutable type)",
+    "introduced": "0.2.0",
+    "properties": [
+        {
+            "name": "info",
+            "type": "TextInfo",
+            "access": "Read Only",
+            "description": "Stores text meta informations"
+        },
+        {
+            "name": "text",
+            "type": "string",
+            "access": "Read Only",
+            "description": "Stores text value"
+        }
+    ],
+    "methods": []
+}

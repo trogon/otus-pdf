@@ -1,0 +1,31 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "PageOrientation",
+    "description": "Describes page orientation information (immutable type)",
+    "introduced": "0.2.0",
+    "properties": [],
+    "methods": [
+        {
+            "name": "isPortrait",
+            "type": "boolean",
+            "description": "Returns if orientation is 'Portrait'"
+        },
+        {
+            "name": "isLandscape",
+            "type": "boolean",
+            "description": "Returns if orientation is 'Landscape'"
+        },
+        {
+            "name": "getPortrait",
+            "type": "PageOrientation",
+            "description": "Returns 'Portrait' page orientation",
+            "isStatic": true
+        },
+        {
+            "name": "getLandscape",
+            "type": "PageOrientation",
+            "description": "Returns 'Landscape' page orientation",
+            "isStatic": true
+        }
+    ]
+}

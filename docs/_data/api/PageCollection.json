@@ -1,0 +1,14 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "PageCollection",
+    "description": "Describes collection of pages",
+    "introduced": "0.2.0",
+    "properties": [],
+    "methods": [
+        {
+            "name": "add",
+            "type": "Page",
+            "description": "Append new page"
+        }
+    ]
+}

@@ -3,6 +3,7 @@
     "name": "DocumentWriter",
     "description": "Transform document object into PDF document",
     "introduced": "0.1.0",
+    "version": "0.2.0",
     "properties": [],
     "methods": [
         {

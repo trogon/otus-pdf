@@ -1,0 +1,76 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "PageSize",
+    "description": "Describes page size information",
+    "introduced": "0.2.0",
+    "properties": [
+        {
+            "name": "height",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores page height"
+        },
+        {
+            "name": "width",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores page width"
+        }
+    ],
+    "methods": [
+        {
+            "name": "getLetter",
+            "type": "PageSize",
+            "description": "Creates standard 'Letter' page size",
+            "isStatic": true
+        },
+        {
+            "name": "getTabloid",
+            "type": "PageSize",
+            "description": "Creates standard 'Tabloid' page size",
+            "isStatic": true
+        },
+        {
+            "name": "getLegal",
+            "type": "PageSize",
+            "description": "Creates standard 'Legal' page size",
+            "isStatic": true
+        },
+        {
+            "name": "getStatement",
+            "type": "PageSize",
+            "description": "Creates standard 'Statement' page size",
+            "isStatic": true
+        },
+        {
+            "name": "getA3",
+            "type": "PageSize",
+            "description": "Creates standard 'A3' page size",
+            "isStatic": true
+        },
+        {
+            "name": "getA4",
+            "type": "PageSize",
+            "description": "Creates standard 'A4' page size",
+            "isStatic": true
+        },
+        {
+            "name": "getA5",
+            "type": "PageSize",
+            "description": "Creates standard 'A5' page size",
+            "isStatic": true
+        },
+        {
+            "name": "getB4Jis",
+            "type": "PageSize",
+            "description": "Creates standard 'B4Jis' page size",
+            "isStatic": true
+        },
+        {
+            "name": "getB5Jis",
+            "type": "PageSize",
+            "description": "Creates standard 'B5Jis' page size",
+            "isStatic": true
+        }
+    ]
+}
