@@ -18,6 +18,8 @@
  */
 namespace trogon\otuspdf\meta;
 
+use trogon\otuspdf\base\InvalidCallException;
+
 class UnitInfo extends \trogon\otuspdf\base\BaseObject
 {
     const MM_UNIT = 'mm';
@@ -37,6 +39,8 @@ class UnitInfo extends \trogon\otuspdf\base\BaseObject
                 return $value * self::CM_TO_MM_FACTOR;
             case self::INCH_UNIT:
                 return $value * self::CM_TO_MM_FACTOR * self::INCH_TO_CM_FACTOR;
+            default:
+                throw new InvalidCallException("Convertion '{$this->unit}' to 'mm' not defined");
         }
     }
 
@@ -49,6 +53,8 @@ class UnitInfo extends \trogon\otuspdf\base\BaseObject
                 return $value;
             case self::INCH_UNIT:
                 return $value * self::INCH_TO_CM_FACTOR;
+            default:
+                throw new InvalidCallException("Convertion '{$this->unit}' to 'cm' not defined");
         }
     }
 
@@ -61,6 +67,8 @@ class UnitInfo extends \trogon\otuspdf\base\BaseObject
                 return $value / self::INCH_TO_CM_FACTOR;
             case self::INCH_UNIT:
                 return $value;
+            default:
+                throw new InvalidCallException("Convertion '{$this->unit}' to 'inch' not defined");
         }
     }
 
