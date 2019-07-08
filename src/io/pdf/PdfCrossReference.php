@@ -33,7 +33,7 @@ class PdfCrossReference extends \trogon\otuspdf\base\BaseObject
         return $lastKey + $this->refBlocks[$lastKey];
     }
 
-    public function registerObject(PdfObject $pdfObject, int $offset)
+    public function registerObject(PdfObject $pdfObject, $offset)
     {
         $this->objects[$pdfObject->id] = $pdfObject;
         $this->objectLocations[$pdfObject->id] = $offset;

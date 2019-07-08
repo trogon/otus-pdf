@@ -28,7 +28,7 @@ class PaddingInfo extends \trogon\otuspdf\base\BaseObject
     public $right;
     public $bottom;
 
-    public static function create(float $left, float $top, float $right, float $bottom, UnitInfo $unitInfo = null)
+    public static function create($left, $top, $right, $bottom, UnitInfo $unitInfo = null)
     {
         return new PaddingInfo([
             'unitInfo' => $unitInfo,
@@ -39,7 +39,7 @@ class PaddingInfo extends \trogon\otuspdf\base\BaseObject
         ]);
     }
 
-    public static function createByCss(float $top, float $right, float $bottom, float $left, UnitInfo $unitInfo = null)
+    public static function createByCss($top, $right, $bottom, $left, UnitInfo $unitInfo = null)
     {
         return new PaddingInfo([
             'unitInfo' => $unitInfo,
