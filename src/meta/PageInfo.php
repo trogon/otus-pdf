@@ -22,4 +22,5 @@ class PageInfo extends \trogon\otuspdf\base\BaseObject
 {
     public $orientation;
     public $size;
+    public $margin;
 }
