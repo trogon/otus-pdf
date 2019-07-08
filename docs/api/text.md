@@ -1,9 +1,8 @@
 ---
 layout: page
-title: DocumentWriter
-apiname: io.DocumentWriter
-parent: io
-grand_parent: API
+title: Text
+apiname: Text
+parent: API
 ---
 
 {% include api_layout.md %}

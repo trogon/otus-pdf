@@ -1,8 +1,8 @@
 ---
 layout: page
-title: DocumentWriter
-apiname: io.DocumentWriter
-parent: io
+title: PageInfo
+apiname: meta.PageInfo
+parent: meta
 grand_parent: API
 ---
 
