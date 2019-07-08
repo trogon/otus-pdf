@@ -27,7 +27,7 @@ class PageSizeInfo extends \trogon\otuspdf\base\BaseObject
     private $height;
     private $width;
 
-    public function __construct(float $width, float $height, UnitInfo $unitInfo = null)
+    public function __construct($width, $height, UnitInfo $unitInfo = null)
     {
         if ($width < $height) {
             throw new InvalidCallException('Width is shorter than height. Page size defines a size for landscape orientation.');
