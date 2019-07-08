@@ -50,10 +50,17 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
 
     private function computeTextStartPosition($pageInfo)
     {
+        $pageMargin = $pageInfo->margin;
+        $unitInfo = $pageMargin->unitInfo;
+        $leftMargin = $unitInfo->toInch($pageMargin->left);
+        $topMargin = $unitInfo->toInch($pageMargin->top);
+
+        $pageSize = $pageInfo->size;
+
         if ($pageInfo->orientation->isLandscape()) {
-            return new PositionInfo(0.0, $pageInfo->size->height *72);
+            return new PositionInfo($leftMargin *72, ($pageInfo->size->height - $topMargin) *72);
         } else {
-            return new PositionInfo(0.0, $pageInfo->size->width *72);
+            return new PositionInfo($leftMargin *72, ($pageInfo->size->width - $topMargin) *72);
         }
     }
 }
