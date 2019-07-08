@@ -165,4 +165,17 @@ final class BaseObjectTest extends TestCase
             $dummy->winstonDumpValue
         );
     }
+
+    public function testToDictionary()
+    {
+        $config = [
+            'winstonDumpValue' => 'Dummy value'
+        ];
+        $dummy = new Dummy($config);
+
+        $this->assertEquals(
+            $config,
+            $dummy->toDictionary()
+        );
+    }
 }
