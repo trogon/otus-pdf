@@ -18,6 +18,8 @@
  */
 namespace trogon\otuspdf\io\pdf;
 
+use trogon\otuspdf\base\InvalidCallException;
+
 class PdfDictionary extends \trogon\otuspdf\base\BaseObject
 {
     private $items;
@@ -27,9 +29,21 @@ class PdfDictionary extends \trogon\otuspdf\base\BaseObject
         return $this->items;
     }
 
+    public function getItem($key)
+    {
+        if (array_key_exists($key, $this->items)) {
+            return $this->items[$key][1];
+        }
+        throw new InvalidCallException("Undefined index: {$key}'");
+    }
+
     public function addItem($key, $value)
     {
-        $this->items[] = [$key, $value];
+        if ($key instanceof PdfName) {
+            $this->items[$key->value] = [$key, $value];
+        } else {
+            $this->items[] = [$key, $value];
+        }
     }
 
     public function toString()
