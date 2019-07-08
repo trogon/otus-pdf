@@ -157,8 +157,8 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
     public function mergePageInfo($pageInfo, $defautPageInfo)
     {
         $mergedConfig = array_merge(
-            $pageInfo->toDictionary(),
-            $defautPageInfo->toDictionary()
+            $defautPageInfo->toDictionary(),
+            array_filter($pageInfo->toDictionary())
         );
         $mergedPageInfo = new PageInfo($mergedConfig);
         return $mergedPageInfo;
