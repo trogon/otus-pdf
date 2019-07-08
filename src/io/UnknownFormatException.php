@@ -16,11 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace trogon\otuspdf\meta;
+namespace trogon\otuspdf\io;
 
-class PageInfo extends \trogon\otuspdf\base\BaseObject
+class UnknownFormatException extends \Exception
 {
-    public $orientation;
-    public $size;
-    public $margin;
+
 }

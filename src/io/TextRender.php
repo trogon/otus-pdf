@@ -25,10 +25,10 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
 {
     private $defaultFontSize = 14;
 
-    public function renderTextItems($textItems, $pageOrientation, $pageSize)
+    public function renderTextItems($textItems, $pageInfo)
     {
         $fontSize = $this->defaultFontSize;
-        $startPosition = $this->computeTextStartPosition($pageOrientation, $pageSize);
+        $startPosition = $this->computeTextStartPosition($pageInfo);
         $x = intval($startPosition->x);
         $y = intval($startPosition->y -$fontSize);
 
@@ -48,12 +48,19 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
         return $content;
     }
 
-    private function computeTextStartPosition($pageOrientation, $pageSize)
+    private function computeTextStartPosition($pageInfo)
     {
-        if ($pageOrientation->isLandscape()) {
-            return new PositionInfo(0.0, $pageSize->height *72);
+        $pageMargin = $pageInfo->margin;
+        $unitInfo = $pageMargin->unitInfo;
+        $leftMargin = $unitInfo->toInch($pageMargin->left);
+        $topMargin = $unitInfo->toInch($pageMargin->top);
+
+        $pageSize = $pageInfo->size;
+
+        if ($pageInfo->orientation->isLandscape()) {
+            return new PositionInfo($leftMargin *72, ($pageInfo->size->height - $topMargin) *72);
         } else {
-            return new PositionInfo(0.0, $pageSize->width *72);
+            return new PositionInfo($leftMargin *72, ($pageInfo->size->width - $topMargin) *72);
         }
     }
 }

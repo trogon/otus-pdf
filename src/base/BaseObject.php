@@ -87,4 +87,9 @@ abstract class BaseObject
     {
         throw new UnknownMethodException('Calling unknown static method: ' . get_class() . "::$name()");
     }
+
+    public function toDictionary()
+    {
+        return get_object_vars($this);
+    }
 }
