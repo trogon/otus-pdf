@@ -1,0 +1,23 @@
+format_document:
+  title: Document with information
+  description: 
+  content: |-
+    ```php
+    $document = new Document([
+      'title' => 'My document',
+      'author' => 'Josh Smith',
+      'subject' => 'New math project',
+      'keywords' => 'math, project, science'
+    ]);
+    ```
+
+simple_document_with_page:
+  title: Adding new specified page to document
+  description: 
+  content: |-
+    ```php
+    $page = $document->pages->add([
+      'orientation' => PageOrientationInfo::getPortrait(),
+      'size' => PageSizeInfo::getA5()
+    ]);
+    ```
