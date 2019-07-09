@@ -19,160 +19,97 @@
 namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\InvalidCallException;
-use trogon\otuspdf\io\pdf\PdfArray;
-use trogon\otuspdf\io\pdf\PdfCrossReference;
-use trogon\otuspdf\io\pdf\PdfDictionary;
-use trogon\otuspdf\io\pdf\PdfName;
-use trogon\otuspdf\io\pdf\PdfNumber;
-use trogon\otuspdf\io\pdf\PdfObject;
-use trogon\otuspdf\io\pdf\PdfObjectFactory;
-use trogon\otuspdf\io\pdf\PdfObjectReference;
-use trogon\otuspdf\io\pdf\PdfStream;
-use trogon\otuspdf\io\pdf\PdfString;
-use trogon\otuspdf\io\pdf\PdfTrailer;
-use trogon\otuspdf\meta\PageOrientationInfo;
-use trogon\otuspdf\meta\PageSizeInfo;
-use trogon\otuspdf\meta\PositionInfo;
+use trogon\otuspdf\io\PdfBuilder;
 
 class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
 {
     private $document;
-    private $objectFactory;
-    private $crossReference;
-    private $trailer;
-    private $offset;
+    private $pdfBuilder;
     private $content;
 
     public function __construct(\trogon\otuspdf\Document $document)
     {
         $this->document = $document;
-        $this->objectFactory = new PdfObjectFactory();
-        $this->crossReference = new PdfCrossReference();
-        $this->trailer = new PdfTrailer();
-        $this->offset = 0;
+        $this->pdfBuilder = new PdfBuilder();
         $this->content = '';
     }
 
     private function generatePdfContent()
     {
+        $pdfBuilder = $this->pdfBuilder;
         $objects = [];
 
-        // PDF Catalog
-        $catalogObj = $this->objectFactory->create();
-        $catalogObj->content = new PdfDictionary();
-        $catalogObj->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Catalog'])
-        );
+        // PDF catalog
+        $catalogObj = $pdfBuilder->createCatalog();
         $objects[] = $catalogObj;
 
-        // PDF Outlines
-        $outlinesObj = $this->objectFactory->create();
-        $outlinesObj->content = new PdfDictionary();
-        $outlinesObj->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Outlines'])
-        );
-        $outlinesObj->content->addItem(
-            new PdfName(['value' => 'Count']),
-            new PdfNumber(['value' => 0])
-        );
+        // PDF outlines
+        $outlinesObj = $pdfBuilder->createOutlines();
+        $pdfBuilder->registerOutlines($catalogObj, $outlinesObj);
         $objects[] = $outlinesObj;
-        $catalogObj->content->addItem(
-            new PdfName(['value' => 'Outlines']),
-            new PdfObjectReference(['object' => $outlinesObj])
-        );
 
-        // PDF Pages collection
+        // Check if there are any pages
         if (count($this->document->pages) === 0) {
             throw new InvalidCallException('Document does not contain pages.');
         }
 
-        $resourcesDict = new PdfDictionary();
-        $pageWriter = new PageRender($this->objectFactory, $resourcesDict);
+        // PDF pages collection
+        $resourcesDict = $pdfBuilder->createResourceCatalog();
+        $pageWriter = new PageRender($this->pdfBuilder->objectFactory, $resourcesDict);
         $objects[] = $pageWriter->renderPageCollection($this->document->pages, $catalogObj);
 
-        // PDF Proc Set
-        $procSetObj = $this->objectFactory->create();
-        $procSetObj->content = new PdfArray();
-        $procSetObj->content->addItem(new PdfName(['value' => 'PDF']));
+        // PDF proc set
+        $procSetObj = $pdfBuilder->createProcSet();
+        $pdfBuilder->registerProcSetResource($resourcesDict, $procSetObj);
         $objects[] = $procSetObj;
-        $resourcesDict->addItem(
-            new PdfName(['value' => 'ProcSet']),
-            new PdfObjectReference(['object' => $procSetObj])
-        );
 
+        // PDF document information
         $docInfoObject = null;
         if (!empty($this->document->info)) {
-            $infoDict = new PdfDictionary();
-            $this->setInfoTextIfNotEmpty($infoDict, 'title', 'Title');
-            $this->setInfoTextIfNotEmpty($infoDict, 'author', 'Author');
-            $this->setInfoTextIfNotEmpty($infoDict, 'subject', 'Subject');
-            $this->setInfoTextIfNotEmpty($infoDict, 'keywords', 'Keywords');
-            $this->setInfoTextIfNotEmpty($infoDict, 'creator', 'Creator');
-            $this->setInfoTextIfNotEmpty($infoDict, 'producer', 'Producer');
-            $this->setInfoTextIfNotEmpty($infoDict, 'creationDate', 'CreationDate');
-            $this->setInfoTextIfNotEmpty($infoDict, 'modificationDate', 'ModDate');
-            if (!empty($infoDict->items)) {
-                $docInfoObject = $this->objectFactory->create();
-                $docInfoObject->content = $infoDict;
+            $docInfoObject = $pdfBuilder->createDocumentInfo([
+                'Title' => $this->document->info->title,
+                'Author' => $this->document->info->author,
+                'Subject' => $this->document->info->subject,
+                'Keywords' => $this->document->info->keywords,
+                'Creator' => $this->document->info->creator,
+                'Producer' => $this->document->info->producer,
+                'CreationDate' => $this->document->info->creationDate,
+                'ModDate' => $this->document->info->modificationDate,
+                'Title' => $this->document->info->title,
+            ]);
+            if ($docInfoObject != null) {
                 $objects[] = $docInfoObject;
             }
         }
 
+        // PDF pages
         foreach ($this->document->pages as $n => $page) {
             $pageObjects = $pageWriter->renderPage($page);
             $objects = array_merge($objects, $pageObjects);
         }
 
-        // Simple font F1
-        $fontObj1 = $this->objectFactory->create();
-        $fontObj1->content = new PdfDictionary();
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Font'])
-        );
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'Subtype']),
-            new PdfName(['value' => 'Type1'])
-        );
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'Name']),
-            new PdfName(['value' => 'F1'])
-        );
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'BaseFont']),
-            new PdfName(['value' => 'Times-Roman'])
-        );
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'Encoding']),
-            new PdfName(['value' => 'WinAnsiEncoding'])
-        );
+        // PDF fonts catalog
+        $fontsDict = $pdfBuilder->createFontsResource();
+        $pdfBuilder->registerFontsResource($resourcesDict, $fontsDict);
+
+        // PDF simple font F1
+        $fontObj1 = $pdfBuilder->createBasicFont('F1', 'Times-Roman');
+        $pdfBuilder->registerFont($fontsDict, $fontObj1);
         $objects[] = $fontObj1;
-        $fontsDict = new PdfDictionary();
-        $fontsDict->addItem(
-            new PdfName(['value' => 'F1']),
-            new PdfObjectReference(['object' => $fontObj1])
-        );
-        $resourcesDict->addItem(
-            new PdfName(['value' => 'Font']),
-            $fontsDict
-        );
 
-        $this->writeHeader();
-        $this->writeBody($objects);
-        $this->writeCrossReference();
-        $this->writeTrailer($catalogObj, $docInfoObject);
-    }
-
-    private function setInfoTextIfNotEmpty($dictionary, $property, $pdfKey)
-    {
-        if (!empty($this->document->info->$property)) {
-            $dictionary->addItem(
-                new PdfName(['value' => $pdfKey]),
-                new PdfString(['value' => $this->document->info->$property])
-            );
-        }
+        // Transform PDF objects into PDF text
+        $this->writeBegin();
+        $crossReference = $pdfBuilder->createCrossReference();
+        $xrefOffset = $this->writeBody($objects, $crossReference);
+        $this->writeObject($crossReference);
+        $trailer = $pdfBuilder->createTrailer(
+            $catalogObj,
+            $xrefOffset,
+            $crossReference->size,
+            $docInfoObject
+        );
+        $this->writeObject($trailer);
+        $this->writeEnd();
     }
 
     public function save(String $filepath)
@@ -197,46 +134,30 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
         echo($encodedContent);
     }
 
-    private function writeHeader()
+    private function writeBegin()
     {
         $this->writeLine('%PDF-1.7');
     }
 
-    private function writeBody($objects)
+    private function writeBody($objects, $crossReference)
     {
-        $this->offset = \strlen($this->content);
+        $offset = \strlen($this->content);
         foreach ($objects as $object) {
             $text = $object->toString();
-            $this->crossReference->registerObject($object, $this->offset);
+            $crossReference->registerObject($object, $offset);
             $this->writeLine($text);
-            $this->offset += \strlen($text);
+            $offset += \strlen($text);
         }
+        return $offset;
     }
 
-    private function writeCrossReference()
+    private function writeObject($object)
     {
-        $this->trailer->xrefOffset = $this->offset;
-        $this->writeLine($this->crossReference->toString());
+        $this->writeLine($object->toString());
     }
 
-    private function writeTrailer($rootObject, $docInfoObject = null)
+    private function writeEnd()
     {
-        $this->trailer->content->addItem(
-            new PdfName(['value' => 'Size']),
-            new PdfNumber(['value' => $this->crossReference->size])
-        );
-        $this->trailer->content->addItem(
-            new PdfName(['value' => 'Root']),
-            new PdfObjectReference(['object' => $rootObject])
-        );
-        if ($docInfoObject instanceof PdfObject) {
-            $this->trailer->content->addItem(
-                new PdfName(['value' => 'Info']),
-                new PdfObjectReference(['object' => $docInfoObject])
-            );
-        }
-
-        $this->writeLine($this->trailer->toString());
         $this->writeLine('%%EOF');
     }
 

@@ -56,11 +56,14 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
         $topMargin = $unitInfo->toInch($pageMargin->top);
 
         $pageSize = $pageInfo->size;
+        $unitInfo = $pageSize->unitInfo;
 
         if ($pageInfo->orientation->isLandscape()) {
-            return new PositionInfo($leftMargin *72, ($pageInfo->size->height - $topMargin) *72);
+            $top = $unitInfo->toInch($pageSize->height);
+            return new PositionInfo($leftMargin * 72, ($top - $topMargin) * 72);
         } else {
-            return new PositionInfo($leftMargin *72, ($pageInfo->size->width - $topMargin) *72);
+            $top = $unitInfo->toInch($pageSize->width);
+            return new PositionInfo($leftMargin * 72, ($top - $topMargin) * 72);
         }
     }
 }

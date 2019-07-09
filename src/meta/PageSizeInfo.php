@@ -19,19 +19,27 @@
 namespace trogon\otuspdf\meta;
 
 use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\meta\UnitInfo;
 
 class PageSizeInfo extends \trogon\otuspdf\base\BaseObject
 {
+    private $unitInfo;
     private $height;
     private $width;
 
-    public function __construct($width, $height)
+    public function __construct($width, $height, UnitInfo $unitInfo = null)
     {
         if ($width < $height) {
             throw new InvalidCallException('Width is shorter than height. Page size defines a size for landscape orientation.');
         }
         $this->height = $height;
         $this->width = $width;
+        $this->unitInfo = $unitInfo;
+    }
+
+    public function getUnitInfo()
+    {
+        return $this->unitInfo;
     }
 
     public function getHeight()
@@ -46,51 +54,51 @@ class PageSizeInfo extends \trogon\otuspdf\base\BaseObject
 
     public static function getLetter()
     {
-        return new PageSizeInfo(11, 8.5);
+        return new PageSizeInfo(11, 8.5, UnitInfo::inch());
     }
 
     public static function getTabloid()
     {
-        return new PageSizeInfo(17, 11);
+        return new PageSizeInfo(17, 11, UnitInfo::inch());
     }
 
     public static function getLegal()
     {
-        return new PageSizeInfo(14, 8.5);
+        return new PageSizeInfo(14, 8.5, UnitInfo::inch());
     }
 
     public static function getStatement()
     {
-        return new PageSizeInfo(8.5, 5.5);
+        return new PageSizeInfo(8.5, 5.5, UnitInfo::inch());
     }
 
     public static function getExecutive()
     {
-        return new PageSizeInfo(10.5, 7.25);
+        return new PageSizeInfo(10.5, 7.25, UnitInfo::inch());
     }
 
     public static function getA3()
     {
-        return new PageSizeInfo(16.5, 11.7);
+        return new PageSizeInfo(16.5, 11.7, UnitInfo::inch());
     }
 
     public static function getA4()
     {
-        return new PageSizeInfo(11.7, 8.27);
+        return new PageSizeInfo(11.7, 8.27, UnitInfo::inch());
     }
 
     public static function getA5()
     {
-        return new PageSizeInfo(8.27, 5.83);
+        return new PageSizeInfo(8.27, 5.83, UnitInfo::inch());
     }
 
     public static function getB4Jis()
     {
-        return new PageSizeInfo(14.33, 10.12);
+        return new PageSizeInfo(14.33, 10.12, UnitInfo::inch());
     }
 
     public static function getB5Jis()
     {
-        return new PageSizeInfo(10.12, 7.17);
+        return new PageSizeInfo(10.12, 7.17, UnitInfo::inch());
     }
 }

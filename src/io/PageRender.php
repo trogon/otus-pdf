@@ -137,14 +137,19 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         }
 
         $pageSizeArray = new PdfArray();
-        $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
+        $pageSizeArray->addItem(new PdfNumber(['value' => 0]));
+        $pageSizeArray->addItem(new PdfNumber(['value' => 0]));
+
+        $unitInfo = $size->unitInfo;
+        $width = $unitInfo->toInch($size->width) *72;
+        $height = $unitInfo->toInch($size->height) *72;
+
         if ($orientation->isLandscape()) {
-            $pageSizeArray->addItem(new PdfNumber(['value' => ($size->width * 72)]));
-            $pageSizeArray->addItem(new PdfNumber(['value' => ($size->height * 72)]));
+            $pageSizeArray->addItem(new PdfNumber(['value' => $width]));
+            $pageSizeArray->addItem(new PdfNumber(['value' => $height]));
         } else {
-            $pageSizeArray->addItem(new PdfNumber(['value' => ($size->height * 72)]));
-            $pageSizeArray->addItem(new PdfNumber(['value' => ($size->width * 72)]));
+            $pageSizeArray->addItem(new PdfNumber(['value' => $height]));
+            $pageSizeArray->addItem(new PdfNumber(['value' => $width]));
         }
         return $pageSizeArray;
     }
@@ -152,8 +157,8 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
     public function mergePageInfo($pageInfo, $defautPageInfo)
     {
         $mergedConfig = array_merge(
-            $pageInfo->toDictionary(),
-            $defautPageInfo->toDictionary()
+            $defautPageInfo->toDictionary(),
+            array_filter($pageInfo->toDictionary())
         );
         $mergedPageInfo = new PageInfo($mergedConfig);
         return $mergedPageInfo;
