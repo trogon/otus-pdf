@@ -42,8 +42,8 @@ class Page extends \trogon\otuspdf\base\BaseObject
         return $this->items;
     }
 
-    public function addText($text)
+    public function addText($text, $config = [])
     {
-        return $this->items[] = new Text($text);
+        return $this->items[] = new Text($text, $config);
     }
 }
