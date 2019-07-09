@@ -1,0 +1,17 @@
+format_document:
+  title: Saves PDF as file
+  description: 
+  content: |-
+    ```php
+    $writer = new DocumentWriter($document);
+    $writer->save('myFile.pdf');
+    ```
+
+simple_document_with_page:
+  title: Saves PDF as text
+  description: 
+  content: |-
+    ```php
+    $writer = new DocumentWriter($document);
+    echo $writer->toString();
+    ```

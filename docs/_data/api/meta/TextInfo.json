@@ -1,0 +1,8 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "TextInfo",
+    "description": "Describes single text block information",
+    "introduced": "0.2.0",
+    "properties": [],
+    "methods": []
+}

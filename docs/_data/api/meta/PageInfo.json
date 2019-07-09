@@ -1,0 +1,21 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "PageInfo",
+    "description": "Describes single page information",
+    "introduced": "0.2.0",
+    "properties": [
+        {
+            "name": "orientation",
+            "type": "PageOrientation",
+            "access": "Normal",
+            "description": "Stores page orientation"
+        },
+        {
+            "name": "size",
+            "type": "PageSize",
+            "access": "Normal",
+            "description": "Stores page size"
+        }
+    ],
+    "methods": []
+}
