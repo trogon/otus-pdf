@@ -20,27 +20,47 @@ namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\meta\PositionInfo;
+use trogon\otuspdf\meta\TextInfo;
 
 class TextRender extends \trogon\otuspdf\base\BaseObject
 {
-    private $defaultFontSize = 14;
-
-    public function renderTextItems($textItems, $pageInfo)
+    public function renderTextItems($textItems, $pageInfo, $fontRender)
     {
-        $fontSize = $this->defaultFontSize;
+        $defaultTextInfo = new TextInfo([
+            'fontFamily' => 'Times-Roman',
+            'fontSize' => 14
+        ]);
+        $fontSize = $defaultTextInfo->fontSize;
+        $fontFamily = $defaultTextInfo->fontFamily;
+        $fontKey = $fontRender->findFontKey($fontFamily);
+
         $startPosition = $this->computeTextStartPosition($pageInfo);
         $x = intval($startPosition->x);
         $y = intval($startPosition->y -$fontSize);
 
         $content = "BT\n";
-        $content .= "\t /F1 {$fontSize} Tf\n";
+        $content .= "\t /{$fontKey} {$fontSize} Tf\n";
         $content .= "\t {$fontSize} TL\n";
         $content .= "\t {$x} {$y} Td\n";
-        foreach ($textItems as $text) {
-            $lines = \explode("\n", $text->text);
-            foreach ($lines as $textLine) {
-                $content .= "\t ({$textLine}) Tj\n";
+        foreach ($textItems as $textNo => $text) {
+            $textInfo = new TextInfo(array_merge(
+                $defaultTextInfo->toDictionary(),
+                array_filter($text->info->toDictionary())
+            ));
+            $fontSize = $textInfo->fontSize;
+            $fontFamily = $textInfo->fontFamily;
+            $fontKey = $fontRender->findFontKey($fontFamily);
+            $content .= "\t /{$fontKey} {$fontSize} Tf\n";
+            $content .= "\t {$fontSize} TL\n";
+            if ($textNo != 0) {
                 $content .= "\t T*\n";
+            }
+            $lines = \explode("\n", $text->text);
+            foreach ($lines as $lineNo => $textLine) {
+                if ($lineNo != 0) {
+                    $content .= "\t T*\n";
+                }
+                $content .= "\t ({$textLine}) Tj\n";
             }
         }
         $content .= "ET";
