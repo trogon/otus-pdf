@@ -111,7 +111,7 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
         $this->writeEnd();
     }
 
-    public function save(String $filepath)
+    public function save($filepath)
     {
         if (empty($this->content)) {
             $this->generatePdfContent();

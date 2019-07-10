@@ -34,7 +34,7 @@ class DocumentWriter extends \trogon\otuspdf\base\BaseObject
         $this->document = $document;
     }
 
-    public function save(String $filepath, String $format = null)
+    public function save($filepath, $format = null)
     {
         if (empty($format)) {
             $format = pathinfo($filepath, PATHINFO_EXTENSION);
@@ -53,11 +53,8 @@ class DocumentWriter extends \trogon\otuspdf\base\BaseObject
         }
     }
 
-    public function toString(String $format)
+    public function toString($format)
     {
-        if (empty($format)) {
-            $format = pathinfo($filepath, PATHINFO_EXTENSION);
-        }
         if (array_key_exists($format, self::$providers)) {
             $class = self::$providers[$format];
             if (class_exists($class)) {
