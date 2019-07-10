@@ -22,10 +22,17 @@ final class DocumentWriterTest extends TestCase
     }
 
     /**
+     * @requires PHP >= 7.1
      * @expectedException ArgumentCountError
      */
     public function testCannotBeCreatedFromEmptyConfig()
     {
+        if (!version_compare(PHP_VERSION, '7.1.0', '>=')) {
+            $this->markTestSkipped(
+              'PHP treats it as PHP Fatal error. Can not be tested until PHP 7.1.'
+            );
+        }
+
         $this->assertInstanceOf(
             $this->documentWriterClass,
             new DocumentWriter()

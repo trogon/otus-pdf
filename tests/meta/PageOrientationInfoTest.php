@@ -12,6 +12,7 @@ final class PageOrientationInfoTest extends TestCase
     private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     /**
+     * @requires PHP >= 7.1
      * @expectedException Error
      */
     public function testCanNotBeCreated()
