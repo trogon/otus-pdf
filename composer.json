@@ -40,7 +40,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "trogon\\otuspdf\\test\\": "src/test/"
+            "trogon\\otuspdf\\test\\": "tests/"
         }
     },
     "require-dev": {
