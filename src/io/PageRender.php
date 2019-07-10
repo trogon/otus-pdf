@@ -86,7 +86,7 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         return $pageCollectionObj;
     }
 
-    public function renderPage($page)
+    public function renderPage($page, $fontRender)
     {
         $objects = [];
 
@@ -115,7 +115,7 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         // PDF Page <n> content
         $pageContentObj = $this->objectFactory->create();
         $pageContentObj->content = new PdfDictionary();
-        $this->writeContentStream($page, $pageContentObj, $realPageInfo);
+        $this->writeContentStream($page, $pageContentObj, $realPageInfo, $fontRender);
         $objects[] = $pageContentObj;
         $pageObj->content->addItem(
             new PdfName(['value' => 'Contents']),
@@ -164,11 +164,11 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         return $mergedPageInfo;
     }
 
-    private function writeContentStream($page, $pageContentObj, $pageInfo)
+    private function writeContentStream($page, $pageContentObj, $pageInfo, $fontRender)
     {
         $textRender = new TextRender();
 
-        $content = $textRender->renderTextItems($page->items, $pageInfo);
+        $content = $textRender->renderTextItems($page->items, $pageInfo, $fontRender);
 
         $contentStream = new PdfStream();
         $contentStream->value = \gzcompress($content);

@@ -82,20 +82,19 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
             }
         }
 
+        // PDF fonts render
+        $pdfFontRender = new FontRender($pdfBuilder);
+
         // PDF pages
         foreach ($this->document->pages as $n => $page) {
-            $pageObjects = $pageWriter->renderPage($page);
+            $pageObjects = $pageWriter->renderPage($page, $pdfFontRender);
             $objects = array_merge($objects, $pageObjects);
         }
 
         // PDF fonts catalog
-        $fontsDict = $pdfBuilder->createFontsResource();
-        $pdfBuilder->registerFontsResource($resourcesDict, $fontsDict);
-
-        // PDF simple font F1
-        $fontObj1 = $pdfBuilder->createBasicFont('F1', 'Times-Roman');
-        $pdfBuilder->registerFont($fontsDict, $fontObj1);
-        $objects[] = $fontObj1;
+        $pdfFontRender->registerFontsResource($resourcesDict);
+        $fontObjects = $pdfFontRender->createFontObjects();
+        $objects = array_merge($objects, $fontObjects);
 
         // Transform PDF objects into PDF text
         $this->writeBegin();
@@ -112,7 +111,7 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
         $this->writeEnd();
     }
 
-    public function save(String $filepath)
+    public function save($filepath)
     {
         if (empty($this->content)) {
             $this->generatePdfContent();
