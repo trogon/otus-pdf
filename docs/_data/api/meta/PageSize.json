@@ -1,19 +1,27 @@
 {
     "$schema": "http://schema.trogon.eu/json/apidocs.json",
     "name": "PageSize",
-    "description": "Describes page size information",
+    "description": "Describes page size information (immutable type)",
     "introduced": "0.2.0",
+    "version": "0.3.0",
     "properties": [
         {
             "name": "height",
             "type": "float",
-            "access": "Normal",
+            "access": "Read Only",
             "description": "Stores page height"
+        },
+        {
+            "name": "unitInfo",
+            "type": "UnitInfo",
+            "access": "Read Only",
+            "description": "Stores sizes unit",
+            "introduced": "0.3.0"
         },
         {
             "name": "width",
             "type": "float",
-            "access": "Normal",
+            "access": "Read Only",
             "description": "Stores page width"
         }
     ],

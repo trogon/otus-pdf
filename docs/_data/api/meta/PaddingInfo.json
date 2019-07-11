@@ -1,0 +1,39 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "PaddingInfo",
+    "description": "Describes padding information",
+    "introduced": "0.3.0",
+    "properties": [
+        {
+            "name": "bottom",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores distance from bottom"
+        },
+        {
+            "name": "left",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores distance from left"
+        },
+        {
+            "name": "right",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores distance from right"
+        },
+        {
+            "name": "top",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores distance from top"
+        },
+        {
+            "name": "unitInfo",
+            "type": "UnitInfo",
+            "access": "Normal",
+            "description": "Stores page orientation"
+        }
+    ],
+    "methods": []
+}

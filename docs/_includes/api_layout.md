@@ -32,7 +32,12 @@
     </tr>
 {%- for property in apidesc.properties %}
     <tr>
-        <td><strong>${{- property.name -}}</strong></td>
+        <td>
+            <strong>${{- property.name -}}</strong>
+{%- if property.introduced %}
+            <span class="label label-purple">New in {{ property.introduced }}</span>
+{%- endif -%}
+        </td>
         <td>{{- property.type -}}</td>
         <td>{{- property.access -}}</td>
         <td>{{- property.description -}}</td>
@@ -53,7 +58,12 @@
     </tr>
 {%- for method in apidesc.methods %}
     <tr>
-        <td><strong>{{- method.name -}}()</strong></td>
+        <td>
+            <strong>{{- method.name -}}()</strong>
+{%- if method.introduced %}
+            <span class="label label-purple">New in {{ method.introduced }}</span>
+{%- endif -%}
+        </td>
         <td>{{- method.type -}}</td>
         <td>{{- method.description -}}</td>
     </tr>

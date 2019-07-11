@@ -3,6 +3,7 @@
     "name": "Text",
     "description": "Describes single text block (immutable type)",
     "introduced": "0.2.0",
+    "version": "0.3.0",
     "properties": [
         {
             "name": "info",

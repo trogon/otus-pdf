@@ -1,0 +1,42 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "UnitInfo",
+    "description": "Describes unit metrics information (immutable type)",
+    "introduced": "0.3.0",
+    "properties": [],
+    "methods": [
+        {
+            "name": "cm",
+            "type": "UnitInfo",
+            "description": "Creates cm unit info object",
+            "isStatic": true
+        },
+        {
+            "name": "inch",
+            "type": "UnitInfo",
+            "description": "Creates inch unit info object",
+            "isStatic": true
+        },
+        {
+            "name": "mm",
+            "type": "UnitInfo",
+            "description": "Creates mm unit info object",
+            "isStatic": true
+        },
+        {
+            "name": "toCm",
+            "type": "float",
+            "description": "Converts given nuber from unit info metric to cm"
+        },
+        {
+            "name": "toInch",
+            "type": "float",
+            "description": "Converts given nuber from unit info metric to inch"
+        },
+        {
+            "name": "toMm",
+            "type": "float",
+            "description": "Converts given nuber from unit info metric to mm"
+        }
+    ]
+}
