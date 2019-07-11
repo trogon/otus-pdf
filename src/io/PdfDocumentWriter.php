@@ -130,7 +130,7 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
         }
 
         $encodedContent = $this->encodeContent($this->content);
-        echo($encodedContent);
+        return $encodedContent;
     }
 
     private function writeBegin()
