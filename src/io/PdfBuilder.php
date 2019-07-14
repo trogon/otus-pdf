@@ -164,7 +164,7 @@ class PdfBuilder extends \trogon\otuspdf\base\BaseObject
         return $trailer;
     }
 
-    public function registerFont($fontsDict, $fontObj)
+    public static function registerFont($fontsDict, $fontObj)
     {
         $fontsDict->addItem(
             new PdfName(['value' => $fontObj->content->getItem('Name')->value]),
@@ -172,7 +172,7 @@ class PdfBuilder extends \trogon\otuspdf\base\BaseObject
         );
     }
 
-    public function registerFontsResource($resourcesDict, $fontsDict)
+    public static function registerFontsResource($resourcesDict, $fontsDict)
     {
         $resourcesDict->addItem(
             new PdfName(['value' => 'Font']),
@@ -180,7 +180,7 @@ class PdfBuilder extends \trogon\otuspdf\base\BaseObject
         );
     }
 
-    public function registerOutlines($catalogObj, $outlinesObj)
+    public static function registerOutlines($catalogObj, $outlinesObj)
     {
         $catalogObj->content->addItem(
             new PdfName(['value' => 'Outlines']),
@@ -188,7 +188,7 @@ class PdfBuilder extends \trogon\otuspdf\base\BaseObject
         );
     }
 
-    public function registerProcSetResource($resourcesDict, $procSetObj)
+    public static function registerProcSetResource($resourcesDict, $procSetObj)
     {
         $resourcesDict->addItem(
             new PdfName(['value' => 'ProcSet']),

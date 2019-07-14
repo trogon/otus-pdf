@@ -19,7 +19,7 @@
 namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\InvalidCallException;
-use trogon\otuspdf\meta\PositionInfo;
+use trogon\otuspdf\meta\FontFamilyInfo;
 
 class FontRender extends \trogon\otuspdf\base\BaseObject
 {
@@ -55,9 +55,19 @@ class FontRender extends \trogon\otuspdf\base\BaseObject
         } else {
             $newKey = $this->createFontKey($fontFamily);
             $this->fontKeys[$fontFamily] = $newKey;
+            $this->fontData[$newKey] = $this->loadFontData($fontFamily);
             return $newKey;
         }
         return null;
+    }
+
+    public function findFontData($fontKey)
+    {
+        if (array_key_exists($fontKey, $this->fontData)) {
+            return $this->fontData[$fontKey];
+        } else {
+            return null;
+        }
     }
 
     public function registerFontsResource($resourcesDict)
@@ -68,5 +78,20 @@ class FontRender extends \trogon\otuspdf\base\BaseObject
     private function createFontKey($fontFamily)
     {
         return md5($fontFamily) . count($this->fontKeys);
+    }
+
+    private function loadFontData($fontFamily)
+    {
+        $dataPath = FontInstaller::getDataPath();
+        $filePath = join(DIRECTORY_SEPARATOR, [$dataPath, $fontFamily . '.php']);
+        if (is_file($filePath)) {
+            $fontData = file_get_contents($filePath);
+            $fontInfo = unserialize($fontData);
+            return $fontInfo;
+        } else {
+            return new FontFamilyInfo([
+                'name' => $fontFamily
+            ]);
+        }
     }
 }

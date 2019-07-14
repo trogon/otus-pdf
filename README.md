@@ -33,7 +33,7 @@ Documentation available on [https://trogon.github.io/otus-pdf/](https://trogon.g
 Contributing
 ============
 
-Please read before submitting issues and pull requests the [CONTRIBUTING.md](https://github.com/trogon/otus-pdf/blob/develop/README.md) file.
+Please read before submitting issues and pull requests the [CONTRIBUTING.md](https://github.com/trogon/otus-pdf/blob/develop/CONTRIBUTING.md) file.
 
 Notice
 ============
