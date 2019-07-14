@@ -26,23 +26,6 @@ use trogon\otuspdf\meta\FontFamilyInfo;
 
 class FontInstaller extends \trogon\otuspdf\base\BaseObject
 {
-    const PDF_CORE_FONTS = [
-        'Courier',
-        'Courier-Bold',
-        'Courier-Oblique',
-        'Courier-BoldOblique',
-        'Helvetica',
-        'Helvetica-Bold',
-        'Helvetica-Oblique',
-        'Helvetica-BoldOblique',
-        'Times-Roman',
-        'Times-Bold',
-        'Times-Italic',
-        'Times-BoldItalic',
-        'Symbol',
-        'ZapfDingbats'
-    ];
-
     public static function postPackageInstall(PackageEvent $event)
     {
         $installedPackage = $event->getOperation()->getPackage();
@@ -54,6 +37,26 @@ class FontInstaller extends \trogon\otuspdf\base\BaseObject
     public static function getDataPath()
     {
         return join(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'data', 'fonts']);
+    }
+
+    public static function getPdfCoreFonts()
+    {
+        return [
+            'Courier',
+            'Courier-Bold',
+            'Courier-Oblique',
+            'Courier-BoldOblique',
+            'Helvetica',
+            'Helvetica-Bold',
+            'Helvetica-Oblique',
+            'Helvetica-BoldOblique',
+            'Times-Roman',
+            'Times-Bold',
+            'Times-Italic',
+            'Times-BoldItalic',
+            'Symbol',
+            'ZapfDingbats'
+        ];
     }
 
     public static function buildFontMetrics()
