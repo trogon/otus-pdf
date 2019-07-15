@@ -1,7 +1,7 @@
 ---
 layout: page
-title: PageOrientation
-apiname: meta.PageOrientation
+title: PageSizeInfo
+apiname: meta.PageSizeInfo
 parent: meta
 grand_parent: API
 ---

@@ -1,0 +1,39 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "FontFamilyInfo",
+    "description": "Describes font family information",
+    "introduced": "0.3.0",
+    "properties": [
+        {
+            "name": "isFixedPitch",
+            "type": "boolean",
+            "access": "Normal",
+            "description": "Flag if font is fixed width"
+        },
+        {
+            "name": "metrics",
+            "type": "array",
+            "access": "Normal",
+            "description": "Stores character width metrics"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores font name"
+        },
+        {
+            "name": "style",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores font style name"
+        },
+        {
+            "name": "weight",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores font weight"
+        }
+    ],
+    "methods": []
+}

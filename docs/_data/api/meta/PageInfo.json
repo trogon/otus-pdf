@@ -3,7 +3,15 @@
     "name": "PageInfo",
     "description": "Describes single page information",
     "introduced": "0.2.0",
+    "version": "0.3.0",
     "properties": [
+        {
+            "name": "margin",
+            "type": "PaddingInfo",
+            "access": "Normal",
+            "description": "Stores page margin information",
+            "introduced": "0.3.0"
+        },
         {
             "name": "orientation",
             "type": "PageOrientation",

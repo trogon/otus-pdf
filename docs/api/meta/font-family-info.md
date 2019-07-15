@@ -1,7 +1,7 @@
 ---
 layout: page
-title: PageSize
-apiname: meta.PageSize
+title: FontFamilyInfo
+apiname: meta.FontFamilyInfo
 parent: meta
 grand_parent: API
 ---

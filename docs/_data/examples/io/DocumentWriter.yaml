@@ -1,4 +1,4 @@
-format_document:
+save_as_file:
   title: Saves PDF as file
   description: 
   content: |-
@@ -7,11 +7,20 @@ format_document:
     $writer->save('myFile.pdf');
     ```
 
-simple_document_with_page:
+parse_as_string:
   title: Saves PDF as text
   description: 
   content: |-
     ```php
     $writer = new DocumentWriter($document);
-    echo $writer->toString();
+    echo $writer->toString('pdf');
+    ```
+
+save_as_file_in_pdf_format:
+  title: Saves PDF as file with '.data' extension
+  description: 
+  content: |-
+    ```php
+    $writer = new DocumentWriter($document);
+    $writer->save('myFile.data', 'pdf');
     ```

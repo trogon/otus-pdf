@@ -1,8 +1,9 @@
 {
     "$schema": "http://schema.trogon.eu/json/apidocs.json",
-    "name": "PageOrientation",
+    "name": "PageOrientationInfo",
     "description": "Describes page orientation information (immutable type)",
     "introduced": "0.2.0",
+    "version": "0.3.0",
     "properties": [],
     "methods": [
         {
