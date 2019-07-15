@@ -26,6 +26,8 @@ use trogon\otuspdf\io\pdf\PdfNumber;
 use trogon\otuspdf\io\pdf\PdfObject;
 use trogon\otuspdf\io\pdf\PdfObjectReference;
 use trogon\otuspdf\io\pdf\PdfStream;
+use trogon\otuspdf\meta\PaddingInfo;
+use trogon\otuspdf\meta\PageInfo;
 use trogon\otuspdf\meta\PageOrientationInfo;
 use trogon\otuspdf\meta\PageSizeInfo;
 
@@ -33,8 +35,7 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
 {
     private $objectFactory;
     private $resourcesDict;
-    private $defaultOrientation;
-    private $defaultSize;
+    private $defaultPageInfo;
     private $pageCollectionObj;
     private $pageRefs;
 
@@ -42,13 +43,16 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
     {
         $this->objectFactory = $objectFactory;
         $this->resourcesDict = $resourcesDict;
-        $this->defaultOrientation = PageOrientationInfo::getPortrait();
-        $this->defaultSize = PageSizeInfo::getA4();
+        $this->defaultPageInfo = new PageInfo([
+            'orientation' => PageOrientationInfo::getPortrait(),
+            'size' => PageSizeInfo::getA4(),
+            'margin' => PaddingInfo::pageNormal(),
+        ]);
     }
 
     public function renderPageCollection($pageCollection, $catalogObj)
     {
-        $defaultArraySize = $this->createArraySize($this->defaultOrientation, $this->defaultSize);
+        $defaultArraySize = $this->createArraySize($this->defaultPageInfo);
 
         $pageCollectionObj = $this->objectFactory->create();
         $pageCollectionObj->content = new PdfDictionary();
@@ -82,7 +86,7 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         return $pageCollectionObj;
     }
 
-    public function renderPage($page)
+    public function renderPage($page, $fontRender)
     {
         $objects = [];
 
@@ -97,9 +101,9 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
             new PdfName(['value' => 'Parent']),
             new PdfObjectReference(['object' => $this->pageCollectionObj])
         );
-        list($orientation, $size, $isDefined) = $this->findOrientationAndSize($page->info, $this->defaultOrientation, $this->defaultSize);
-        if ($isDefined) {
-            $arraySize = $this->createArraySize($orientation, $size);
+        $realPageInfo = $this->mergePageInfo($page->info, $this->defaultPageInfo);
+        $arraySize = $this->createArraySize($realPageInfo, $this->defaultPageInfo);
+        if ($arraySize != null) {
             $pageObj->content->addItem(
                 new PdfName(['value' => 'MediaBox']),
                 $arraySize
@@ -111,7 +115,7 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         // PDF Page <n> content
         $pageContentObj = $this->objectFactory->create();
         $pageContentObj->content = new PdfDictionary();
-        $this->writeContentStream($page, $pageContentObj, $orientation, $size);
+        $this->writeContentStream($page, $pageContentObj, $realPageInfo, $fontRender);
         $objects[] = $pageContentObj;
         $pageObj->content->addItem(
             new PdfName(['value' => 'Contents']),
@@ -121,43 +125,50 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         return $objects;
     }
 
-    public function createArraySize($orientation, $size)
-    {
-        $pageSizeArray = new PdfArray();
-        $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => (0 * 72)]));
-        if ($orientation->isLandscape()) {
-            $pageSizeArray->addItem(new PdfNumber(['value' => ($size->width * 72)]));
-            $pageSizeArray->addItem(new PdfNumber(['value' => ($size->height * 72)]));
-        } else {
-            $pageSizeArray->addItem(new PdfNumber(['value' => ($size->height * 72)]));
-            $pageSizeArray->addItem(new PdfNumber(['value' => ($size->width * 72)]));
-        }
-        return $pageSizeArray;
-    }
-
-    public function findOrientationAndSize($pageInfo, $defautOrientation, $defaultSize)
+    public function createArraySize($pageInfo, $previousPageInfo = null)
     {
         $orientation = $pageInfo->orientation;
         $size = $pageInfo->size;
 
-        $isOrientationDefined = ($orientation instanceof PageOrientationInfo);
-        $isSizeDefined = ($size instanceof PageSizeInfo);
+        if ($previousPageInfo != null
+            && $previousPageInfo->orientation == $orientation
+            && $previousPageInfo->size == $size) {
+                return null;
+        }
 
-        $isDefined = ($isOrientationDefined && $orientation != $defautOrientation)
-        || ($size && $orientation != $defaultSize);
+        $pageSizeArray = new PdfArray();
+        $pageSizeArray->addItem(new PdfNumber(['value' => 0]));
+        $pageSizeArray->addItem(new PdfNumber(['value' => 0]));
 
-        $orientation = $isOrientationDefined ? $orientation: $defautOrientation;
-        $size = $isSizeDefined ? $size : $defaultSize;
+        $unitInfo = $size->unitInfo;
+        $width = $unitInfo->toInch($size->width) *72;
+        $height = $unitInfo->toInch($size->height) *72;
 
-        return [$orientation, $size, $isDefined];
+        if ($orientation->isLandscape()) {
+            $pageSizeArray->addItem(new PdfNumber(['value' => $width]));
+            $pageSizeArray->addItem(new PdfNumber(['value' => $height]));
+        } else {
+            $pageSizeArray->addItem(new PdfNumber(['value' => $height]));
+            $pageSizeArray->addItem(new PdfNumber(['value' => $width]));
+        }
+        return $pageSizeArray;
     }
 
-    private function writeContentStream($page, $pageContentObj, $pageOrientation, $pageSize)
+    public function mergePageInfo($pageInfo, $defautPageInfo)
+    {
+        $mergedConfig = array_merge(
+            $defautPageInfo->toDictionary(),
+            array_filter($pageInfo->toDictionary())
+        );
+        $mergedPageInfo = new PageInfo($mergedConfig);
+        return $mergedPageInfo;
+    }
+
+    private function writeContentStream($page, $pageContentObj, $pageInfo, $fontRender)
     {
         $textRender = new TextRender();
 
-        $content = $textRender->renderTextItems($page->items, $pageOrientation, $pageSize);
+        $content = $textRender->renderTextItems($page->items, $pageInfo, $fontRender);
 
         $contentStream = new PdfStream();
         $contentStream->value = \gzcompress($content);

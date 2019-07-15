@@ -3,12 +3,20 @@
     "name": "Document",
     "description": "Describes single document",
     "introduced": "0.1.0",
+    "version": "0.3.0",
     "properties": [
         {
             "name": "info",
             "type": "DocumentInfo",
             "access": "Read Only",
             "description": "Stores document meta informations"
+        },
+        {
+            "name": "pages",
+            "type": "PageCollection",
+            "access": "Read Only",
+            "description": "Stores pages list",
+            "introduced": "0.2.0"
         }
     ],
     "methods": []

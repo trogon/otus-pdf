@@ -1,4 +1,5 @@
 <?php
+namespace trogon\otuspdf\test;
 
 use PHPUnit\Framework\TestCase;
 

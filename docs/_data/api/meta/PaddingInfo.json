@@ -1,0 +1,64 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "PaddingInfo",
+    "description": "Describes padding information",
+    "introduced": "0.3.0",
+    "properties": [
+        {
+            "name": "bottom",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores distance from bottom"
+        },
+        {
+            "name": "left",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores distance from left"
+        },
+        {
+            "name": "right",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores distance from right"
+        },
+        {
+            "name": "top",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores distance from top"
+        },
+        {
+            "name": "unitInfo",
+            "type": "UnitInfo",
+            "access": "Normal",
+            "description": "Stores page orientation"
+        }
+    ],
+    "methods": [
+        {
+            "name": "pageNarrow",
+            "type": "PaddingInfo",
+            "description": "Creates 'Narrow' page margin. Top: 1,27cm; Bottom: 1,27cm; Left: 1,27cm; Right: 1,27cm.",
+            "isStatic": true
+        },
+        {
+            "name": "pageNormal",
+            "type": "PaddingInfo",
+            "description": "Creates 'Normal' page margin. Top: 2,54cm; Bottom: 2,54cm; Left: 2,54cm; Right: 2,54cm.",
+            "isStatic": true
+        },
+        {
+            "name": "pageModerate",
+            "type": "PaddingInfo",
+            "description": "Creates 'Moderate' page margin. Top: 2,54cm; Bottom: 2,54cm; Left: 1,91cm; Right: 1,91cm.",
+            "isStatic": true
+        },
+        {
+            "name": "pageWide",
+            "type": "PaddingInfo",
+            "description": "Creates 'Wide' page margin. Top: 2,54cm; Bottom: 2,54cm; Left: 5,08cm; Right: 5,08cm.",
+            "isStatic": true
+        }
+    ]
+}

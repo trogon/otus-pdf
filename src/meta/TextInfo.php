@@ -20,5 +20,6 @@ namespace trogon\otuspdf\meta;
 
 class TextInfo extends \trogon\otuspdf\base\BaseObject
 {
-
+    public $fontFamily;
+    public $fontSize;
 }

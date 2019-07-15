@@ -1,0 +1,20 @@
+simple_page_with_text:
+  title: Simple page with multiline text
+  description: 
+  content: |-
+    ```php
+    $page->addText("First line text");
+    $page->addText("Second line text");
+    $page->addText("Multi line text\nMany lines as one\nSeparated with new line character");
+    ```
+
+format_page:
+  title: Page with defined size and orientation
+  description: 
+  content: |-
+    ```php
+    $page = new Page([
+      'orientation' => PageOrientationInfo::getPortrait(),
+      'size' => PageSizeInfo::getA5()
+    ]);
+    ```

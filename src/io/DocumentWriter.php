@@ -18,235 +18,54 @@
  */
 namespace trogon\otuspdf\io;
 
+use ReflectionClass;
 use trogon\otuspdf\base\InvalidCallException;
-use trogon\otuspdf\io\pdf\PdfArray;
-use trogon\otuspdf\io\pdf\PdfCrossReference;
-use trogon\otuspdf\io\pdf\PdfDictionary;
-use trogon\otuspdf\io\pdf\PdfName;
-use trogon\otuspdf\io\pdf\PdfNumber;
-use trogon\otuspdf\io\pdf\PdfObject;
-use trogon\otuspdf\io\pdf\PdfObjectFactory;
-use trogon\otuspdf\io\pdf\PdfObjectReference;
-use trogon\otuspdf\io\pdf\PdfStream;
-use trogon\otuspdf\io\pdf\PdfString;
-use trogon\otuspdf\io\pdf\PdfTrailer;
-use trogon\otuspdf\meta\PageOrientationInfo;
-use trogon\otuspdf\meta\PageSizeInfo;
-use trogon\otuspdf\meta\PositionInfo;
 
 class DocumentWriter extends \trogon\otuspdf\base\BaseObject
 {
+    static $providers = [
+        'pdf' => '\trogon\otuspdf\io\PdfDocumentWriter',
+    ];
+
     private $document;
-    private $objectFactory;
-    private $crossReference;
-    private $trailer;
-    private $offset;
-    private $content;
 
     public function __construct(\trogon\otuspdf\Document $document)
     {
         $this->document = $document;
-        $this->objectFactory = new PdfObjectFactory();
-        $this->crossReference = new PdfCrossReference();
-        $this->trailer = new PdfTrailer();
-        $this->offset = 0;
-        $this->content = '';
     }
 
-    private function generatePdfContent()
+    public function save($filepath, $format = null)
     {
-        $objects = [];
-
-        // PDF Catalog
-        $catalogObj = $this->objectFactory->create();
-        $catalogObj->content = new PdfDictionary();
-        $catalogObj->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Catalog'])
-        );
-        $objects[] = $catalogObj;
-
-        // PDF Outlines
-        $outlinesObj = $this->objectFactory->create();
-        $outlinesObj->content = new PdfDictionary();
-        $outlinesObj->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Outlines'])
-        );
-        $outlinesObj->content->addItem(
-            new PdfName(['value' => 'Count']),
-            new PdfNumber(['value' => 0])
-        );
-        $objects[] = $outlinesObj;
-        $catalogObj->content->addItem(
-            new PdfName(['value' => 'Outlines']),
-            new PdfObjectReference(['object' => $outlinesObj])
-        );
-
-        // PDF Pages collection
-        if (count($this->document->pages) === 0) {
-            throw new InvalidCallException('Document does not contain pages.');
+        if (empty($format)) {
+            $format = pathinfo($filepath, PATHINFO_EXTENSION);
         }
-
-        $resourcesDict = new PdfDictionary();
-        $pageWriter = new PageRender($this->objectFactory, $resourcesDict);
-        $objects[] = $pageWriter->renderPageCollection($this->document->pages, $catalogObj);
-
-        // PDF Proc Set
-        $procSetObj = $this->objectFactory->create();
-        $procSetObj->content = new PdfArray();
-        $procSetObj->content->addItem(new PdfName(['value' => 'PDF']));
-        $objects[] = $procSetObj;
-        $resourcesDict->addItem(
-            new PdfName(['value' => 'ProcSet']),
-            new PdfObjectReference(['object' => $procSetObj])
-        );
-
-        $docInfoObject = null;
-        if (!empty($this->document->info)) {
-            $infoDict = new PdfDictionary();
-            $this->setInfoTextIfNotEmpty($infoDict, 'title', 'Title');
-            $this->setInfoTextIfNotEmpty($infoDict, 'author', 'Author');
-            $this->setInfoTextIfNotEmpty($infoDict, 'subject', 'Subject');
-            $this->setInfoTextIfNotEmpty($infoDict, 'keywords', 'Keywords');
-            $this->setInfoTextIfNotEmpty($infoDict, 'creator', 'Creator');
-            $this->setInfoTextIfNotEmpty($infoDict, 'producer', 'Producer');
-            $this->setInfoTextIfNotEmpty($infoDict, 'creationDate', 'CreationDate');
-            $this->setInfoTextIfNotEmpty($infoDict, 'modificationDate', 'ModDate');
-            if (!empty($infoDict->items)) {
-                $docInfoObject = $this->objectFactory->create();
-                $docInfoObject->content = $infoDict;
-                $objects[] = $docInfoObject;
+        if (array_key_exists($format, self::$providers)) {
+            $class = self::$providers[$format];
+            if (class_exists($class)) {
+                $reflection = new ReflectionClass($class);
+                $provider = $reflection->newInstance($this->document);
+                return $provider->save($filepath);
+            } else {
+                throw new UnknownFormatException("Provider '$class' not found. Please make sure the provider is installed.");
             }
-        }
-
-        foreach ($this->document->pages as $n => $page) {
-            $pageObjects = $pageWriter->renderPage($page);
-            $objects = array_merge($objects, $pageObjects);
-        }
-
-        // Simple font F1
-        $fontObj1 = $this->objectFactory->create();
-        $fontObj1->content = new PdfDictionary();
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Font'])
-        );
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'Subtype']),
-            new PdfName(['value' => 'Type1'])
-        );
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'Name']),
-            new PdfName(['value' => 'F1'])
-        );
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'BaseFont']),
-            new PdfName(['value' => 'Times-Roman'])
-        );
-        $fontObj1->content->addItem(
-            new PdfName(['value' => 'Encoding']),
-            new PdfName(['value' => 'WinAnsiEncoding'])
-        );
-        $objects[] = $fontObj1;
-        $fontsDict = new PdfDictionary();
-        $fontsDict->addItem(
-            new PdfName(['value' => 'F1']),
-            new PdfObjectReference(['object' => $fontObj1])
-        );
-        $resourcesDict->addItem(
-            new PdfName(['value' => 'Font']),
-            $fontsDict
-        );
-
-        $this->writeHeader();
-        $this->writeBody($objects);
-        $this->writeCrossReference();
-        $this->writeTrailer($catalogObj, $docInfoObject);
-    }
-
-    private function setInfoTextIfNotEmpty($dictionary, $property, $pdfKey)
-    {
-        if (!empty($this->document->info->$property)) {
-            $dictionary->addItem(
-                new PdfName(['value' => $pdfKey]),
-                new PdfString(['value' => $this->document->info->$property])
-            );
+        } else {
+            throw new UnknownFormatException("Format '$format' does not have any providers.");
         }
     }
 
-    public function save(String $filepath)
+    public function toString($format)
     {
-        if (empty($this->content)) {
-            $this->generatePdfContent();
+        if (array_key_exists($format, self::$providers)) {
+            $class = self::$providers[$format];
+            if (class_exists($class)) {
+                $reflection = new ReflectionClass($class);
+                $provider = $reflection->newInstance($this->document);
+                return $provider->toString();
+            } else {
+                throw new UnknownFormatException("Provider '$class' not found. Please make sure the provider is installed.");
+            }
+        } else {
+            throw new UnknownFormatException("Format '$format' does not have any providers.");
         }
-
-        $fp = fopen($filepath, 'w');
-        $encodedContent = $this->encodeContent($this->content);
-        fwrite($fp, $encodedContent);
-        fclose($fp);
-    }
-
-    public function toString()
-    {
-        if (empty($this->content)) {
-            $this->generatePdfContent();
-        }
-
-        $encodedContent = $this->encodeContent($this->content);
-        echo($encodedContent);
-    }
-
-    private function writeHeader()
-    {
-        $this->writeLine('%PDF-1.7');
-    }
-
-    private function writeBody($objects)
-    {
-        $this->offset = \strlen($this->content);
-        foreach ($objects as $object) {
-            $text = $object->toString();
-            $this->crossReference->registerObject($object, $this->offset);
-            $this->writeLine($text);
-            $this->offset += \strlen($text);
-        }
-    }
-
-    private function writeCrossReference()
-    {
-        $this->trailer->xrefOffset = $this->offset;
-        $this->writeLine($this->crossReference->toString());
-    }
-
-    private function writeTrailer($rootObject, $docInfoObject = null)
-    {
-        $this->trailer->content->addItem(
-            new PdfName(['value' => 'Size']),
-            new PdfNumber(['value' => $this->crossReference->size])
-        );
-        $this->trailer->content->addItem(
-            new PdfName(['value' => 'Root']),
-            new PdfObjectReference(['object' => $rootObject])
-        );
-        if ($docInfoObject instanceof PdfObject) {
-            $this->trailer->content->addItem(
-                new PdfName(['value' => 'Info']),
-                new PdfObjectReference(['object' => $docInfoObject])
-            );
-        }
-
-        $this->writeLine($this->trailer->toString());
-        $this->writeLine('%%EOF');
-    }
-
-    private function writeLine($line)
-    {
-        $this->content .= $line. "\n";
-    }
-
-    private function encodeContent($data)
-    {
-        return $data;
     }
 }

@@ -1,0 +1,28 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "Page",
+    "description": "Describes single page",
+    "introduced": "0.2.0",
+    "version": "0.3.0",
+    "properties": [
+        {
+            "name": "info",
+            "type": "PageInfo",
+            "access": "Read Only",
+            "description": "Stores page meta informations"
+        },
+        {
+            "name": "items",
+            "type": "Text[]",
+            "access": "Read Only",
+            "description": "Stores page content"
+        }
+    ],
+    "methods": [
+        {
+            "name": "addText",
+            "type": "Text",
+            "description": "Append new text entry"
+        }
+    ]
+}

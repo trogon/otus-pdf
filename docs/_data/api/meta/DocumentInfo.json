@@ -3,30 +3,13 @@
     "name": "DocumentInfo",
     "description": "Describes single document information",
     "introduced": "0.1.0",
+    "version": "0.3.0",
     "properties": [
-        {
-            "name": "title",
-            "type": "string",
-            "access": "Normal",
-            "description": "Stores document title"
-        },
         {
             "name": "author",
             "type": "string",
             "access": "Normal",
             "description": "Stores document author"
-        },
-        {
-            "name": "subject",
-            "type": "string",
-            "access": "Normal",
-            "description": "Stores document subject"
-        },
-        {
-            "name": "keywords",
-            "type": "string",
-            "access": "Normal",
-            "description": "Stores document keywords, comma-separated list"
         },
         {
             "name": "creationDate",
@@ -35,10 +18,28 @@
             "description": "Stores document creation date and time"
         },
         {
+            "name": "keywords",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores document keywords, comma-separated list"
+        },
+        {
             "name": "modificationDate",
             "type": "string",
             "access": "Read Only",
             "description": "Stores document modification date and time"
+        },
+        {
+            "name": "subject",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores document subject"
+        },
+        {
+            "name": "title",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores document title"
         }
     ],
     "methods": []

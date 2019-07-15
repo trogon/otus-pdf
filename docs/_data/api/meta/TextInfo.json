@@ -1,0 +1,24 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "TextInfo",
+    "description": "Describes single text block information",
+    "introduced": "0.2.0",
+    "version": "0.3.0",
+    "properties": [
+        {
+            "name": "fontFamily",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores font family",
+            "introduced": "0.3.0"
+        },
+        {
+            "name": "fontSize",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores font size",
+            "introduced": "0.3.0"
+        }
+    ],
+    "methods": []
+}
