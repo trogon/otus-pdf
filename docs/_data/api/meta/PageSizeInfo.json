@@ -1,6 +1,6 @@
 {
     "$schema": "http://schema.trogon.eu/json/apidocs.json",
-    "name": "PageSize",
+    "name": "PageSizeInfo",
     "description": "Describes page size information (immutable type)",
     "introduced": "0.2.0",
     "version": "0.3.0",
