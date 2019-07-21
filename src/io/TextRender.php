@@ -26,11 +26,13 @@ use trogon\otuspdf\Text;
 
 class TextRender extends \trogon\otuspdf\base\BaseObject
 {
+    private $contentBuilder;
     private $defaultTextInfo;
     private $fontRender;
 
     public function __construct($fontRender)
     {
+        $this->contentBuilder = new PdfContentBuilder();
         $this->fontRender = $fontRender;
         $this->defaultTextInfo = new TextInfo([
             'fontFamily' => 'Times-Roman',
@@ -66,55 +68,62 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
 
     public function renderTextItems($textItems, $pageInfo)
     {
-        $fontSize = $this->defaultTextInfo->fontSize;
-        $fontFamily = $this->defaultTextInfo->fontFamily;
-        $fontKey = $this->fontRender->findFontKey($fontFamily);
-
-        $startPosition = $this->computeTextStartPosition($pageInfo);
-        $x = intval($startPosition->x);
-        $y = intval($startPosition->y -$fontSize);
-
+        $cb = $this->contentBuilder;
         $maxTextWidth = $this->computeMaxTextWidth($pageInfo);
 
-        $content = "BT\n";
-        $content .= "\t /{$fontKey} {$fontSize} Tf\n";
-        $content .= "\t {$fontSize} TL\n";
-        $content .= "\t {$x} {$y} Td\n";
+        $fontSize = null;
+        $fontFamily = null;
+        $fontKey = null;
+        $fontData = null;
+        
+        $content = $cb->beginText();
         foreach ($textItems as $textNo => $text) {
             $textInfo = $this->getTextInfo($text);
-            $fontSize = $textInfo->fontSize;
-            $fontFamily = $textInfo->fontFamily;
-            $fontKey = $this->fontRender->findFontKey($fontFamily);
-            $fontData = $this->fontRender->findFontData($fontKey);
-            $content .= "\t /{$fontKey} {$fontSize} Tf\n";
-            $content .= "\t {$fontSize} TL\n";
+            if ($textInfo->fontFamily !== $fontFamily || $textInfo->fontSize !== $fontSize) {
+                if ($textInfo->fontFamily !== $fontFamily) {
+                    $fontFamily = $textInfo->fontFamily;
+                    $fontKey = $this->fontRender->findFontKey($fontFamily);
+                    $fontData = $this->fontRender->findFontData($fontKey);
+                }
+                if ($textInfo->fontSize !== $fontSize) {
+                    $fontSize = $textInfo->fontSize;
+                    $content .= $cb->setTextLeading($fontSize);
+                }
+                $content .= $cb->setFont($fontKey, $fontSize);
+            }
+
             if ($textNo != 0) {
-                $content .= "\t T*\n";
+                $content .= $cb->newLine();
+            } else {
+                $startPosition = $this->computeTextStartPosition($pageInfo, $fontSize);
+                $content .= $cb->setTextPosition($startPosition->x, $startPosition->y);
             }
             $content .= $this->renderTextLines($text, $maxTextWidth, $fontSize, $fontData);
         }
-        $content .= "ET\n";
+        $content .= $cb->endText();
 
         return $content;
     }
 
     private function renderTextLines($text, $maxTextWidth, $fontSize, $fontData)
     {
+        $cb = $this->contentBuilder;
         $content = '';
         $lines = \explode("\n", $text->text);
         foreach ($lines as $lineNo => $textLine) {
             if ($lineNo != 0) {
-                $content .= "\t T*\n";
+                $content .= $cb->newLine();
             }
-            $content .= "\t (";
+            $content .= $cb->beginTextRender();
             $content .= $this->wrapText($textLine, $maxTextWidth, $fontSize, $fontData);
-            $content .= ") Tj\n";
+            $content .= $cb->endTextRender();
         }
         return $content;
     }
 
     private function wrapText($textLine, $maxTextWidth, $fontSize, $fontData)
     {
+        $cb = $this->contentBuilder;
         $content = '';
         $words = \explode(" ", $textLine);
         $textLineWidth = 0;
@@ -127,7 +136,9 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
             }
             if ($textLineWidth > $maxTextWidth) {
                 $textLineWidth = $wordWidth;
-                $content .= ") Tj\n\t T*\n\t (";
+                $content .= $cb->endTextRender();
+                $content .= $cb->newLine();
+                $content .= $cb->beginTextRender();
             } elseif ($key != 0) {
                 $content .= ' ';
             }
@@ -136,7 +147,7 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
         return $content;
     }
 
-    private function computeTextStartPosition($pageInfo)
+    private function computePageTopLeftPosition($pageInfo)
     {
         $pageMargin = $pageInfo->margin;
         $unitInfo = $pageMargin->unitInfo;
@@ -153,6 +164,15 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
             $top = $unitInfo->toInch($pageSize->width);
             return new PositionInfo($leftMargin * 72, ($top - $topMargin) * 72);
         }
+    }
+
+    private function computeTextStartPosition($pageInfo, $fontSize)
+    {
+        $startPosition = $this->computePageTopLeftPosition($pageInfo);
+        return new PositionInfo(
+            intval($startPosition->x),
+            intval($startPosition->y - $fontSize)
+        );
     }
 
     private function computeMaxTextWidth($pageInfo)
