@@ -19,6 +19,7 @@
 namespace trogon\otuspdf;
 
 use trogon\otuspdf\meta\PageInfo;
+use trogon\otuspdf\PageBreak;
 use trogon\otuspdf\Text;
 
 class Page extends \trogon\otuspdf\base\BaseObject
@@ -40,6 +41,11 @@ class Page extends \trogon\otuspdf\base\BaseObject
     public function getItems()
     {
         return $this->items;
+    }
+
+    public function addPagebreak($config = [])
+    {
+        return $this->items[] = new PageBreak($config);
     }
 
     public function addText($text, $config = [])
