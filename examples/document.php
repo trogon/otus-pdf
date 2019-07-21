@@ -62,6 +62,10 @@ $page = $doc->pages->add([
     'size' => PageSizeInfo::getA5()
 ]);
 $page->addText("A5, Landscape");
+$page->addText("This is simple text before page break.");
+$page->addPageBreak();
+$page->addText("This is simple text after page break.");
+
 $page = $doc->pages->add([
     'orientation' => PageOrientationInfo::getLandscape()
 ]);

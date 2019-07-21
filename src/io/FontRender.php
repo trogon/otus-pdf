@@ -37,15 +37,11 @@ class FontRender extends \trogon\otuspdf\base\BaseObject
 
     public function createFontObjects()
     {
-        $objects = [];
-
         foreach ($this->fontKeys as $fontFamily => $fontKey) {
             $fontObject = $this->pdfBuilder->createBasicFont($fontKey, $fontFamily);
             $this->pdfBuilder->registerFont($this->fontsCatalog, $fontObject);
-            $objects[] = $fontObject;
+            yield $fontObject;
         }
-
-        return $objects;
     }
 
     public function findFontKey($fontFamily)

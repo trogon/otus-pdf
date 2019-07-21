@@ -21,18 +21,54 @@ namespace trogon\otuspdf\io;
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\meta\PositionInfo;
 use trogon\otuspdf\meta\TextInfo;
+use trogon\otuspdf\PageBreak;
+use trogon\otuspdf\Text;
 
 class TextRender extends \trogon\otuspdf\base\BaseObject
 {
-    public function renderTextItems($textItems, $pageInfo, $fontRender)
+    private $defaultTextInfo;
+    private $fontRender;
+
+    public function __construct($fontRender)
     {
-        $defaultTextInfo = new TextInfo([
+        $this->fontRender = $fontRender;
+        $this->defaultTextInfo = new TextInfo([
             'fontFamily' => 'Times-Roman',
             'fontSize' => 14
         ]);
-        $fontSize = $defaultTextInfo->fontSize;
-        $fontFamily = $defaultTextInfo->fontFamily;
-        $fontKey = $fontRender->findFontKey($fontFamily);
+    }
+
+    public function getTextInfo($text)
+    {
+        $mergedConfig = array_merge(
+            $this->defaultTextInfo->toDictionary(),
+            array_filter($text->info->toDictionary())
+        );
+        $mergedPageInfo = new TextInfo($mergedConfig);
+        return $mergedPageInfo;
+    }
+
+    public function renderBlockItems($blockItems, $pageInfo)
+    {
+        $textItems = [];
+        foreach ($blockItems as $blockItem) {
+            if ($blockItem instanceof Text) {
+                $textItems[] = $blockItem;
+            } else if ($blockItem instanceof PageBreak) {
+                yield $this->renderTextItems($textItems, $pageInfo);
+                $textItems = [];
+            }
+        }
+        if (!empty($textItems)) {
+            yield $this->renderTextItems($textItems, $pageInfo);
+        }
+    }
+
+    public function renderTextItems($textItems, $pageInfo)
+    {
+        $fontSize = $this->defaultTextInfo->fontSize;
+        $fontFamily = $this->defaultTextInfo->fontFamily;
+        $fontKey = $this->fontRender->findFontKey($fontFamily);
 
         $startPosition = $this->computeTextStartPosition($pageInfo);
         $x = intval($startPosition->x);
@@ -45,14 +81,11 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
         $content .= "\t {$fontSize} TL\n";
         $content .= "\t {$x} {$y} Td\n";
         foreach ($textItems as $textNo => $text) {
-            $textInfo = new TextInfo(array_merge(
-                $defaultTextInfo->toDictionary(),
-                array_filter($text->info->toDictionary())
-            ));
+            $textInfo = $this->getTextInfo($text);
             $fontSize = $textInfo->fontSize;
             $fontFamily = $textInfo->fontFamily;
-            $fontKey = $fontRender->findFontKey($fontFamily);
-            $fontData = $fontRender->findFontData($fontKey);
+            $fontKey = $this->fontRender->findFontKey($fontFamily);
+            $fontData = $this->fontRender->findFontData($fontKey);
             $content .= "\t /{$fontKey} {$fontSize} Tf\n";
             $content .= "\t {$fontSize} TL\n";
             if ($textNo != 0) {

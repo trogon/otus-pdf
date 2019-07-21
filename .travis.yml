@@ -19,7 +19,7 @@ install:
    - composer install
 
 script:
-   - vendor/bin/phpunit --verbose
+   - vendor/bin/codecept run --verbose --coverage --coverage-xml --coverage-html
 
 after_success:
    - bash <(curl -s https://codecov.io/bash)
