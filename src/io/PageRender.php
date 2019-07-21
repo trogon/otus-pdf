@@ -96,10 +96,18 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         return $pageCollectionObj;
     }
 
-    public function renderPage($page, $fontRender)
+    public function renderPage($pageInfo, $pageContents)
     {
-        $objects = [];
+        foreach ($pageContents as $pageContent) {
+            $objects = $this->renderSinglePage($pageInfo, $pageContent);
+            foreach ($objects as $object) {
+                yield $object;
+            }
+        }
+    }
 
+    private function renderSinglePage($pageInfo, $pageContent)
+    {
         // PDF Page <n>
         $pageObj = $this->objectFactory->create();
         $pageObj->content = new PdfDictionary();
@@ -111,28 +119,25 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
             new PdfName(['value' => 'Parent']),
             new PdfObjectReference(['object' => $this->pageCollectionObj])
         );
-        $realPageInfo = $this->mergePageInfo($page->info, $this->defaultPageInfo);
-        $arraySize = $this->createArraySize($realPageInfo, $this->defaultPageInfo);
+        $arraySize = $this->createArraySize($pageInfo, $this->defaultPageInfo);
         if ($arraySize != null) {
             $pageObj->content->addItem(
                 new PdfName(['value' => 'MediaBox']),
                 $arraySize
             );
         }
-        $objects[] = $pageObj;
+        yield $pageObj;
         $this->pageRefs->addItem(new PdfObjectReference(['object' => $pageObj]));
 
         // PDF Page <n> content
         $pageContentObj = $this->objectFactory->create();
         $pageContentObj->content = new PdfDictionary();
-        $this->writeContentStream($page, $pageContentObj, $realPageInfo, $fontRender);
-        $objects[] = $pageContentObj;
+        $this->writeContentStream($pageContentObj, $pageContent);
+        yield $pageContentObj;
         $pageObj->content->addItem(
             new PdfName(['value' => 'Contents']),
             new PdfObjectReference(['object' => $pageContentObj])
         );
-
-        return $objects;
     }
 
     public function createArraySize($pageInfo, $previousPageInfo = null)
@@ -164,22 +169,8 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         return $pageSizeArray;
     }
 
-    public function mergePageInfo($pageInfo, $defautPageInfo)
+    private function writeContentStream($pageContentObj, $content)
     {
-        $mergedConfig = array_merge(
-            $defautPageInfo->toDictionary(),
-            array_filter($pageInfo->toDictionary())
-        );
-        $mergedPageInfo = new PageInfo($mergedConfig);
-        return $mergedPageInfo;
-    }
-
-    private function writeContentStream($page, $pageContentObj, $pageInfo, $fontRender)
-    {
-        $textRender = new TextRender();
-
-        $content = $textRender->renderTextItems($page->items, $pageInfo, $fontRender);
-
         $contentStream = new PdfStream();
         $contentStream->value = \gzcompress($content);
         $pageContentObj->stream = $contentStream;

@@ -48,6 +48,22 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
         return $mergedPageInfo;
     }
 
+    public function renderBlockItems($blockItems, $pageInfo)
+    {
+        $textItems = [];
+        foreach ($blockItems as $blockItem) {
+            if ($blockItem instanceof Text) {
+                $textItems[] = $blockItem;
+            } else if ($blockItem instanceof PageBreak) {
+                yield $this->renderTextItems($textItems, $pageInfo);
+                $textItems = [];
+            }
+        }
+        if (!empty($textItems)) {
+            yield $this->renderTextItems($textItems, $pageInfo);
+        }
+    }
+
     public function renderTextItems($textItems, $pageInfo)
     {
         $fontSize = $this->defaultTextInfo->fontSize;

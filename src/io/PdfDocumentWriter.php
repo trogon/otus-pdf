@@ -84,17 +84,21 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
 
         // PDF fonts render
         $pdfFontRender = new FontRender($pdfBuilder);
+        // PDF text render
+        $pdfTextRender = new TextRender($pdfFontRender);
 
         // PDF pages
         foreach ($this->document->pages as $n => $page) {
-            $pageObjects = $pageWriter->renderPage($page, $pdfFontRender);
-            $objects = array_merge($objects, $pageObjects);
+            $pageInfo = $pageWriter->getPageInfo($page);
+            $contents = $pdfTextRender->renderBlockItems($page->items, $pageInfo);
+            $pageObjects = $pageWriter->renderPage($pageInfo, $contents);
+            $objects = array_merge($objects, iterator_to_array($pageObjects));
         }
 
         // PDF fonts catalog
         $pdfFontRender->registerFontsResource($resourcesDict);
         $fontObjects = $pdfFontRender->createFontObjects();
-        $objects = array_merge($objects, $fontObjects);
+        $objects = array_merge($objects, iterator_to_array($fontObjects));
 
         // Transform PDF objects into PDF text
         $this->writeBegin();
