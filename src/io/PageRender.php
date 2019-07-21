@@ -50,6 +50,16 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         ]);
     }
 
+    public function getPageInfo($page)
+    {
+        $mergedConfig = array_merge(
+            $this->defaultPageInfo->toDictionary(),
+            array_filter($page->info->toDictionary())
+        );
+        $mergedPageInfo = new PageInfo($mergedConfig);
+        return $mergedPageInfo;
+    }
+
     public function renderPageCollection($pageCollection, $catalogObj)
     {
         $defaultArraySize = $this->createArraySize($this->defaultPageInfo);
