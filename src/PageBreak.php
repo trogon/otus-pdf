@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf;
 
-class PageBreak extends \trogon\otuspdf\base\DependencyObject
+class PageBreak extends \trogon\otuspdf\Block
 {
 
 }
