@@ -16,14 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace trogon\otuspdf;
+namespace trogon\otuspdf\meta;
 
-use trogon\otuspdf\meta\InlineInfo;
-
-abstract class Inline extends \trogon\otuspdf\TextElement
+class InlineInfo extends TextElementInfo
 {
-    protected function createInfo($config)
-    {
-        return new InlineInfo($config);
-    }
+
 }

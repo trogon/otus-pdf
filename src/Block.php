@@ -18,7 +18,12 @@
  */
 namespace trogon\otuspdf;
 
-abstract class Block extends \trogon\otuspdf\base\DependencyObject
-{
+use trogon\otuspdf\meta\BlockInfo;
 
+abstract class Block extends \trogon\otuspdf\TextElement
+{
+    protected function createInfo($config)
+    {
+        return new BlockInfo($config);
+    }
 }
