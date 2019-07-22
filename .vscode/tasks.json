@@ -12,7 +12,8 @@
         {
             "label": "Run Unit Tests",
             "type": "shell",
-            "command": "vendor/bin/phpunit",
+            "command": "vendor/bin/codecept",
+            "args": [ "run" ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
