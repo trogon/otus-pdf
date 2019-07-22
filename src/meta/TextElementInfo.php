@@ -20,5 +20,6 @@ namespace trogon\otuspdf\meta;
 
 class TextElementInfo extends \trogon\otuspdf\base\DependencyObject
 {
-
+    public $fontFamily;
+    public $fontSize;
 }
