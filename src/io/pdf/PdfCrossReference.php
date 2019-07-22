@@ -20,7 +20,7 @@ namespace trogon\otuspdf\io\pdf;
 
 use trogon\otuspdf\io\pdf\PdfObject;
 
-class PdfCrossReference extends \trogon\otuspdf\base\BaseObject
+class PdfCrossReference extends \trogon\otuspdf\base\DependencyObject
 {
     private $objects = [];
     private $objectLocations = [];

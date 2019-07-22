@@ -20,7 +20,7 @@ namespace trogon\otuspdf\io\pdf;
 
 use trogon\otuspdf\io\pdf\PdfObject;
 
-class PdfObjectFactory extends \trogon\otuspdf\base\BaseObject
+class PdfObjectFactory extends \trogon\otuspdf\base\DependencyObject
 {
     private $nextId = 1;
 

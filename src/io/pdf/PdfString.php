@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io\pdf;
 
-class PdfString extends \trogon\otuspdf\base\BaseObject
+class PdfString extends \trogon\otuspdf\base\DependencyObject
 {
     const TYPE_LITERAL = 0;
     const TYPE_HEX = 1;

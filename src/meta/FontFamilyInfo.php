@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\meta;
 
-class FontFamilyInfo extends \trogon\otuspdf\base\BaseObject
+class FontFamilyInfo extends \trogon\otuspdf\base\DependencyObject
 {
     public $name;
     public $style;

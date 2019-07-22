@@ -22,7 +22,7 @@ use trogon\otuspdf\meta\PageInfo;
 use trogon\otuspdf\PageBreak;
 use trogon\otuspdf\Text;
 
-class Page extends \trogon\otuspdf\base\BaseObject
+class Page extends \trogon\otuspdf\base\DependencyObject
 {
     private $info;
     private $items;

@@ -20,7 +20,7 @@ namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\InvalidCallException;
 
-class PdfContentBuilder extends \trogon\otuspdf\base\BaseObject
+class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
 {
     const NONE_STATE = 0;
     const TEXT_STATE = 1;

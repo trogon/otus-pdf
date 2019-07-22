@@ -31,7 +31,7 @@ use trogon\otuspdf\io\pdf\PdfStream;
 use trogon\otuspdf\io\pdf\PdfString;
 use trogon\otuspdf\io\pdf\PdfTrailer;
 
-class PdfBuilder extends \trogon\otuspdf\base\BaseObject
+class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
 {
     private $objectFactory;
 

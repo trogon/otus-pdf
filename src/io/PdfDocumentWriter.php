@@ -21,7 +21,7 @@ namespace trogon\otuspdf\io;
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\io\PdfBuilder;
 
-class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
+class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
 {
     private $document;
     private $pdfBuilder;

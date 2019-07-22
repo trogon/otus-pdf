@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\meta;
 
-class PageInfo extends \trogon\otuspdf\base\BaseObject
+class PageInfo extends \trogon\otuspdf\base\DependencyObject
 {
     public $orientation;
     public $size;

@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io\pdf;
 
-class PdfObjectReference extends \trogon\otuspdf\base\BaseObject
+class PdfObjectReference extends \trogon\otuspdf\base\DependencyObject
 {
     private $id;
     private $version;

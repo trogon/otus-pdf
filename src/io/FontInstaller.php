@@ -24,7 +24,7 @@ use Composer\Installer\PackageEvent;
 use trogon\fontscore14\AfmLoader;
 use trogon\otuspdf\meta\FontFamilyInfo;
 
-class FontInstaller extends \trogon\otuspdf\base\BaseObject
+class FontInstaller extends \trogon\otuspdf\base\DependencyObject
 {
     public static function postPackageInstall(PackageEvent $event)
     {

@@ -20,7 +20,7 @@ namespace trogon\otuspdf;
 
 use trogon\otuspdf\Page;
 
-class PageCollection extends \trogon\otuspdf\base\BaseObject implements \ArrayAccess, \Countable, \Iterator
+class PageCollection extends \trogon\otuspdf\base\DependencyObject implements \ArrayAccess, \Countable, \Iterator
 {
     private $container;
     private $position;

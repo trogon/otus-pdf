@@ -20,7 +20,7 @@ namespace trogon\otuspdf\io\pdf;
 
 use trogon\otuspdf\io\pdf\PdfDictionary;
 
-class PdfTrailer extends \trogon\otuspdf\base\BaseObject
+class PdfTrailer extends \trogon\otuspdf\base\DependencyObject
 {
     private $xrefOffset;
     private $content;

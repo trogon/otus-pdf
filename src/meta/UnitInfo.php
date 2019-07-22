@@ -20,7 +20,7 @@ namespace trogon\otuspdf\meta;
 
 use trogon\otuspdf\base\InvalidCallException;
 
-class UnitInfo extends \trogon\otuspdf\base\BaseObject
+class UnitInfo extends \trogon\otuspdf\base\DependencyObject
 {
     const MM_UNIT = 'mm';
     const CM_UNIT = 'cm';

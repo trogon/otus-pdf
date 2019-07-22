@@ -20,7 +20,7 @@ namespace trogon\otuspdf;
 
 use trogon\otuspdf\meta\TextInfo;
 
-class Text extends \trogon\otuspdf\base\BaseObject
+class Text extends \trogon\otuspdf\base\DependencyObject
 {
     private $info;
     private $text;

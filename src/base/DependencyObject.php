@@ -18,11 +18,11 @@
  */
 namespace trogon\otuspdf\base;
 
-abstract class BaseObject
+abstract class DependencyObject
 {
     public function __construct($config = [])
     {
-        if (!empty($config)) {
+        if (is_array($config)) {
             foreach ($config as $name => $value) {
                 $this->$name = $value;
             }

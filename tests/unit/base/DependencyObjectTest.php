@@ -2,10 +2,10 @@
 
 use PHPUnit\Framework\TestCase;
 
-use trogon\otuspdf\base\BaseObject;
+use trogon\otuspdf\base\DependencyObject;
 use trogon\otuspdf\base\InvalidCallException;
 
-final class Dummy extends BaseObject
+final class Dummy extends DependencyObject
 {
     public $winstonDumpValue;
 
@@ -13,15 +13,15 @@ final class Dummy extends BaseObject
     public function setWinston($value) { $this->winstonDumpValue = $value; }
 }
 
-final class BaseObjectTest extends TestCase
+final class DependencyObjectTest extends TestCase
 {
-    private $baseObjectClass = 'trogon\otuspdf\base\BaseObject';
+    private $dependencyObjectClass = 'trogon\otuspdf\base\DependencyObject';
     private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
         $this->assertInstanceOf(
-            $this->baseObjectClass,
+            $this->dependencyObjectClass,
             new Dummy()
         );
     }

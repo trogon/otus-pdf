@@ -21,7 +21,7 @@ namespace trogon\otuspdf;
 use trogon\otuspdf\meta\DocumentInfo;
 use trogon\otuspdf\PageCollection;
 
-class Document extends \trogon\otuspdf\base\BaseObject
+class Document extends \trogon\otuspdf\base\DependencyObject
 {
     private $info;
     private $pages;

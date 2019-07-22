@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf;
 
-class BlockCollection extends \trogon\otuspdf\base\BaseObject
+class BlockCollection extends \trogon\otuspdf\base\DependencyObject
 {
 
 }

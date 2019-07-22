@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf;
 
-abstract class Inline extends \trogon\otuspdf\base\BaseObject
+abstract class Inline extends \trogon\otuspdf\base\DependencyObject
 {
 
 }

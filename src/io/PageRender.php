@@ -24,7 +24,7 @@ use trogon\otuspdf\meta\PageInfo;
 use trogon\otuspdf\meta\PageOrientationInfo;
 use trogon\otuspdf\meta\PageSizeInfo;
 
-class PageRender extends \trogon\otuspdf\base\BaseObject
+class PageRender extends \trogon\otuspdf\base\DependencyObject
 {
     private $defaultPageInfo;
     private $pageCollectionObj;

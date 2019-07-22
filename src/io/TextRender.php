@@ -24,7 +24,7 @@ use trogon\otuspdf\meta\TextInfo;
 use trogon\otuspdf\PageBreak;
 use trogon\otuspdf\Text;
 
-class TextRender extends \trogon\otuspdf\base\BaseObject
+class TextRender extends \trogon\otuspdf\base\DependencyObject
 {
     private $contentBuilder;
     private $defaultTextInfo;
