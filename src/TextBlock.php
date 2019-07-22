@@ -18,26 +18,20 @@
  */
 namespace trogon\otuspdf;
 
-use trogon\otuspdf\meta\TextInfo;
+use trogon\otuspdf\InlineCollection;
 
-class Text extends \trogon\otuspdf\Inline
+class TextBlock extends \trogon\otuspdf\Block
 {
-    private $info;
-    private $text;
+    private $inlines;
 
     public function __construct($text, $config = [])
     {
-        $this->text = $text;
-        $this->info = new TextInfo($config);
+        $this->inlines = new InlineCollection();
+        $this->inlines[] = new Text($text, $config);
     }
 
-    public function getInfo()
+    public function getInlines()
     {
-        return $this->info;
-    }
-
-    public function getText()
-    {
-        return $this->text;
+        return $this->inlines;
     }
 }
