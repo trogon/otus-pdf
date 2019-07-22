@@ -18,11 +18,13 @@
  */
 namespace trogon\otuspdf\io;
 
+use trogon\otuspdf\base\ChainIterator;
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\meta\PositionInfo;
 use trogon\otuspdf\meta\TextInfo;
 use trogon\otuspdf\PageBreak;
 use trogon\otuspdf\Text;
+use trogon\otuspdf\TextBlock;
 
 class TextRender extends \trogon\otuspdf\base\DependencyObject
 {
@@ -50,23 +52,23 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
         return $mergedPageInfo;
     }
 
-    public function renderBlockItems($blockItems, $pageInfo)
+    public function renderBlocks($blocks, $pageInfo)
     {
-        $textItems = [];
-        foreach ($blockItems as $blockItem) {
-            if ($blockItem instanceof Text) {
-                $textItems[] = $blockItem;
-            } else if ($blockItem instanceof PageBreak) {
-                yield $this->renderTextItems($textItems, $pageInfo);
-                $textItems = [];
+        $inlines = new ChainIterator();
+        foreach ($blocks as $block) {
+            if ($block instanceof TextBlock) {
+                $inlines->append($block->inlines->iterator);
+            } else if ($block instanceof PageBreak) {
+                yield $this->renderInlines($inlines, $pageInfo);
+                $inlines = new ChainIterator();
             }
         }
-        if (!empty($textItems)) {
-            yield $this->renderTextItems($textItems, $pageInfo);
+        if (!empty($inlines)) {
+            yield $this->renderInlines($inlines, $pageInfo);
         }
     }
 
-    public function renderTextItems($textItems, $pageInfo)
+    public function renderInlines($inlines, $pageInfo)
     {
         $cb = $this->contentBuilder;
         $maxTextWidth = $this->computeMaxTextWidth($pageInfo);
@@ -77,7 +79,8 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
         $fontData = null;
         
         $content = $cb->beginText();
-        foreach ($textItems as $textNo => $text) {
+
+        foreach ($inlines as $textNo => $text) {
             $textInfo = $this->getTextInfo($text);
             if ($textInfo->fontFamily !== $fontFamily || $textInfo->fontSize !== $fontSize) {
                 if ($textInfo->fontFamily !== $fontFamily) {

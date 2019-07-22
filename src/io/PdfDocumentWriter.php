@@ -90,7 +90,7 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
         // PDF pages
         foreach ($this->document->pages as $n => $page) {
             $pageInfo = $pageWriter->getPageInfo($page);
-            $contents = $pdfTextRender->renderBlockItems($page->items, $pageInfo);
+            $contents = $pdfTextRender->renderBlocks($page->blocks, $pageInfo);
             $pageObjects = $pageWriter->renderPage($pageInfo, $contents);
             $objects = array_merge($objects, iterator_to_array($pageObjects));
         }
