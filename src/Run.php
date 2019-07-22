@@ -20,5 +20,16 @@ namespace trogon\otuspdf;
 
 class Run extends \trogon\otuspdf\Inline
 {
+    private $text;
 
+    public function __construct($text, $config = [])
+    {
+        parent::__construct($config);
+        $this->text = $text;
+    }
+
+    public function getText()
+    {
+        return $this->text;
+    }
 }

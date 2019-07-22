@@ -19,6 +19,7 @@
 namespace trogon\otuspdf;
 
 use trogon\otuspdf\InlineCollection;
+use trogon\otuspdf\Run;
 
 class TextBlock extends \trogon\otuspdf\Block
 {
@@ -26,8 +27,14 @@ class TextBlock extends \trogon\otuspdf\Block
 
     public function __construct($text, $config = [])
     {
+        parent::__construct($config);
+        $this->inlines[] = new Run($text, $config);
+    }
+
+    public function init()
+    {
+        parent::init();
         $this->inlines = new InlineCollection();
-        $this->inlines[] = new Text($text, $config);
     }
 
     public function getInlines()
