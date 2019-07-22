@@ -21,20 +21,19 @@ namespace trogon\otuspdf;
 use trogon\otuspdf\meta\DocumentInfo;
 use trogon\otuspdf\PageCollection;
 
-class Document extends \trogon\otuspdf\base\DependencyObject
+class Document extends \trogon\otuspdf\base\ContentElement
 {
-    private $info;
     private $pages;
 
-    public function __construct($config = [])
+    public function init()
     {
-        $this->info = new DocumentInfo($config);
+        parent::init();
         $this->pages = new PageCollection();
     }
 
-    public function getInfo()
+    protected function createInfo($config)
     {
-        return $this->info;
+        return new DocumentInfo($config);
     }
 
     public function getPages()

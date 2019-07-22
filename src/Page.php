@@ -22,20 +22,19 @@ use trogon\otuspdf\meta\PageInfo;
 use trogon\otuspdf\PageBreak;
 use trogon\otuspdf\Text;
 
-class Page extends \trogon\otuspdf\base\DependencyObject
+class Page extends \trogon\otuspdf\base\ContentElement
 {
-    private $info;
     private $blocks;
 
-    public function __construct($config = [])
+    public function init()
     {
-        $this->info = new PageInfo($config);
+        parent::init();
         $this->blocks = new BlockCollection();
     }
 
-    public function getInfo()
+    protected function createInfo($config)
     {
-        return $this->info;
+        return new PageInfo($config);
     }
 
     public function getBlocks()
