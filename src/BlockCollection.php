@@ -18,7 +18,110 @@
  */
 namespace trogon\otuspdf;
 
-class BlockCollection extends \trogon\otuspdf\base\DependencyObject
-{
+use ArrayIterator;
 
+use trogon\otuspdf\Block;
+use trogon\otuspdf\base\InvalidCallException;
+
+class BlockCollection extends \trogon\otuspdf\base\DependencyObject
+    implements \ArrayAccess, \Countable, \IteratorAggregate
+{
+    private $container;
+    private $position;
+
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+        $this->container = [];
+    }
+
+    public function add(Block $item)
+    {
+        $this->container[] = $item;
+        return $item;
+    }
+
+    public function contains(Block $item)
+    {
+        $key = array_search($item, $this->container);
+        if ($key !== false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function insertAfter(Block $previousSibling, Block $item)
+    {
+        $key = array_search($item, $this->container);
+        if ($key !== false) {
+            array_splice($this->container, ($key + 1), 0, array($item));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function insertBefore(Block $nextSibling, Block $item)
+    {
+        $key = array_search($item, $this->container);
+        if ($key !== false) {
+            array_splice($this->container, $key, 0, array($item));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function remove(Block $item)
+    {
+        $key = array_search($item, $this->container);
+        if ($key !== false) {
+            unset($this->container[$key]);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* ArrayAccess Methods */
+    public function offsetExists($offset)
+    {
+        return isset($this->container[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        if ($value instanceof Block) {
+            if (is_null($offset)) {
+                $this->container[] = $value;
+            } else {
+                $this->container[$offset] = $value;
+            }
+        } else {
+            throw new InvalidCallException("Only Block type elements can be set");
+        }
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->container[$offset]);
+    }
+
+    /* Countable Methods */
+    public function count()
+    {
+        return count($this->container);
+    }
+
+    /* IteratorAggregate Methods */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->container);
+    }
 }
