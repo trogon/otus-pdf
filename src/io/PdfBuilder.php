@@ -114,6 +114,16 @@ class PdfBuilder extends \trogon\otuspdf\base\BaseObject
         return new PdfDictionary();
     }
 
+    public function createMediaBox($width, $height, $x = 0, $y = 0)
+    {
+        $mediaBox = new PdfArray();
+        $mediaBox->addItem(new PdfNumber(['value' => $x]));
+        $mediaBox->addItem(new PdfNumber(['value' => $y]));
+        $mediaBox->addItem(new PdfNumber(['value' => $width]));
+        $mediaBox->addItem(new PdfNumber(['value' => $height]));
+        return $mediaBox;
+    }
+
     public function createOutlines()
     {
         $outlinesObj = $this->objectFactory->create();
@@ -127,6 +137,55 @@ class PdfBuilder extends \trogon\otuspdf\base\BaseObject
             new PdfNumber(['value' => 0])
         );
         return $outlinesObj;
+    }
+
+    public function createPage($pageCollectionObj)
+    {
+        $pageObj = $this->objectFactory->create();
+        $pageObj->content = new PdfDictionary();
+        $pageObj->content->addItem(
+            new PdfName(['value' => 'Type']),
+            new PdfName(['value' => 'Page'])
+        );
+        $pageObj->content->addItem(
+            new PdfName(['value' => 'Parent']),
+            new PdfObjectReference(['object' => $pageCollectionObj])
+        );
+        return $pageObj;
+    }
+
+    public function createPageCollection($resourcesDict, $mediaBox)
+    {
+        $pageCollectionObj = $this->objectFactory->create();
+        $pageCollectionObj->content = new PdfDictionary();
+        $pageCollectionObj->content->addItem(
+            new PdfName(['value' => 'Type']),
+            new PdfName(['value' => 'Pages'])
+        );
+        $pageCollectionObj->content->addItem(
+            new PdfName(['value' => 'Kids']),
+            new PdfArray()
+        );
+        $pageCollectionObj->content->addItem(
+            new PdfName(['value' => 'Count']),
+            new PdfNumber(['value' => 0])
+        );
+        $pageCollectionObj->content->addItem(
+            new PdfName(['value' => 'Resources']),
+            $resourcesDict
+        );
+        $pageCollectionObj->content->addItem(
+            new PdfName(['value' => 'MediaBox']),
+            $mediaBox
+        );
+        return $pageCollectionObj;
+    }
+
+    public function createPageContent()
+    {
+        $pageContentObj = $this->objectFactory->create();
+        $pageContentObj->content = new PdfDictionary();
+        return $pageContentObj;
     }
 
     public function createProcSet()
@@ -180,6 +239,14 @@ class PdfBuilder extends \trogon\otuspdf\base\BaseObject
         );
     }
 
+    public static function registerMediaBox($pageObj, $mediaBoxArray)
+    {
+        $pageObj->content->addItem(
+            new PdfName(['value' => 'MediaBox']),
+            $mediaBoxArray
+        );
+    }
+
     public static function registerOutlines($catalogObj, $outlinesObj)
     {
         $catalogObj->content->addItem(
@@ -188,11 +255,50 @@ class PdfBuilder extends \trogon\otuspdf\base\BaseObject
         );
     }
 
+    public static function registerPage($pageCollectionObj, $pageObj)
+    {
+        $pageCollectionObj->content->getItem('Kids')->addItem(
+            new PdfObjectReference(['object' => $pageObj])
+        );
+        $pageCollectionObj->content->getItem('Count')->value++;
+    }
+
+    public static function registerPageCollection($catalogObj, $pageCollectionObj)
+    {
+        $catalogObj->content->addItem(
+            new PdfName(['value' => 'Pages']),
+            new PdfObjectReference(['object' => $pageCollectionObj])
+        );
+    }
+
+    public static function registerPageContent($pageObj, $pageContentObj)
+    {
+        $pageObj->content->addItem(
+            new PdfName(['value' => 'Contents']),
+            new PdfObjectReference(['object' => $pageContentObj])
+        );
+    }
+
     public static function registerProcSetResource($resourcesDict, $procSetObj)
     {
         $resourcesDict->addItem(
             new PdfName(['value' => 'ProcSet']),
             new PdfObjectReference(['object' => $procSetObj])
+        );
+    }
+
+    public static function setStreamContent($object, $streamContent)
+    {
+        $stream = new PdfStream();
+        $stream->value = $streamContent;
+        $object->stream = $stream;
+        $object->content->addItem(
+            new PdfName(['value' => 'Filter']),
+            new PdfName(['value' => 'FlateDecode'])
+        );
+        $object->content->addItem(
+            new PdfName(['value' => 'Length']),
+            new PdfNumber(['value' => $stream->length])
         );
     }
 }

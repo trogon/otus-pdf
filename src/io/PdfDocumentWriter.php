@@ -55,7 +55,7 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
 
         // PDF pages collection
         $resourcesDict = $pdfBuilder->createResourceCatalog();
-        $pageWriter = new PageRender($this->pdfBuilder->objectFactory, $resourcesDict);
+        $pageWriter = new PageRender($this->pdfBuilder, $resourcesDict);
         $objects[] = $pageWriter->renderPageCollection($this->document->pages, $catalogObj);
 
         // PDF proc set
