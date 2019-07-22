@@ -18,9 +18,12 @@
  */
 namespace trogon\otuspdf;
 
+use ArrayIterator;
+
 use trogon\otuspdf\Page;
 
-class PageCollection extends \trogon\otuspdf\base\DependencyObject implements \ArrayAccess, \Countable, \Iterator
+class PageCollection extends \trogon\otuspdf\base\DependencyObject
+    implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     private $container;
     private $position;
@@ -29,7 +32,6 @@ class PageCollection extends \trogon\otuspdf\base\DependencyObject implements \A
     {
         parent::__construct($config);
         $this->container = [];
-        $this->rewind();
     }
 
     public function add($config = [])
@@ -70,29 +72,9 @@ class PageCollection extends \trogon\otuspdf\base\DependencyObject implements \A
         return count($this->container);
     }
 
-    /* Iterator Methods */
-    public function current()
+    /* IteratorAggregate Methods */
+    public function getIterator()
     {
-        return $this->container[$this->position];
-    }
-
-    public function key()
-    {
-        return $this->position;
-    }
-
-    public function next()
-    {
-        ++$this->position;
-    }
-
-    public function rewind()
-    {
-        $this->position = 0;
-    }
-
-    public function valid()
-    {
-        return isset($this->container[$this->position]);
+        return new ArrayIterator($this->container);
     }
 }
