@@ -55,23 +55,24 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
     public function renderBlocks($blocks, $pageInfo)
     {
         $inlines = new ChainIterator();
+        $pageStartPosition = $this->computePageTopLeftPosition($pageInfo);
+        $maxContentWidth = $this->computeMaxContentWidth($pageInfo);
         foreach ($blocks as $block) {
             if ($block instanceof TextBlock) {
                 $inlines->append($block->inlines->iterator);
             } else if ($block instanceof PageBreak) {
-                yield $this->renderInlines($inlines, $pageInfo);
+                yield $this->renderInlines($inlines, $pageStartPosition, $maxContentWidth);
                 $inlines = new ChainIterator();
             }
         }
         if (!empty($inlines)) {
-            yield $this->renderInlines($inlines, $pageInfo);
+            yield $this->renderInlines($inlines, $pageStartPosition, $maxContentWidth);
         }
     }
 
-    public function renderInlines($inlines, $pageInfo)
+    public function renderInlines($inlines, $pageStartPosition, $maxContentWidth)
     {
         $cb = $this->contentBuilder;
-        $maxTextWidth = $this->computeMaxTextWidth($pageInfo);
 
         $fontSize = null;
         $fontFamily = null;
@@ -79,7 +80,6 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
         $fontData = null;
         
         $content = $cb->beginText();
-
         foreach ($inlines as $textNo => $text) {
             $textInfo = $this->getTextInfo($text);
             if ($textInfo->fontFamily !== $fontFamily || $textInfo->fontSize !== $fontSize) {
@@ -98,10 +98,10 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
             if ($textNo != 0) {
                 $content .= $cb->newLine();
             } else {
-                $startPosition = $this->computeTextStartPosition($pageInfo, $fontSize);
+                $startPosition = $this->computeTextStartPosition($pageStartPosition, $fontSize);
                 $content .= $cb->setTextPosition($startPosition->x, $startPosition->y);
             }
-            $content .= $this->renderTextLines($text, $maxTextWidth, $fontSize, $fontData);
+            $content .= $this->renderTextLines($text, $maxContentWidth, $fontSize, $fontData);
         }
         $content .= $cb->endText();
 
@@ -150,7 +150,7 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
         return $content;
     }
 
-    private function computePageTopLeftPosition($pageInfo)
+    public function computePageTopLeftPosition($pageInfo)
     {
         $pageMargin = $pageInfo->margin;
         $unitInfo = $pageMargin->unitInfo;
@@ -169,16 +169,15 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
         }
     }
 
-    private function computeTextStartPosition($pageInfo, $fontSize)
+    public function computeTextStartPosition($pageStartPosition, $fontSize)
     {
-        $startPosition = $this->computePageTopLeftPosition($pageInfo);
         return new PositionInfo(
-            intval($startPosition->x),
-            intval($startPosition->y - $fontSize)
+            intval($pageStartPosition->x),
+            intval($pageStartPosition->y - $fontSize)
         );
     }
 
-    private function computeMaxTextWidth($pageInfo)
+    public function computeMaxContentWidth($pageInfo)
     {
         $maxWidth = 0;
 
