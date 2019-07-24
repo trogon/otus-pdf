@@ -20,5 +20,36 @@ namespace trogon\otuspdf\meta;
 
 class RectInfo extends \trogon\otuspdf\base\DependencyObject
 {
+    private $x;
+    private $y;
+    private $width;
+    private $height;
 
+    public function __construct($x, $y, $width, $height)
+    {
+        $this->x = $x;
+        $this->y = $y;
+        $this->width = $width;
+        $this->height = $height;
+    }
+
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    public function getX()
+    {
+        return $this->x;
+    }
+
+    public function getY()
+    {
+        return $this->y;
+    }
 }
