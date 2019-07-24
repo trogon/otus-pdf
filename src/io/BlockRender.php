@@ -18,7 +18,6 @@
  */
 namespace trogon\otuspdf\io;
 
-use trogon\otuspdf\base\ChainIterator;
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\meta\RectInfo;
 use trogon\otuspdf\io\InlineRender;
@@ -72,33 +71,33 @@ class BlockRender extends \trogon\otuspdf\base\DependencyObject
     public function renderBlocks($blocks, $pageInfo)
     {
         $pageContentBox = $this->computePageContentBox($pageInfo);
+        $remainingBox = $pageContentBox;
         $inlineRender = new InlineRender(
             $this->contentBuilder,
             $this->fontRender,
             $pageContentBox
         );
 
-        $inlines = new ChainIterator();
+        $content = '';
         $blockBox = null;
         foreach ($blocks as $block) {
             if ($block instanceof TextBlock) {
-                $blockBox = $this->computeParagraphBox($block->info, $pageContentBox);
-                $inlines->append($block->inlines->iterator);
+                $blockBox = $remainingBox;
+                $content .= $inlineRender->renderInlines($block->inlines, $blockBox);
+                $remainingBox = $inlineRender->remainingBox;
             } elseif ($block instanceof Paragraph) {
-                if (count($inlines->getArrayIterator()) != 0) {
-                    yield $inlineRender->renderInlines($inlines, $blockBox);
-                }
-                $inlines = new ChainIterator();
-                $blockBox = $this->computeParagraphBox($block->info, $pageContentBox);
-                yield $inlineRender->renderInlines($block->inlines, $blockBox);
+                $blockBox = $this->computeParagraphBox($block->info, $remainingBox);
+                $content .= $inlineRender->renderInlines($block->inlines, $blockBox);
+                $remainingBox = $inlineRender->remainingBox;
             } elseif ($block instanceof PageBreak) {
-                yield $inlineRender->renderInlines($inlines, $blockBox);
-                $inlines = new ChainIterator();
-                $blockBox = $pageContentBox;
+                yield $content;
+                $content = '';
+                $remainingBox = $pageContentBox;
+                $inlineRender->resetRemainingBox();
             }
         }
-        if (count($inlines->getArrayIterator()) != 0) {
-            yield $inlineRender->renderInlines($inlines, $blockBox);
+        if (!empty($content)) {
+            yield $content;
         }
     }
 }

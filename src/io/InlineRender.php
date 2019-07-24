@@ -21,6 +21,7 @@ namespace trogon\otuspdf\io;
 use trogon\otuspdf\base\ChainIterator;
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\meta\PositionInfo;
+use trogon\otuspdf\meta\RectInfo;
 use trogon\otuspdf\meta\InlineInfo;
 
 class InlineRender extends \trogon\otuspdf\base\DependencyObject
@@ -28,11 +29,15 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
     private $contentBuilder;
     private $defaultInlineInfo;
     private $fontRender;
+    private $pageContentBox;
+    private $remainingBox;
 
     public function __construct($contentBuilder, $fontRender, $pageContentBox)
     {
         $this->contentBuilder = $contentBuilder;
         $this->fontRender = $fontRender;
+        $this->pageContentBox = $pageContentBox;
+        $this->remainingBox = $pageContentBox;
         $this->defaultInlineInfo = new InlineInfo([
             'fontFamily' => 'Times-Roman',
             'fontSize' => 14
@@ -47,6 +52,26 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         );
         $mergedInlineInfo = new InlineInfo($mergedConfig);
         return $mergedInlineInfo;
+    }
+
+    public function resetRemainingBox()
+    {
+        $this->remainingBox = $this->pageContentBox;
+    }
+
+    public function getRemainingBox()
+    {
+        return $this->remainingBox;
+    }
+
+    public function updateRemainingBox($fontSize)
+    {
+        $this->remainingBox = new RectInfo(
+            $this->remainingBox->x,
+            $this->remainingBox->y - $fontSize,
+            $this->remainingBox->width,
+            $this->remainingBox->height - $fontSize,
+        );
     }
 
     public function renderInlines($inlines, $blockBox)
@@ -76,9 +101,11 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
 
             if ($inlineNo != 0) {
                 $content .= $cb->newLine();
+                $this->updateRemainingBox($fontSize);
             } else {
                 $startPosition = $this->computeTextStartPosition($blockBox, $fontSize);
                 $content .= $cb->setTextPosition($startPosition->x, $startPosition->y);
+                $this->updateRemainingBox($fontSize);
             }
             $content .= $this->renderTextLines($inline, $blockBox, $fontSize, $fontData);
         }
@@ -95,6 +122,7 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         foreach ($lines as $lineNo => $textLine) {
             if ($lineNo != 0) {
                 $content .= $cb->newLine();
+                $this->updateRemainingBox($fontSize);
             }
             $content .= $cb->beginTextRender();
             $content .= $this->wrapText($textLine, $blockBox, $fontSize, $fontData);
@@ -120,6 +148,7 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
                 $textLineWidth = $wordWidth;
                 $content .= $cb->endTextRender();
                 $content .= $cb->newLine();
+                $this->updateRemainingBox($fontSize);
                 $content .= $cb->beginTextRender();
             } elseif ($key != 0) {
                 $content .= ' ';
