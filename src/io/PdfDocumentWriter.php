@@ -21,7 +21,10 @@ namespace trogon\otuspdf\io;
 use ArrayIterator;
 
 use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\BlockRender;
+use trogon\otuspdf\io\FontRender;
 use trogon\otuspdf\io\PdfBuilder;
+use trogon\otuspdf\io\TextRender;
 
 class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
 {
@@ -90,12 +93,12 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
         // PDF fonts render
         $pdfFontRender = new FontRender($pdfBuilder);
         // PDF text render
-        $pdfTextRender = new TextRender($pdfFontRender);
+        $pdfBlockRender = new BlockRender($pdfFontRender);
 
         // PDF pages
         foreach ($this->document->pages as $n => $page) {
             $pageInfo = $pageWriter->getPageInfo($page);
-            $contents = $pdfTextRender->renderBlocks($page->blocks, $pageInfo);
+            $contents = $pdfBlockRender->renderBlocks($page->blocks, $pageInfo);
             $pageObjects = $pageWriter->renderPage($pageInfo, $contents);
             $objects = array_merge($objects, iterator_to_array($pageObjects, false));
         }

@@ -21,56 +21,35 @@ namespace trogon\otuspdf\io;
 use trogon\otuspdf\base\ChainIterator;
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\meta\PositionInfo;
-use trogon\otuspdf\meta\TextInfo;
-use trogon\otuspdf\PageBreak;
-use trogon\otuspdf\Text;
-use trogon\otuspdf\TextBlock;
+use trogon\otuspdf\meta\InlineInfo;
 
-class TextRender extends \trogon\otuspdf\base\DependencyObject
+class InlineRender extends \trogon\otuspdf\base\DependencyObject
 {
     private $contentBuilder;
-    private $defaultTextInfo;
+    private $defaultInlineInfo;
     private $fontRender;
 
-    public function __construct($fontRender)
+    public function __construct($contentBuilder, $fontRender, $pageContentBox)
     {
-        $this->contentBuilder = new PdfContentBuilder();
+        $this->contentBuilder = $contentBuilder;
         $this->fontRender = $fontRender;
-        $this->defaultTextInfo = new TextInfo([
+        $this->defaultInlineInfo = new InlineInfo([
             'fontFamily' => 'Times-Roman',
             'fontSize' => 14
         ]);
     }
 
-    public function getTextInfo($text)
+    public function getInlineInfo($inline)
     {
         $mergedConfig = array_merge(
-            $this->defaultTextInfo->toDictionary(),
-            array_filter($text->info->toDictionary())
+            $this->defaultInlineInfo->toDictionary(),
+            array_filter($inline->info->toDictionary())
         );
-        $mergedPageInfo = new TextInfo($mergedConfig);
-        return $mergedPageInfo;
+        $mergedInlineInfo = new InlineInfo($mergedConfig);
+        return $mergedInlineInfo;
     }
 
-    public function renderBlocks($blocks, $pageInfo)
-    {
-        $inlines = new ChainIterator();
-        $pageStartPosition = $this->computePageTopLeftPosition($pageInfo);
-        $maxContentWidth = $this->computeMaxContentWidth($pageInfo);
-        foreach ($blocks as $block) {
-            if ($block instanceof TextBlock) {
-                $inlines->append($block->inlines->iterator);
-            } else if ($block instanceof PageBreak) {
-                yield $this->renderInlines($inlines, $pageStartPosition, $maxContentWidth);
-                $inlines = new ChainIterator();
-            }
-        }
-        if (!empty($inlines)) {
-            yield $this->renderInlines($inlines, $pageStartPosition, $maxContentWidth);
-        }
-    }
-
-    public function renderInlines($inlines, $pageStartPosition, $maxContentWidth)
+    public function renderInlines($inlines, $blockBox)
     {
         $cb = $this->contentBuilder;
 
@@ -80,51 +59,51 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
         $fontData = null;
         
         $content = $cb->beginText();
-        foreach ($inlines as $textNo => $text) {
-            $textInfo = $this->getTextInfo($text);
-            if ($textInfo->fontFamily !== $fontFamily || $textInfo->fontSize !== $fontSize) {
-                if ($textInfo->fontFamily !== $fontFamily) {
-                    $fontFamily = $textInfo->fontFamily;
+        foreach ($inlines as $inlineNo => $inline) {
+            $inlineInfo = $this->getInlineInfo($inline);
+            if ($inlineInfo->fontFamily !== $fontFamily || $inlineInfo->fontSize !== $fontSize) {
+                if ($inlineInfo->fontFamily !== $fontFamily) {
+                    $fontFamily = $inlineInfo->fontFamily;
                     $fontKey = $this->fontRender->findFontKey($fontFamily);
                     $fontData = $this->fontRender->findFontData($fontKey);
                 }
-                if ($textInfo->fontSize !== $fontSize) {
-                    $fontSize = $textInfo->fontSize;
+                if ($inlineInfo->fontSize !== $fontSize) {
+                    $fontSize = $inlineInfo->fontSize;
                     $content .= $cb->setTextLeading($fontSize);
                 }
                 $content .= $cb->setFont($fontKey, $fontSize);
             }
 
-            if ($textNo != 0) {
+            if ($inlineNo != 0) {
                 $content .= $cb->newLine();
             } else {
-                $startPosition = $this->computeTextStartPosition($pageStartPosition, $fontSize);
+                $startPosition = $this->computeTextStartPosition($blockBox, $fontSize);
                 $content .= $cb->setTextPosition($startPosition->x, $startPosition->y);
             }
-            $content .= $this->renderTextLines($text, $maxContentWidth, $fontSize, $fontData);
+            $content .= $this->renderTextLines($inline, $blockBox, $fontSize, $fontData);
         }
         $content .= $cb->endText();
 
         return $content;
     }
 
-    private function renderTextLines($text, $maxTextWidth, $fontSize, $fontData)
+    private function renderTextLines($inline, $blockBox, $fontSize, $fontData)
     {
         $cb = $this->contentBuilder;
         $content = '';
-        $lines = \explode("\n", $text->text);
+        $lines = \explode("\n", $inline->text);
         foreach ($lines as $lineNo => $textLine) {
             if ($lineNo != 0) {
                 $content .= $cb->newLine();
             }
             $content .= $cb->beginTextRender();
-            $content .= $this->wrapText($textLine, $maxTextWidth, $fontSize, $fontData);
+            $content .= $this->wrapText($textLine, $blockBox, $fontSize, $fontData);
             $content .= $cb->endTextRender();
         }
         return $content;
     }
 
-    private function wrapText($textLine, $maxTextWidth, $fontSize, $fontData)
+    private function wrapText($textLine, $blockBox, $fontSize, $fontData)
     {
         $cb = $this->contentBuilder;
         $content = '';
@@ -137,7 +116,7 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
             if ($key != 0) {
                 $textLineWidth += $spaceWidth;
             }
-            if ($textLineWidth > $maxTextWidth) {
+            if ($textLineWidth > $blockBox->width) {
                 $textLineWidth = $wordWidth;
                 $content .= $cb->endTextRender();
                 $content .= $cb->newLine();
@@ -150,51 +129,12 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
         return $content;
     }
 
-    public function computePageTopLeftPosition($pageInfo)
-    {
-        $pageMargin = $pageInfo->margin;
-        $unitInfo = $pageMargin->unitInfo;
-        $leftMargin = $unitInfo->toInch($pageMargin->left);
-        $topMargin = $unitInfo->toInch($pageMargin->top);
-
-        $pageSize = $pageInfo->size;
-        $unitInfo = $pageSize->unitInfo;
-
-        if ($pageInfo->orientation->isLandscape()) {
-            $top = $unitInfo->toInch($pageSize->height);
-            return new PositionInfo($leftMargin * 72, ($top - $topMargin) * 72);
-        } else {
-            $top = $unitInfo->toInch($pageSize->width);
-            return new PositionInfo($leftMargin * 72, ($top - $topMargin) * 72);
-        }
-    }
-
-    public function computeTextStartPosition($pageStartPosition, $fontSize)
+    public function computeTextStartPosition($blockBox, $fontSize)
     {
         return new PositionInfo(
-            intval($pageStartPosition->x),
-            intval($pageStartPosition->y - $fontSize)
+            intval($blockBox->x),
+            intval($blockBox->y - $fontSize)
         );
-    }
-
-    public function computeMaxContentWidth($pageInfo)
-    {
-        $maxWidth = 0;
-
-        $pageSize = $pageInfo->size;
-        $unitInfo = $pageSize->unitInfo;
-        if ($pageInfo->orientation->isLandscape()) {
-            $maxWidth = $unitInfo->toInch($pageSize->width);
-        } else {
-            $maxWidth = $unitInfo->toInch($pageSize->height);
-        }
-
-        $pageMargin = $pageInfo->margin;
-        $unitInfo = $pageMargin->unitInfo;
-        $leftMargin = $unitInfo->toInch($pageMargin->left);
-        $rightMargin = $unitInfo->toInch($pageMargin->right);
-
-        return ($maxWidth - $leftMargin - $rightMargin) *72;
     }
 
     private function computeHorizontalLength($text, $fontSize, $fontData)
