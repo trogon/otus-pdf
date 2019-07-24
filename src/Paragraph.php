@@ -18,7 +18,32 @@
  */
 namespace trogon\otuspdf;
 
+use trogon\otuspdf\meta\ParagraphInfo;
+use trogon\otuspdf\InlineCollection;
+use trogon\otuspdf\Run;
+
 class Paragraph extends \trogon\otuspdf\Block
 {
+    private $inlines;
 
+    public function init()
+    {
+        parent::init();
+        $this->inlines = new InlineCollection();
+    }
+
+    protected function createInfo($config)
+    {
+        return new ParagraphInfo($config);
+    }
+
+    public function getInlines()
+    {
+        return $this->inlines;
+    }
+
+    public function addRun($text, $config = [])
+    {
+        return $this->inlines[] = new Run($text, $config);
+    }
 }
