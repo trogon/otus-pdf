@@ -20,6 +20,7 @@ namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\ChainIterator;
 use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\TextRender;
 use trogon\otuspdf\meta\PositionInfo;
 use trogon\otuspdf\meta\RectInfo;
 use trogon\otuspdf\meta\InlineInfo;
@@ -31,6 +32,7 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
     private $fontRender;
     private $pageContentBox;
     private $remainingBox;
+    private $textRender;
 
     public function __construct($contentBuilder, $fontRender, $pageContentBox)
     {
@@ -38,6 +40,7 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         $this->fontRender = $fontRender;
         $this->pageContentBox = $pageContentBox;
         $this->remainingBox = $pageContentBox;
+        $this->textRender = new TextRender();
         $this->defaultInlineInfo = new InlineInfo([
             'fontFamily' => 'Times-Roman',
             'fontSize' => 14
@@ -77,12 +80,13 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
     public function renderInlines($inlines, $blockBox)
     {
         $cb = $this->contentBuilder;
+        $this->textRender->init();
 
         $fontSize = null;
         $fontFamily = null;
         $fontKey = null;
         $fontData = null;
-        
+
         $content = $cb->beginText();
         foreach ($inlines as $inlineNo => $inline) {
             $inlineInfo = $this->getInlineInfo($inline);
@@ -99,100 +103,42 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
                 $content .= $cb->setFont($fontKey, $fontSize);
             }
 
-            if ($inlineNo != 0) {
-                $content .= $cb->newLine();
-                $this->updateRemainingBox($fontSize);
-            } else {
+            if ($inlineNo == 0) {
                 $startPosition = $this->computeTextStartPosition($blockBox, $fontSize);
                 $content .= $cb->setTextPosition($startPosition->x, $startPosition->y);
                 $this->updateRemainingBox($fontSize);
             }
-            $content .= $this->renderTextLines($inline, $blockBox, $fontSize, $fontData);
+            $content .= $this->renderInlineText($inline->text, $blockBox, $fontSize, $fontData);
         }
         $content .= $cb->endText();
 
         return $content;
     }
 
-    private function renderTextLines($inline, $blockBox, $fontSize, $fontData)
+    private function renderInlineText($text, $blockBox, $fontSize, $fontData)
     {
         $cb = $this->contentBuilder;
-        $content = '';
-        $lines = \explode("\n", $inline->text);
-        foreach ($lines as $lineNo => $textLine) {
-            if ($lineNo != 0) {
-                $content .= $cb->newLine();
-                $this->updateRemainingBox($fontSize);
-            }
-            $content .= $cb->beginTextRender();
-            $content .= $this->wrapText($textLine, $blockBox, $fontSize, $fontData);
-            $content .= $cb->endTextRender();
-        }
-        return $content;
-    }
-
-    private function wrapText($textLine, $blockBox, $fontSize, $fontData)
-    {
-        $cb = $this->contentBuilder;
-        $content = '';
-        $words = \explode(" ", $textLine);
-        $textLineWidth = 0;
-        $spaceWidth = $this->findCharHorizontalLength(ord(' '), $fontSize, $fontData);
-        foreach ($words as $key => $textWord) {
-            $wordWidth = $this->computeHorizontalLength($textWord, $fontSize, $fontData);
-            $textLineWidth += $wordWidth;
-            if ($key != 0) {
-                $textLineWidth += $spaceWidth;
-            }
-            if ($textLineWidth > $blockBox->width) {
-                $textLineWidth = $wordWidth;
+        $content = $cb->beginTextRender();
+        $this->textRender->setMaxWidth($blockBox->width);
+        $subLines = $this->textRender->wrapText($text, $fontSize, $fontData);
+        foreach ($subLines as $subLineNo => $subLine) {
+            if ($subLineNo != 0) {
                 $content .= $cb->endTextRender();
                 $content .= $cb->newLine();
                 $this->updateRemainingBox($fontSize);
                 $content .= $cb->beginTextRender();
-            } elseif ($key != 0) {
-                $content .= ' ';
             }
-            $content .= $textWord;
+            $content .= $subLine;
         }
+        $content .= $cb->endTextRender();
         return $content;
     }
 
-    public function computeTextStartPosition($blockBox, $fontSize)
+    public static function computeTextStartPosition($blockBox, $fontSize)
     {
         return new PositionInfo(
             intval($blockBox->x),
             intval($blockBox->y - $fontSize)
         );
-    }
-
-    private function computeHorizontalLength($text, $fontSize, $fontData)
-    {
-        $chars = mb_split('\X\K(?!$)', $text);
-        $width = 0;
-        foreach ($chars as $char) {
-            $charCode = $this->mb_ord($char); // Method available since PHP 7.0 :(
-            $width += $this->findCharHorizontalLength($charCode, $fontSize, $fontData);
-        }
-        return $width;
-    }
-
-    private function findCharHorizontalLength($charCode, $fontSize, $fontData)
-    {
-        if (array_key_exists($charCode, $fontData->metrics)) {
-            return ($fontData->metrics[$charCode]) * $fontSize / 1000;
-        } else {
-            return 72 / $fontSize;
-        }
-    }
-
-    private function mb_ord($char)
-    {
-        $charCode = 0;
-        $bytes = str_split($char);
-        foreach ($bytes as $byte) {
-            $charCode = ($charCode << 8) + ord($byte);
-        }
-        return $charCode;
     }
 }
