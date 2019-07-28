@@ -10,6 +10,8 @@ final class PageTest extends TestCase
 {
     private $pageClass = 'trogon\otuspdf\Page';
     private $pageInfoClass = 'trogon\otuspdf\meta\PageInfo';
+    private $pagebreakClass = 'trogon\otuspdf\PageBreak';
+    private $paragraphClass = 'trogon\otuspdf\Paragraph';
     private $textBlockClass = 'trogon\otuspdf\TextBlock';
     private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
@@ -51,6 +53,17 @@ final class PageTest extends TestCase
         );
     }
 
+    public function testGetsBlocksWhenEmpty()
+    {
+        $page = new Page();
+        $expectedItems = [];
+
+        $this->assertEquals(
+            $expectedItems,
+            iterator_to_array($page->blocks)
+        );
+    }
+
     public function testReturnAddedTextElement()
     {
         $page = new Page();
@@ -73,11 +86,55 @@ final class PageTest extends TestCase
         );
     }
 
-    public function testGetItemsOnEmpty()
+    public function testGetsBlocksWithAddedTextElement()
     {
         $page = new Page();
         $expectedItems = [];
         $expectedItems[] = $page->addText('Example text to add');
+
+        $this->assertEquals(
+            $expectedItems,
+            iterator_to_array($page->blocks)
+        );
+    }
+
+    public function testReturnAddedPagebreak()
+    {
+        $page = new Page();
+
+        $this->assertInstanceOf(
+            $this->pagebreakClass,
+            $page->addPagebreak()
+        );
+    }
+
+    public function testGetsBlocksWithAddedPagebreak()
+    {
+        $page = new Page();
+        $expectedItems = [];
+        $expectedItems[] = $page->addPagebreak();
+
+        $this->assertEquals(
+            $expectedItems,
+            iterator_to_array($page->blocks)
+        );
+    }
+
+    public function testReturnAddedParagraph()
+    {
+        $page = new Page();
+
+        $this->assertInstanceOf(
+            $this->paragraphClass,
+            $page->addParagraph()
+        );
+    }
+
+    public function testGetsBlocksWithAddedParagraph()
+    {
+        $page = new Page();
+        $expectedItems = [];
+        $expectedItems[] = $page->addParagraph();
 
         $this->assertEquals(
             $expectedItems,
