@@ -83,11 +83,11 @@ class BlockRender extends \trogon\otuspdf\base\DependencyObject
         foreach ($blocks as $block) {
             if ($block instanceof TextBlock) {
                 $blockBox = $remainingBox;
-                $content .= $inlineRender->renderInlines($block->inlines, $blockBox);
+                $content .= $inlineRender->renderInlines($block->inlines, $blockBox, $block->info);
                 $remainingBox = $inlineRender->remainingBox;
             } elseif ($block instanceof Paragraph) {
                 $blockBox = $this->computeParagraphBox($block->info, $remainingBox);
-                $content .= $inlineRender->renderInlines($block->inlines, $blockBox);
+                $content .= $inlineRender->renderInlines($block->inlines, $blockBox, $block->info);
                 $remainingBox = $inlineRender->remainingBox;
             } elseif ($block instanceof PageBreak) {
                 yield $content;

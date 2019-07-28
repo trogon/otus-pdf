@@ -47,6 +47,13 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         ]);
     }
 
+    public function computeTextIndent($blockInfo)
+    {
+        return isset($blockInfo->textIndent)
+            ? $blockInfo->textIndent * 72
+            : null;
+    }
+
     public function getInlineInfo($inline)
     {
         $mergedConfig = array_merge(
@@ -77,7 +84,7 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         );
     }
 
-    public function renderInlines($inlines, $blockBox)
+    public function renderInlines($inlines, $blockBox, $blockInfo)
     {
         $cb = $this->contentBuilder;
         $this->textRender->init();
@@ -86,6 +93,7 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         $fontFamily = null;
         $fontKey = null;
         $fontData = null;
+        $textIndent = $this->computeTextIndent($blockInfo);
 
         $content = $cb->beginText();
         foreach ($inlines as $inlineNo => $inline) {
@@ -104,27 +112,32 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
             }
 
             if ($inlineNo == 0) {
-                $startPosition = $this->computeTextStartPosition($blockBox, $fontSize);
+                $startPosition = $this->computeTextStartPosition($blockBox, $fontSize, $textIndent);
                 $content .= $cb->setTextPosition($startPosition->x, $startPosition->y);
                 $this->updateRemainingBox($fontSize);
             }
-            $content .= $this->renderInlineText($inline->text, $blockBox, $fontSize, $fontData);
+            $content .= $this->renderInlineText($inline->text, $blockBox, $fontSize, $fontData, $textIndent);
         }
         $content .= $cb->endText();
 
         return $content;
     }
 
-    private function renderInlineText($text, $blockBox, $fontSize, $fontData)
+    private function renderInlineText($text, $blockBox, $fontSize, $fontData, $textIndent)
     {
         $cb = $this->contentBuilder;
         $content = $cb->beginTextRender();
-        $this->textRender->setMaxWidth($blockBox->width);
+        $this->textRender->setMaxWidth($blockBox->width - intval($textIndent));
         $subLines = $this->textRender->wrapText($text, $fontSize, $fontData);
         foreach ($subLines as $subLineNo => $subLine) {
             if ($subLineNo != 0) {
                 $content .= $cb->endTextRender();
                 $content .= $cb->newLine();
+                if (!is_null($textIndent)) {
+                    $content .= $cb->setTextPosition(-$textIndent, 0, true);
+                    $this->textRender->setMaxWidth($blockBox->width);
+                    $textIndent = null;
+                }
                 $this->updateRemainingBox($fontSize);
                 $content .= $cb->beginTextRender();
             }
@@ -134,10 +147,10 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         return $content;
     }
 
-    public static function computeTextStartPosition($blockBox, $fontSize)
+    public static function computeTextStartPosition($blockBox, $fontSize, $textIndent)
     {
         return new PositionInfo(
-            intval($blockBox->x),
+            intval($blockBox->x) + intval($textIndent),
             intval($blockBox->y - $fontSize)
         );
     }
