@@ -20,5 +20,5 @@ namespace trogon\otuspdf\meta;
 
 class ParagraphInfo extends BlockInfo
 {
-
+    public $textIndent;
 }
