@@ -27,7 +27,7 @@ abstract class ContentElement extends DependencyObject
     public function __construct($config = [])
     {
         $this->info = $this->createInfo($config);
-        $this->init();
+        parent::__construct();
     }
 
     protected function createInfo($config)
