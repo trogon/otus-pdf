@@ -1,5 +1,5 @@
 <?php
-namespace trogon\otuspdf\test;
+namespace trogon\otuspdf\test\unit;
 
 use PHPUnit\Framework\TestCase;
 
@@ -57,6 +57,92 @@ final class InlineCollectionTest extends TestCase
         $collection->add(new InlineStub());
 
         $this->assertEquals(true, $collection->contains($myItem));
+    }
+
+    public function testInsertAfterFirstInline()
+    {
+        $myItem = new InlineStub();
+        $firstItem = new InlineStub();
+
+        $collection = new InlineCollection();
+        $collection->add($firstItem);
+        $collection->add(new InlineStub());
+        $collection->add(new InlineStub());
+
+        $collection->insertAfter($firstItem, $myItem);
+
+        $this->assertSame($myItem, $collection[1]);
+    }
+
+    public function testInsertAfterLastInline()
+    {
+        $myItem = new InlineStub();
+        $lastItem = new InlineStub();
+
+        $collection = new InlineCollection();
+        $collection->add(new InlineStub());
+        $collection->add(new InlineStub());
+        $collection->add($lastItem);
+
+        $collection->insertAfter($lastItem, $myItem);
+
+        $this->assertSame($myItem, $collection[3]);
+    }
+
+    public function testInsertAfterNotExistingBock()
+    {
+        $myItem = new InlineStub();
+        $notAddedItem = new InlineStub();
+
+        $collection = new InlineCollection();
+        $collection->add(new InlineStub());
+        $collection->add(new InlineStub());
+        $collection->add(new InlineStub());
+
+        $this->assertEquals(false, $collection->insertAfter($notAddedItem, $myItem));
+    }
+
+    public function testInsertBeforeFirstInline()
+    {
+        $myItem = new InlineStub();
+        $firstItem = new InlineStub();
+
+        $collection = new InlineCollection();
+        $collection->add($firstItem);
+        $collection->add(new InlineStub());
+        $collection->add(new InlineStub());
+
+        $collection->insertBefore($firstItem, $myItem);
+
+        $this->assertSame($myItem, $collection[0]);
+    }
+
+    public function testInsertBeforeLastInline()
+    {
+        $myItem = new InlineStub();
+        $lastItem = new InlineStub();
+
+        $collection = new InlineCollection();
+        $collection->add(new InlineStub());
+        $collection->add(new InlineStub());
+        $collection->add($lastItem);
+
+        $collection->insertBefore($lastItem, $myItem);
+
+        $this->assertSame($myItem, $collection[2]);
+    }
+
+    public function testInsertBeforeNotExistingBock()
+    {
+        $myItem = new InlineStub();
+        $notAddedItem = new InlineStub();
+
+        $collection = new InlineCollection();
+        $collection->add(new InlineStub());
+        $collection->add(new InlineStub());
+        $collection->add(new InlineStub());
+
+        $this->assertEquals(false, $collection->insertBefore($notAddedItem, $myItem));
     }
 
     public function testRemoveInlineOnNotAddedIsFalse()

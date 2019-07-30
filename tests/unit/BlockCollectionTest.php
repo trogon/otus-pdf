@@ -1,5 +1,5 @@
 <?php
-namespace trogon\otuspdf\test;
+namespace trogon\otuspdf\test\unit;
 
 use PHPUnit\Framework\TestCase;
 
@@ -66,6 +66,92 @@ final class BlockCollectionTest extends TestCase
         $collection->add(new BlockStub());
 
         $this->assertEquals(true, $collection->contains($myItem));
+    }
+
+    public function testInsertAfterFirstBlock()
+    {
+        $myItem = new BlockStub();
+        $firstItem = new BlockStub();
+
+        $collection = new BlockCollection();
+        $collection->add($firstItem);
+        $collection->add(new BlockStub());
+        $collection->add(new BlockStub());
+
+        $collection->insertAfter($firstItem, $myItem);
+
+        $this->assertSame($myItem, $collection[1]);
+    }
+
+    public function testInsertAfterLastBlock()
+    {
+        $myItem = new BlockStub();
+        $lastItem = new BlockStub();
+
+        $collection = new BlockCollection();
+        $collection->add(new BlockStub());
+        $collection->add(new BlockStub());
+        $collection->add($lastItem);
+
+        $collection->insertAfter($lastItem, $myItem);
+
+        $this->assertSame($myItem, $collection[3]);
+    }
+
+    public function testInsertAfterNotExistingBock()
+    {
+        $myItem = new BlockStub();
+        $notAddedItem = new BlockStub();
+
+        $collection = new BlockCollection();
+        $collection->add(new BlockStub());
+        $collection->add(new BlockStub());
+        $collection->add(new BlockStub());
+
+        $this->assertEquals(false, $collection->insertAfter($notAddedItem, $myItem));
+    }
+
+    public function testInsertBeforeFirstBlock()
+    {
+        $myItem = new BlockStub();
+        $firstItem = new BlockStub();
+
+        $collection = new BlockCollection();
+        $collection->add($firstItem);
+        $collection->add(new BlockStub());
+        $collection->add(new BlockStub());
+
+        $collection->insertBefore($firstItem, $myItem);
+
+        $this->assertSame($myItem, $collection[0]);
+    }
+
+    public function testInsertBeforeLastBlock()
+    {
+        $myItem = new BlockStub();
+        $lastItem = new BlockStub();
+
+        $collection = new BlockCollection();
+        $collection->add(new BlockStub());
+        $collection->add(new BlockStub());
+        $collection->add($lastItem);
+
+        $collection->insertBefore($lastItem, $myItem);
+
+        $this->assertSame($myItem, $collection[2]);
+    }
+
+    public function testInsertBeforeNotExistingBock()
+    {
+        $myItem = new BlockStub();
+        $notAddedItem = new BlockStub();
+
+        $collection = new BlockCollection();
+        $collection->add(new BlockStub());
+        $collection->add(new BlockStub());
+        $collection->add(new BlockStub());
+
+        $this->assertEquals(false, $collection->insertBefore($notAddedItem, $myItem));
     }
 
     public function testRemoveBlockOnNotAddedIsFalse()
