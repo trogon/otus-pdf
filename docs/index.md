@@ -13,7 +13,7 @@ Otus PDF is a open source PHP library for generation PDF document in fast and re
 
 ## Installation
 
-* The minimum required PHP version is PHP 5.4.
+* The minimum required PHP version is PHP 5.5.
 * It works best with PHP 7.
 * You can use Composer to install library
 
