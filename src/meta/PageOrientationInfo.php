@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\meta;
 
-class PageOrientationInfo extends \trogon\otuspdf\base\DependencyObject
+class PageOrientationInfo
 {
     const PORTRAIT = 1;
     const LANDSCAPE = 2;
@@ -28,7 +28,6 @@ class PageOrientationInfo extends \trogon\otuspdf\base\DependencyObject
     private function __construct($orientation)
     {
         $this->orientation = $orientation;
-        parent::__construct();
     }
 
     public function isPortrait()
