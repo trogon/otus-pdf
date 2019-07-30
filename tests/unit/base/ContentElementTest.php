@@ -1,22 +1,13 @@
 <?php
+namespace trogon\otuspdf\test\unit\base;
 
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\base\ContentElement;
 use trogon\otuspdf\base\InvalidCallException;
 
-final class InvalidContentElementDummy extends ContentElement
-{
-
-}
-
-final class ContentElementDummy extends ContentElement
-{
-    protected function createInfo($config)
-    {
-        return $config;
-    }
-}
+use trogon\otuspdf\test\fixture\ContentElementDummy;
+use trogon\otuspdf\test\fixture\InvalidContentElementDummy;
 
 /**
  * @covers \trogon\otuspdf\base\ContentElement

@@ -1,17 +1,12 @@
 <?php
+namespace trogon\otuspdf\test\unit\base;
 
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\base\DependencyObject;
 use trogon\otuspdf\base\InvalidCallException;
 
-final class DependencyObjectDummy extends DependencyObject
-{
-    public $winstonDumpValue;
-
-    public function getRonald() { return 'test ronald'; }
-    public function setWinston($value) { $this->winstonDumpValue = $value; }
-}
+use trogon\otuspdf\test\fixture\DependencyObjectDummy;
 
 /**
  * @covers \trogon\otuspdf\base\DependencyObject
