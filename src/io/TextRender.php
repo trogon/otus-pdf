@@ -19,174 +19,31 @@
 namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\InvalidCallException;
-use trogon\otuspdf\meta\PositionInfo;
-use trogon\otuspdf\meta\TextInfo;
-use trogon\otuspdf\PageBreak;
-use trogon\otuspdf\Text;
 
-class TextRender extends \trogon\otuspdf\base\BaseObject
+class TextRender extends \trogon\otuspdf\base\DependencyObject
 {
-    private $defaultTextInfo;
-    private $fontRender;
+    const LINE_SEPARATOR = "\n";
+    const REGEX_SPLIT_CHARS = '\X\K(?!$)';
+    const REGEX_SPLIT_WORDS = '(?:(?<word>[\w\.\,]+)(?<separator>\W*))|(?<separator>\W+)';
 
-    public function __construct($fontRender)
+    private $lineNumber;
+    private $lineWidth;
+    private $maxWidth;
+
+    public function init()
     {
-        $this->fontRender = $fontRender;
-        $this->defaultTextInfo = new TextInfo([
-            'fontFamily' => 'Times-Roman',
-            'fontSize' => 14
-        ]);
+        parent::init();
+        $this->lineNumber = 0;
+        $this->lineWidth = 0;
     }
 
-    public function getTextInfo($text)
-    {
-        $mergedConfig = array_merge(
-            $this->defaultTextInfo->toDictionary(),
-            array_filter($text->info->toDictionary())
-        );
-        $mergedPageInfo = new TextInfo($mergedConfig);
-        return $mergedPageInfo;
-    }
-
-    public function renderBlockItems($blockItems, $pageInfo)
-    {
-        $textItems = [];
-        foreach ($blockItems as $blockItem) {
-            if ($blockItem instanceof Text) {
-                $textItems[] = $blockItem;
-            } else if ($blockItem instanceof PageBreak) {
-                yield $this->renderTextItems($textItems, $pageInfo);
-                $textItems = [];
-            }
-        }
-        if (!empty($textItems)) {
-            yield $this->renderTextItems($textItems, $pageInfo);
-        }
-    }
-
-    public function renderTextItems($textItems, $pageInfo)
-    {
-        $fontSize = $this->defaultTextInfo->fontSize;
-        $fontFamily = $this->defaultTextInfo->fontFamily;
-        $fontKey = $this->fontRender->findFontKey($fontFamily);
-
-        $startPosition = $this->computeTextStartPosition($pageInfo);
-        $x = intval($startPosition->x);
-        $y = intval($startPosition->y -$fontSize);
-
-        $maxTextWidth = $this->computeMaxTextWidth($pageInfo);
-
-        $content = "BT\n";
-        $content .= "\t /{$fontKey} {$fontSize} Tf\n";
-        $content .= "\t {$fontSize} TL\n";
-        $content .= "\t {$x} {$y} Td\n";
-        foreach ($textItems as $textNo => $text) {
-            $textInfo = $this->getTextInfo($text);
-            $fontSize = $textInfo->fontSize;
-            $fontFamily = $textInfo->fontFamily;
-            $fontKey = $this->fontRender->findFontKey($fontFamily);
-            $fontData = $this->fontRender->findFontData($fontKey);
-            $content .= "\t /{$fontKey} {$fontSize} Tf\n";
-            $content .= "\t {$fontSize} TL\n";
-            if ($textNo != 0) {
-                $content .= "\t T*\n";
-            }
-            $content .= $this->renderTextLines($text, $maxTextWidth, $fontSize, $fontData);
-        }
-        $content .= "ET\n";
-
-        return $content;
-    }
-
-    private function renderTextLines($text, $maxTextWidth, $fontSize, $fontData)
-    {
-        $content = '';
-        $lines = \explode("\n", $text->text);
-        foreach ($lines as $lineNo => $textLine) {
-            if ($lineNo != 0) {
-                $content .= "\t T*\n";
-            }
-            $content .= "\t (";
-            $content .= $this->wrapText($textLine, $maxTextWidth, $fontSize, $fontData);
-            $content .= ") Tj\n";
-        }
-        return $content;
-    }
-
-    private function wrapText($textLine, $maxTextWidth, $fontSize, $fontData)
-    {
-        $content = '';
-        $words = \explode(" ", $textLine);
-        $textLineWidth = 0;
-        $spaceWidth = $this->findCharHorizontalLength(ord(' '), $fontSize, $fontData);
-        foreach ($words as $key => $textWord) {
-            $wordWidth = $this->computeHorizontalLength($textWord, $fontSize, $fontData);
-            $textLineWidth += $wordWidth;
-            if ($key != 0) {
-                $textLineWidth += $spaceWidth;
-            }
-            if ($textLineWidth > $maxTextWidth) {
-                $textLineWidth = $wordWidth;
-                $content .= ") Tj\n\t T*\n\t (";
-            } elseif ($key != 0) {
-                $content .= ' ';
-            }
-            $content .= $textWord;
-        }
-        return $content;
-    }
-
-    private function computeTextStartPosition($pageInfo)
-    {
-        $pageMargin = $pageInfo->margin;
-        $unitInfo = $pageMargin->unitInfo;
-        $leftMargin = $unitInfo->toInch($pageMargin->left);
-        $topMargin = $unitInfo->toInch($pageMargin->top);
-
-        $pageSize = $pageInfo->size;
-        $unitInfo = $pageSize->unitInfo;
-
-        if ($pageInfo->orientation->isLandscape()) {
-            $top = $unitInfo->toInch($pageSize->height);
-            return new PositionInfo($leftMargin * 72, ($top - $topMargin) * 72);
-        } else {
-            $top = $unitInfo->toInch($pageSize->width);
-            return new PositionInfo($leftMargin * 72, ($top - $topMargin) * 72);
-        }
-    }
-
-    private function computeMaxTextWidth($pageInfo)
-    {
-        $maxWidth = 0;
-
-        $pageSize = $pageInfo->size;
-        $unitInfo = $pageSize->unitInfo;
-        if ($pageInfo->orientation->isLandscape()) {
-            $maxWidth = $unitInfo->toInch($pageSize->width);
-        } else {
-            $maxWidth = $unitInfo->toInch($pageSize->height);
-        }
-
-        $pageMargin = $pageInfo->margin;
-        $unitInfo = $pageMargin->unitInfo;
-        $leftMargin = $unitInfo->toInch($pageMargin->left);
-        $rightMargin = $unitInfo->toInch($pageMargin->right);
-
-        return ($maxWidth - $leftMargin - $rightMargin) *72;
-    }
-
-    private function computeHorizontalLength($text, $fontSize, $fontData)
-    {
-        $chars = mb_split('\X\K(?!$)', $text);
-        $width = 0;
-        foreach ($chars as $char) {
-            $charCode = $this->mb_ord($char); // Method available since PHP 7.0 :(
-            $width += $this->findCharHorizontalLength($charCode, $fontSize, $fontData);
-        }
-        return $width;
-    }
-
-    private function findCharHorizontalLength($charCode, $fontSize, $fontData)
+    /**
+     * @param integer $charCode
+     * @param double $fontSize
+     * @param array $fontData
+     * @return integer|float
+     */
+    public static function characterWidth($charCode, $fontSize, $fontData)
     {
         if (array_key_exists($charCode, $fontData->metrics)) {
             return ($fontData->metrics[$charCode]) * $fontSize / 1000;
@@ -195,7 +52,123 @@ class TextRender extends \trogon\otuspdf\base\BaseObject
         }
     }
 
-    private function mb_ord($char)
+    /**
+     * @return integer
+     */
+    public function getLineNumber()
+    {
+        return $this->lineNumber;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getLineWidth()
+    {
+        return $this->lineWidth;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getMaxWidth()
+    {
+        return $this->maxWidth;
+    }
+
+    /**
+     * @param double $maxWidth
+     */
+    public function setMaxWidth($maxWidth)
+    {
+        $this->maxWidth = $maxWidth;
+    }
+
+    /**
+     * @param string $text
+     * @param double $fontSize
+     * @param array $fontData
+     * @return integer|float
+     */
+    public static function textWidth($text, $fontSize, $fontData)
+    {
+        $chars = mb_split(self::REGEX_SPLIT_CHARS, $text);
+        $width = 0;
+        foreach ($chars as $char) {
+            $charCode = self::mb_ord($char); // Method available since PHP 7.0 :(
+            $width += self::characterWidth($charCode, $fontSize, $fontData);
+        }
+        return $width;
+    }
+
+    /**
+     * @param string $text
+     * @param double $fontSize
+     * @param array $fontData
+     * @return Generator<integer, string>
+     */
+    public function wrapText($text, $fontSize, $fontData)
+    {
+        $lineWidth = $this->lineWidth;
+        $content = '';
+        $previousSeparator = false;
+        $previousSeparatorWidth = 0;
+        if (mb_ereg_search_init($text, self::REGEX_SPLIT_WORDS)) {
+            while (($regs = mb_ereg_search_regs()) !== false) {
+                $word = $regs['word'];
+                $separator = $regs['separator'];
+                if (!empty($word)) {
+                    $wordWidth = self::textWidth($word, $fontSize, $fontData);
+                    if (!empty($previousSeparator)) {
+                        $separatorParts = mb_split(self::LINE_SEPARATOR, $previousSeparator);
+                        if (count($separatorParts) === 1) {
+                            $lineWidth += $previousSeparatorWidth;
+                            $content .= $previousSeparator;
+                        } else {
+                            $firstPart = array_shift($separatorParts);
+                            $lastPart = array_pop($separatorParts);
+                            $content .= $firstPart;
+                            yield $content;
+                            foreach ($separatorParts as $separatorPart) {
+                                yield $separatorPart;
+                            }
+                            $lineWidth = self::textWidth($lastPart, $fontSize, $fontData);
+                            $content = $lastPart;
+                        }
+                    }
+                    $lineWidth += $wordWidth;
+                    if ($lineWidth > $this->maxWidth) {
+                        $this->lineWidth = $lineWidth - $wordWidth;
+                        $this->lineNumber++;
+                        yield $content;
+                        $lineWidth = $wordWidth;
+                        $content = $word;
+                    } else {
+                        $content .= $word;
+                    }
+                }
+                if (!empty($separator)) {
+                    $separatorWidth = self::textWidth($separator, $fontSize, $fontData);
+                } else {
+                    $separatorWidth = 0;
+                }
+                $previousSeparator = $separator;
+                $previousSeparatorWidth = $separatorWidth;
+            }
+        }
+
+        if (!empty($content)) {
+            $this->lineWidth = $lineWidth;
+            $this->lineNumber++;
+            yield $content;
+        }
+    }
+
+    /**
+     * @param string $char
+     * @return integer
+     */
+    public static function mb_ord($char)
     {
         $charCode = 0;
         $bytes = str_split($char);

@@ -18,9 +18,15 @@
  */
 namespace trogon\otuspdf\io\pdf;
 
-class PdfArray extends \trogon\otuspdf\base\BaseObject
+class PdfArray extends \trogon\otuspdf\base\DependencyObject
 {
-    private $items = [];
+    private $items;
+
+    public function init()
+    {
+        parent::init();
+        $this->items = [];
+    }
 
     public function getItems()
     {

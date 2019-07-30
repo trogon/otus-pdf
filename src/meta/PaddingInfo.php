@@ -20,7 +20,7 @@ namespace trogon\otuspdf\meta;
 
 use trogon\otuspdf\meta\UnitInfo;
 
-class PaddingInfo extends \trogon\otuspdf\base\BaseObject
+class PaddingInfo extends \trogon\otuspdf\base\DependencyObject
 {
     public $unitInfo;
     public $left;

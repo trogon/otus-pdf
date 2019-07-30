@@ -20,9 +20,15 @@ namespace trogon\otuspdf\io\pdf;
 
 use trogon\otuspdf\base\InvalidCallException;
 
-class PdfDictionary extends \trogon\otuspdf\base\BaseObject
+class PdfDictionary extends \trogon\otuspdf\base\DependencyObject
 {
     private $items;
+
+    public function init()
+    {
+        parent::init();
+        $this->items = [];
+    }
 
     public function getItems()
     {

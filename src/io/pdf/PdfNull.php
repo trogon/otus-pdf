@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io\pdf;
 
-class PdfNull extends \trogon\otuspdf\base\BaseObject
+class PdfNull extends \trogon\otuspdf\base\DependencyObject
 {
 
 }

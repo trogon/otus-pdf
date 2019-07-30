@@ -21,7 +21,7 @@ namespace trogon\otuspdf\io;
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\meta\FontFamilyInfo;
 
-class FontRender extends \trogon\otuspdf\base\BaseObject
+class FontRender extends \trogon\otuspdf\base\DependencyObject
 {
     private $fontData;
     private $fontKeys;
@@ -30,9 +30,15 @@ class FontRender extends \trogon\otuspdf\base\BaseObject
     
     public function __construct($pdfBuilder)
     {
-        $this->fontKeys = [];
         $this->fontsCatalog = $pdfBuilder->createFontsResource();
         $this->pdfBuilder = $pdfBuilder;
+        parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
+        $this->fontKeys = [];
     }
 
     public function createFontObjects()

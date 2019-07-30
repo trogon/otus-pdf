@@ -21,7 +21,7 @@ namespace trogon\otuspdf\io;
 use ReflectionClass;
 use trogon\otuspdf\base\InvalidCallException;
 
-class DocumentWriter extends \trogon\otuspdf\base\BaseObject
+class DocumentWriter extends \trogon\otuspdf\base\DependencyObject
 {
     static $providers = [
         'pdf' => '\trogon\otuspdf\io\PdfDocumentWriter',
@@ -32,6 +32,7 @@ class DocumentWriter extends \trogon\otuspdf\base\BaseObject
     public function __construct(\trogon\otuspdf\Document $document)
     {
         $this->document = $document;
+        parent::__construct();
     }
 
     public function save($filepath, $format = null)

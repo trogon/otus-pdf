@@ -20,36 +20,41 @@ namespace trogon\otuspdf;
 
 use trogon\otuspdf\meta\PageInfo;
 use trogon\otuspdf\PageBreak;
+use trogon\otuspdf\Paragraph;
 use trogon\otuspdf\Text;
 
-class Page extends \trogon\otuspdf\base\BaseObject
+class Page extends \trogon\otuspdf\base\ContentElement
 {
-    private $info;
-    private $items;
+    private $blocks;
 
-    public function __construct($config = [])
+    public function init()
     {
-        $this->info = new PageInfo($config);
-        $this->items = [];
+        parent::init();
+        $this->blocks = new BlockCollection();
     }
 
-    public function getInfo()
+    protected function createInfo($config)
     {
-        return $this->info;
+        return new PageInfo($config);
     }
 
-    public function getItems()
+    public function getBlocks()
     {
-        return $this->items;
+        return $this->blocks;
     }
 
     public function addPagebreak($config = [])
     {
-        return $this->items[] = new PageBreak($config);
+        return $this->blocks[] = new PageBreak($config);
+    }
+
+    public function addParagraph($config = [])
+    {
+        return $this->blocks[] = new Paragraph($config);
     }
 
     public function addText($text, $config = [])
     {
-        return $this->items[] = new Text($text, $config);
+        return $this->blocks[] = new TextBlock($text, $config);
     }
 }

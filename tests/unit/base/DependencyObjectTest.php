@@ -1,28 +1,26 @@
 <?php
+namespace trogon\otuspdf\test\unit\base;
 
 use PHPUnit\Framework\TestCase;
 
-use trogon\otuspdf\base\BaseObject;
+use trogon\otuspdf\base\DependencyObject;
 use trogon\otuspdf\base\InvalidCallException;
 
-final class Dummy extends BaseObject
-{
-    public $winstonDumpValue;
+use trogon\otuspdf\test\fixture\DependencyObjectDummy;
 
-    public function getRonald() { return 'test ronald'; }
-    public function setWinston($value) { $this->winstonDumpValue = $value; }
-}
-
-final class BaseObjectTest extends TestCase
+/**
+ * @covers \trogon\otuspdf\base\DependencyObject
+ */
+final class DependencyObjectTest extends TestCase
 {
-    private $baseObjectClass = 'trogon\otuspdf\base\BaseObject';
+    private $dependencyObjectClass = 'trogon\otuspdf\base\DependencyObject';
     private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
         $this->assertInstanceOf(
-            $this->baseObjectClass,
-            new Dummy()
+            $this->dependencyObjectClass,
+            new DependencyObjectDummy()
         );
     }
 
@@ -31,14 +29,14 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotGetValueOnNotExistingProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $value = $dummy->dummyProperty;
     }
 
     public function testIssetReturnsFalseOnNotExistingProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $this->assertEquals(
             false,
@@ -51,7 +49,7 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotUnsetOnNotExistingProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         unset($dummy->dummyProperty);
     }
@@ -61,7 +59,7 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotSetValueOnNotExistingProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $dummy->dummyProperty = 'Dummy value';
     }
@@ -71,7 +69,7 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotCallOnNotExistingFunction()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $dummy->dummyFunction();
     }
@@ -81,12 +79,12 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotCallStaticOnNotExistingFunction()
     {
-        Dummy::dummyStaticFunction();
+        DependencyObjectDummy::dummyStaticFunction();
     }
 
     public function testCanGetValueOnReadOnlyProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $this->assertEquals(
             'test ronald',
@@ -96,7 +94,7 @@ final class BaseObjectTest extends TestCase
 
     public function testIssetReturnsTrueOnReadOnlyProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $this->assertEquals(
             true,
@@ -109,7 +107,7 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotUnsetOnReadOnlyProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         unset($dummy->ronald);
     }
@@ -119,7 +117,7 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotSetValueOnReadOnlyProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $dummy->ronald = 'Dummy value';
     }
@@ -129,14 +127,14 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotGetValueOnWriteOnlyProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $value = $dummy->winston;
     }
 
     public function testIssetReturnsFalseOnWriteOnlyProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $this->assertEquals(
             false,
@@ -149,14 +147,14 @@ final class BaseObjectTest extends TestCase
      */
     public function testCanNotUnsetOnWriteOnlyProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         unset($dummy->winston);
     }
 
     public function testCanSetValueOnWriteOnlyProperty()
     {
-        $dummy = new Dummy();
+        $dummy = new DependencyObjectDummy();
 
         $dummy->winston = 'Dummy value';
 
@@ -171,7 +169,7 @@ final class BaseObjectTest extends TestCase
         $config = [
             'winstonDumpValue' => 'Dummy value'
         ];
-        $dummy = new Dummy($config);
+        $dummy = new DependencyObjectDummy($config);
 
         $this->assertEquals(
             $config,
