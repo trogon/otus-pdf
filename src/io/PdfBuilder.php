@@ -35,8 +35,9 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
 {
     private $objectFactory;
 
-    public function __construct()
+    public function init()
     {
+        parent::init();
         $this->objectFactory = new PdfObjectFactory();
     }
 

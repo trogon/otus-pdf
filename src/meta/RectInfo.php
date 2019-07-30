@@ -31,6 +31,7 @@ class RectInfo extends \trogon\otuspdf\base\DependencyObject
         $this->y = $y;
         $this->width = $width;
         $this->height = $height;
+        parent::__construct();
     }
 
     public function getHeight()

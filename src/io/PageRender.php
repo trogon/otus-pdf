@@ -35,6 +35,12 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
     {
         $this->pdfBuilder = $pdfBuilder;
         $this->resourcesDict = $resourcesDict;
+        parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
         $this->defaultPageInfo = new PageInfo([
             'orientation' => PageOrientationInfo::getPortrait(),
             'size' => PageSizeInfo::getA4(),

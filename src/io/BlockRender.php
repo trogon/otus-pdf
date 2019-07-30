@@ -29,13 +29,18 @@ use trogon\otuspdf\TextBlock;
 class BlockRender extends \trogon\otuspdf\base\DependencyObject
 {
     private $contentBuilder;
-    private $defaultTextInfo;
     private $fontRender;
 
     public function __construct($fontRender)
     {
-        $this->contentBuilder = new PdfContentBuilder();
         $this->fontRender = $fontRender;
+        parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
+        $this->contentBuilder = new PdfContentBuilder();
     }
 
     public function computePageContentBox($pageInfo)

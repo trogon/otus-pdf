@@ -23,8 +23,14 @@ class PdfString extends \trogon\otuspdf\base\DependencyObject
     const TYPE_LITERAL = 0;
     const TYPE_HEX = 1;
 
-    private $type = self::TYPE_LITERAL;
+    private $type;
     private $value;
+
+    public function init()
+    {
+        parent::init();
+        $this->type = self::TYPE_LITERAL;
+    }
 
     public function getType()
     {

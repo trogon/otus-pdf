@@ -32,8 +32,9 @@ class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
 
     private $currentState;
 
-    public function __construct()
+    public function init()
     {
+        parent::init();
         $this->currentState = self::NONE_STATE;
     }
 

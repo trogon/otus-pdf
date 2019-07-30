@@ -32,6 +32,7 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
 
     public function init()
     {
+        parent::init();
         $this->lineNumber = 0;
         $this->lineWidth = 0;
     }

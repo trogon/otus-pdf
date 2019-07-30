@@ -32,6 +32,7 @@ class DocumentWriter extends \trogon\otuspdf\base\DependencyObject
     public function __construct(\trogon\otuspdf\Document $document)
     {
         $this->document = $document;
+        parent::__construct();
     }
 
     public function save($filepath, $format = null)

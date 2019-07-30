@@ -30,9 +30,15 @@ class FontRender extends \trogon\otuspdf\base\DependencyObject
     
     public function __construct($pdfBuilder)
     {
-        $this->fontKeys = [];
         $this->fontsCatalog = $pdfBuilder->createFontsResource();
         $this->pdfBuilder = $pdfBuilder;
+        parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
+        $this->fontKeys = [];
     }
 
     public function createFontObjects()

@@ -35,6 +35,7 @@ class PageSizeInfo extends \trogon\otuspdf\base\DependencyObject
         $this->height = $height;
         $this->width = $width;
         $this->unitInfo = $unitInfo;
+        parent::__construct();
     }
 
     public function getUnitInfo()

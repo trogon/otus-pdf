@@ -22,7 +22,13 @@ use trogon\otuspdf\io\pdf\PdfObject;
 
 class PdfObjectFactory extends \trogon\otuspdf\base\DependencyObject
 {
-    private $nextId = 1;
+    private $nextId;
+
+    public function init()
+    {
+        parent::init();
+        $this->nextId = 1;
+    }
 
     public function create()
     {

@@ -39,7 +39,13 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         $this->contentBuilder = $contentBuilder;
         $this->fontRender = $fontRender;
         $this->pageContentBox = $pageContentBox;
-        $this->remainingBox = $pageContentBox;
+        parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
+        $this->remainingBox = $this->pageContentBox;
         $this->textRender = new TextRender();
         $this->defaultInlineInfo = new InlineInfo([
             'fontFamily' => 'Times-Roman',

@@ -35,6 +35,12 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
     public function __construct(\trogon\otuspdf\Document $document)
     {
         $this->document = $document;
+        parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
         $this->pdfBuilder = new PdfBuilder();
         $this->content = '';
     }

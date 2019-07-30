@@ -25,10 +25,10 @@ class PdfTrailer extends \trogon\otuspdf\base\DependencyObject
     private $xrefOffset;
     private $content;
 
-    public function __construct($config = [])
+    public function init()
     {
+        parent::init();
         $this->content = new PdfDictionary();
-        parent::__construct($config);
     }
 
     public function getXrefOffset()

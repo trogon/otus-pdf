@@ -26,11 +26,10 @@ class PageCollection extends \trogon\otuspdf\base\DependencyObject
     implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     private $container;
-    private $position;
 
-    public function __construct($config = [])
+    public function init()
     {
-        parent::__construct($config);
+        parent::init();
         $this->container = [];
     }
 

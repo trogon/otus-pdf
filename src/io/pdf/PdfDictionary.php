@@ -24,6 +24,12 @@ class PdfDictionary extends \trogon\otuspdf\base\DependencyObject
 {
     private $items;
 
+    public function init()
+    {
+        parent::init();
+        $this->items = [];
+    }
+
     public function getItems()
     {
         return $this->items;

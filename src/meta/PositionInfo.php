@@ -27,6 +27,7 @@ class PositionInfo extends \trogon\otuspdf\base\DependencyObject
     {
         $this->x = $x;
         $this->y = $y;
+        parent::__construct();
     }
 
     public function getX()

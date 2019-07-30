@@ -29,6 +29,7 @@ class PdfObject extends \trogon\otuspdf\base\DependencyObject
     {
         $this->id = $id;
         $this->version = $version;
+        parent::__construct();
     }
 
     public function getId()
