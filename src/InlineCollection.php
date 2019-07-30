@@ -42,7 +42,7 @@ class InlineCollection extends \trogon\otuspdf\base\DependencyObject
 
     public function contains(Inline $item)
     {
-        $key = array_search($item, $this->container);
+        $key = array_search($item, $this->container, true);
         if ($key !== false) {
             return true;
         } else {
@@ -52,7 +52,7 @@ class InlineCollection extends \trogon\otuspdf\base\DependencyObject
 
     public function insertAfter(Inline $previousSibling, Inline $item)
     {
-        $key = array_search($item, $this->container);
+        $key = array_search($previousSibling, $this->container, true);
         if ($key !== false) {
             array_splice($this->container, ($key + 1), 0, array($item));
             return true;
@@ -63,7 +63,7 @@ class InlineCollection extends \trogon\otuspdf\base\DependencyObject
 
     public function insertBefore(Inline $nextSibling, Inline $item)
     {
-        $key = array_search($item, $this->container);
+        $key = array_search($nextSibling, $this->container, true);
         if ($key !== false) {
             array_splice($this->container, $key, 0, array($item));
             return true;
@@ -74,7 +74,7 @@ class InlineCollection extends \trogon\otuspdf\base\DependencyObject
 
     public function remove(Inline $item)
     {
-        $key = array_search($item, $this->container);
+        $key = array_search($item, $this->container, true);
         if ($key !== false) {
             unset($this->container[$key]);
             return true;
