@@ -1,0 +1,34 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "BlockCollection",
+    "description": "Describes collection of blocks",
+    "introduced": "0.4.0",
+    "properties": [],
+    "methods": [
+        {
+            "name": "add",
+            "type": "Block",
+            "description": "Add block at the end of collection"
+        },
+        {
+            "name": "contains",
+            "type": "boolean",
+            "description": "Check if block exists in collection"
+        },
+        {
+            "name": "insertAfter",
+            "type": "boolean",
+            "description": "Insert block into collection after given block, returns true if block was inserted"
+        },
+        {
+            "name": "insertBefore",
+            "type": "boolean",
+            "description": "Insert block into collection before given block, returns true if block was inserted"
+        },
+        {
+            "name": "remove",
+            "type": "boolean",
+            "description": "Removes block from the collection, returns true if block was removed"
+        }
+    ]
+}
