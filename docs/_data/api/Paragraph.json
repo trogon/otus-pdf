@@ -1,0 +1,27 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "Paragraph",
+    "description": "Describes paragraph block",
+    "introduced": "0.4.0",
+    "properties": [
+        {
+            "name": "info",
+            "type": "ParagraphInfo",
+            "access": "Read Only",
+            "description": "Stores paragraph meta informations"
+        },
+        {
+            "name": "inlines",
+            "type": "InlineCollection",
+            "access": "Read Only",
+            "description": "Stores paragraph content as list of inline elements"
+        }
+    ],
+    "methods": [
+        {
+            "name": "addRun",
+            "type": "Run",
+            "description": "Append new Run inline"
+        }
+    ]
+}

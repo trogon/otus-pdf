@@ -1,21 +1,19 @@
 {
     "$schema": "http://schema.trogon.eu/json/apidocs.json",
-    "name": "Text",
-    "description": "Describes single text block (immutable type)",
-    "introduced": "0.2.0",
-    "version": "0.3.0",
-    "deprecated": "0.4.0",
+    "name": "Run",
+    "description": "Describes single text inline",
+    "introduced": "0.4.0",
     "properties": [
         {
             "name": "info",
-            "type": "TextInfo",
+            "type": "InlineInfo",
             "access": "Read Only",
-            "description": "Stores text meta informations"
+            "description": "Stores run meta informations"
         },
         {
             "name": "text",
             "type": "string",
-            "access": "Read Only",
+            "access": "Normal",
             "description": "Stores text value"
         }
     ],

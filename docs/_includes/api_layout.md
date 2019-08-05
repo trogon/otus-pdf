@@ -34,7 +34,9 @@
     <tr>
         <td>
             <strong>${{- property.name -}}</strong>
-{%- if property.introduced %}
+{%- if property.deprecated %}
+            <span class="label label-red">Deprecated in {{ property.deprecated }}</span>
+{%- elsif property.introduced %}
             <span class="label label-purple">New in {{ property.introduced }}</span>
 {%- endif -%}
         </td>
@@ -60,7 +62,9 @@
     <tr>
         <td>
             <strong>{{- method.name -}}()</strong>
-{%- if method.introduced %}
+{%- if method.deprecated %}
+            <span class="label label-red">Deprecated in {{ method.deprecated }}</span>
+{%- elsif method.introduced %}
             <span class="label label-purple">New in {{ method.introduced }}</span>
 {%- endif -%}
         </td>
