@@ -2,7 +2,7 @@
 layout: page
 title: Installation
 parent: Guide
-nav_order: 1
+nav_order: 1 Installation
 ---
 
 <h1>{{ page.title }}</h1>
