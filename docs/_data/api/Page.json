@@ -3,26 +3,36 @@
     "name": "Page",
     "description": "Describes single page",
     "introduced": "0.2.0",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "properties": [
+        {
+            "name": "blocks",
+            "type": "BlockCollection",
+            "access": "Read Only",
+            "description": "Stores page content as list of block elements"
+        },
         {
             "name": "info",
             "type": "PageInfo",
             "access": "Read Only",
             "description": "Stores page meta informations"
-        },
-        {
-            "name": "items",
-            "type": "Text[]",
-            "access": "Read Only",
-            "description": "Stores page content"
         }
     ],
     "methods": [
         {
+            "name": "addPagebreak",
+            "type": "PageBreak",
+            "description": "Append new PageBreak block"
+        },
+        {
+            "name": "addParagraph",
+            "type": "Paragraph",
+            "description": "Append new Paragraph block"
+        },
+        {
             "name": "addText",
-            "type": "Text",
-            "description": "Append new text entry"
+            "type": "TextBlock",
+            "description": "Append new text entry wrapped into TextBlock. Legacy method, use Paragraph instead."
         }
     ]
 }
