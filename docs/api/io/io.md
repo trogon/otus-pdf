@@ -1,6 +1,7 @@
 ---
 layout: page
 title: io
+description: otuspdf.io namespace
 parent: API
 has_children: true
 permalink: /api/io

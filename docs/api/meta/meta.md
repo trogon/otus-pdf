@@ -1,6 +1,7 @@
 ---
 layout: page
 title: meta
+description: otuspdf.meta namespace
 parent: API
 has_children: true
 permalink: /api/meta
