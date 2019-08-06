@@ -1,0 +1,15 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "TextElement",
+    "description": "An abstract class used as the base class for the abstract Block and Inline classes.",
+    "introduced": "0.4.0",
+    "properties": [
+        {
+            "name": "info",
+            "type": "TextElementInfo",
+            "access": "Read Only",
+            "description": "Stores text element meta informations"
+        }
+    ],
+    "methods": []
+}

@@ -18,8 +18,7 @@
  */
 namespace trogon\otuspdf\meta;
 
-class TextInfo extends \trogon\otuspdf\base\BaseObject
+class TextInfo extends BlockInfo
 {
-    public $fontFamily;
-    public $fontSize;
+
 }

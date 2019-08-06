@@ -1,11 +1,8 @@
 ---
-layout: page
+layout: apidoc
 title: TextInfo
 apiname: meta.TextInfo
 parent: meta
 grand_parent: API
+nav_order: TextInfo
 ---
-
-{% include api_layout.md %}
-
-{% include examples_layout.md %}

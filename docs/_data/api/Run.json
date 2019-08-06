@@ -1,0 +1,21 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "Run",
+    "description": "Describes single text inline",
+    "introduced": "0.4.0",
+    "properties": [
+        {
+            "name": "info",
+            "type": "InlineInfo",
+            "access": "Read Only",
+            "description": "Stores run meta informations"
+        },
+        {
+            "name": "text",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores text value"
+        }
+    ],
+    "methods": []
+}

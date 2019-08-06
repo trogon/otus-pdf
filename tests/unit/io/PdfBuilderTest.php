@@ -8,11 +8,13 @@ use trogon\otuspdf\io\PdfBuilder;
 
 final class PdfBuilderTest extends TestCase
 {
+    private $pdfArrayClass = 'trogon\otuspdf\io\pdf\PdfArray';
     private $pdfBuilderClass = 'trogon\otuspdf\io\PdfBuilder';
-    private $pdfObjectClass = 'trogon\otuspdf\io\pdf\PdfObject';
-    private $pdfDictionaryClass = 'trogon\otuspdf\io\pdf\PdfDictionary';
-    private $pdfObjectFactoryClass = 'trogon\otuspdf\io\pdf\PdfObjectFactory';
     private $pdfCrossReferenceClass = 'trogon\otuspdf\io\pdf\PdfCrossReference';
+    private $pdfDictionaryClass = 'trogon\otuspdf\io\pdf\PdfDictionary';
+    private $pdfNumberClass = 'trogon\otuspdf\io\pdf\PdfNumber';
+    private $pdfObjectClass = 'trogon\otuspdf\io\pdf\PdfObject';
+    private $pdfObjectFactoryClass = 'trogon\otuspdf\io\pdf\PdfObjectFactory';
     private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreated()
@@ -129,6 +131,84 @@ final class PdfBuilderTest extends TestCase
 
         $this->assertEmpty(
             $builder->createResourceCatalog()->items
+        );
+    }
+
+    public function testCreateMediaBoxReturnsPdfArray()
+    {
+        $builder = new PdfBuilder();
+
+        $this->assertInstanceOf(
+            $this->pdfArrayClass,
+            $builder->createMediaBox(1.43, 31, 24.1, 12)
+        );
+    }
+
+    public function testCreateMediaBoxReturnsItemsOfTypePdfNumber()
+    {
+        $builder = new PdfBuilder();
+
+        $this->assertContainsOnlyInstancesOf(
+            $this->pdfNumberClass,
+            $builder->createMediaBox(1.43, 31, 24.1, 12)->items
+        );
+    }
+
+    public function testCreateMediaBoxReturnsFourValues()
+    {
+        $builder = new PdfBuilder();
+
+        $pdfNumberValue = function($pdfNumber) {
+            return $pdfNumber->value;
+        };
+
+        $this->assertEquals(
+            [0, 0, 1.43, 31],
+            array_map($pdfNumberValue, $builder->createMediaBox(1.43, 31)->items)
+        );
+    }
+
+    public function testCreateMediaBoxStoresValuesInRightOrder()
+    {
+        $builder = new PdfBuilder();
+
+        $pdfNumberValue = function($pdfNumber) {
+            return $pdfNumber->value;
+        };
+
+        $this->assertEquals(
+            [24.1, 12, 1.43, 31],
+            array_map($pdfNumberValue, $builder->createMediaBox(1.43, 31, 24.1, 12)->items)
+        );
+    }
+
+    public function testCreatePageContentReturnsPdfObject()
+    {
+        $builder = new PdfBuilder();
+
+        $this->assertInstanceOf(
+            $this->pdfObjectClass,
+            $builder->createPageContent()
+        );
+    }
+
+    public function testCreatePageContentReturnsPdfDictionaryAsContent()
+    {
+        $builder = new PdfBuilder();
+
+        $this->assertInstanceOf(
+            $this->pdfDictionaryClass,
+            $builder->createPageContent()->content
+        );
+    }
+
+    public function testCreatePageContentReturnsEmptyPdfDictionaryAsContent()
+    {
+        $builder = new PdfBuilder();
+
+        $this->assertEquals(
+            [],
+            $builder->createPageContent()->content->items
         );
     }
 }

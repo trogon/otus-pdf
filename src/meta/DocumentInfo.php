@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\meta;
 
-class DocumentInfo extends \trogon\otuspdf\base\BaseObject
+class DocumentInfo extends \trogon\otuspdf\base\DependencyObject
 {
     public $title;
     public $author;

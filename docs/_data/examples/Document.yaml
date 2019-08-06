@@ -1,6 +1,6 @@
 format_document:
   title: Document with information
-  description: 
+  description: Create new document with meta informations in single instruction.
   content: |-
     ```php
     $document = new Document([
@@ -13,7 +13,7 @@ format_document:
 
 simple_document_with_page:
   title: Adding new specified page to document
-  description: 
+  description: Creates new page and adds it to the document. Page orientation and size information can be passed as method argument.
   content: |-
     ```php
     $page = $document->pages->add([

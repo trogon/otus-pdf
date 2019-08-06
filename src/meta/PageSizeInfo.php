@@ -21,7 +21,7 @@ namespace trogon\otuspdf\meta;
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\meta\UnitInfo;
 
-class PageSizeInfo extends \trogon\otuspdf\base\BaseObject
+class PageSizeInfo extends \trogon\otuspdf\base\DependencyObject
 {
     private $unitInfo;
     private $height;
@@ -35,6 +35,7 @@ class PageSizeInfo extends \trogon\otuspdf\base\BaseObject
         $this->height = $height;
         $this->width = $width;
         $this->unitInfo = $unitInfo;
+        parent::__construct();
     }
 
     public function getUnitInfo()

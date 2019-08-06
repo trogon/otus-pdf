@@ -20,11 +20,19 @@ namespace trogon\otuspdf\io\pdf;
 
 use trogon\otuspdf\io\pdf\PdfObject;
 
-class PdfCrossReference extends \trogon\otuspdf\base\BaseObject
+class PdfCrossReference extends \trogon\otuspdf\base\DependencyObject
 {
-    private $objects = [];
-    private $objectLocations = [];
-    private $refBlocks = [0];
+    private $objects;
+    private $objectLocations;
+    private $refBlocks;
+
+    public function init()
+    {
+        parent::init();
+        $this->objects = [];
+        $this->objectLocations = [];
+        $this->refBlocks = [0];
+    }
 
     public function getSize()
     {

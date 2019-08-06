@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io\pdf;
 
-class PdfBoolean extends \trogon\otuspdf\base\BaseObject
+class PdfBoolean extends \trogon\otuspdf\base\DependencyObject
 {
 
 }

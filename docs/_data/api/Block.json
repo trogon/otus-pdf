@@ -1,0 +1,15 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "Block",
+    "description": "Describes abstract block element",
+    "introduced": "0.4.0",
+    "properties": [
+        {
+            "name": "info",
+            "type": "BlockInfo",
+            "access": "Read Only",
+            "description": "Stores block meta informations"
+        }
+    ],
+    "methods": []
+}

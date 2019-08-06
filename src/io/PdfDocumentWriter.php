@@ -18,10 +18,15 @@
  */
 namespace trogon\otuspdf\io;
 
-use trogon\otuspdf\base\InvalidCallException;
-use trogon\otuspdf\io\PdfBuilder;
+use ArrayIterator;
 
-class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
+use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\BlockRender;
+use trogon\otuspdf\io\FontRender;
+use trogon\otuspdf\io\PdfBuilder;
+use trogon\otuspdf\io\TextRender;
+
+class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
 {
     private $document;
     private $pdfBuilder;
@@ -30,6 +35,12 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
     public function __construct(\trogon\otuspdf\Document $document)
     {
         $this->document = $document;
+        parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
         $this->pdfBuilder = new PdfBuilder();
         $this->content = '';
     }
@@ -37,16 +48,16 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
     private function generatePdfContent()
     {
         $pdfBuilder = $this->pdfBuilder;
-        $objects = [];
+        $baseObjects = new ArrayIterator();
 
         // PDF catalog
         $catalogObj = $pdfBuilder->createCatalog();
-        $objects[] = $catalogObj;
+        $baseObjects->append($catalogObj);
 
         // PDF outlines
         $outlinesObj = $pdfBuilder->createOutlines();
         $pdfBuilder->registerOutlines($catalogObj, $outlinesObj);
-        $objects[] = $outlinesObj;
+        $baseObjects->append($outlinesObj);
 
         // Check if there are any pages
         if (count($this->document->pages) === 0) {
@@ -55,13 +66,15 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
 
         // PDF pages collection
         $resourcesDict = $pdfBuilder->createResourceCatalog();
-        $pageWriter = new PageRender($this->pdfBuilder->objectFactory, $resourcesDict);
-        $objects[] = $pageWriter->renderPageCollection($this->document->pages, $catalogObj);
+        $pageWriter = new PageRender($this->pdfBuilder, $resourcesDict);
+        $baseObjects->append(
+            $pageWriter->renderPageCollection($this->document->pages, $catalogObj)
+        );
 
         // PDF proc set
         $procSetObj = $pdfBuilder->createProcSet();
         $pdfBuilder->registerProcSetResource($resourcesDict, $procSetObj);
-        $objects[] = $procSetObj;
+        $baseObjects->append($procSetObj);
 
         // PDF document information
         $docInfoObject = null;
@@ -78,23 +91,28 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\BaseObject
                 'Title' => $this->document->info->title,
             ]);
             if ($docInfoObject != null) {
-                $objects[] = $docInfoObject;
+                $baseObjects->append($docInfoObject);
             }
         }
 
+        $objects = iterator_to_array($baseObjects, false);
         // PDF fonts render
         $pdfFontRender = new FontRender($pdfBuilder);
+        // PDF text render
+        $pdfBlockRender = new BlockRender($pdfFontRender);
 
         // PDF pages
         foreach ($this->document->pages as $n => $page) {
-            $pageObjects = $pageWriter->renderPage($page, $pdfFontRender);
-            $objects = array_merge($objects, $pageObjects);
+            $pageInfo = $pageWriter->getPageInfo($page);
+            $contents = $pdfBlockRender->renderBlocks($page->blocks, $pageInfo);
+            $pageObjects = $pageWriter->renderPage($pageInfo, $contents);
+            $objects = array_merge($objects, iterator_to_array($pageObjects, false));
         }
 
         // PDF fonts catalog
         $pdfFontRender->registerFontsResource($resourcesDict);
         $fontObjects = $pdfFontRender->createFontObjects();
-        $objects = array_merge($objects, $fontObjects);
+        $objects = array_merge($objects, iterator_to_array($fontObjects, false));
 
         // Transform PDF objects into PDF text
         $this->writeBegin();

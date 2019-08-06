@@ -3,7 +3,7 @@
     "name": "DocumentWriter",
     "description": "Transform document object into given format using installed providers",
     "introduced": "0.1.0",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "properties": [],
     "methods": [
         {

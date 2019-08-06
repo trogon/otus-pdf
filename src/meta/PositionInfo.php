@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\meta;
 
-class PositionInfo extends \trogon\otuspdf\base\BaseObject
+class PositionInfo extends \trogon\otuspdf\base\DependencyObject
 {
     private $x;
     private $y;
@@ -27,6 +27,7 @@ class PositionInfo extends \trogon\otuspdf\base\BaseObject
     {
         $this->x = $x;
         $this->y = $y;
+        parent::__construct();
     }
 
     public function getX()

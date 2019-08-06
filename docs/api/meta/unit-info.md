@@ -1,11 +1,8 @@
 ---
-layout: page
+layout: apidoc
 title: UnitInfo
 apiname: meta.UnitInfo
 parent: meta
 grand_parent: API
+nav_order: UnitInfo
 ---
-
-{% include api_layout.md %}
-
-{% include examples_layout.md %}

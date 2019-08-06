@@ -19,30 +19,28 @@
 namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\InvalidCallException;
-use trogon\otuspdf\io\pdf\PdfArray;
-use trogon\otuspdf\io\pdf\PdfDictionary;
-use trogon\otuspdf\io\pdf\PdfName;
-use trogon\otuspdf\io\pdf\PdfNumber;
-use trogon\otuspdf\io\pdf\PdfObject;
-use trogon\otuspdf\io\pdf\PdfObjectReference;
-use trogon\otuspdf\io\pdf\PdfStream;
 use trogon\otuspdf\meta\PaddingInfo;
 use trogon\otuspdf\meta\PageInfo;
 use trogon\otuspdf\meta\PageOrientationInfo;
 use trogon\otuspdf\meta\PageSizeInfo;
 
-class PageRender extends \trogon\otuspdf\base\BaseObject
+class PageRender extends \trogon\otuspdf\base\DependencyObject
 {
-    private $objectFactory;
-    private $resourcesDict;
     private $defaultPageInfo;
     private $pageCollectionObj;
-    private $pageRefs;
+    private $pdfBuilder;
+    private $resourcesDict;
 
-    public function __construct($objectFactory, $resourcesDict)
+    public function __construct($pdfBuilder, $resourcesDict)
     {
-        $this->objectFactory = $objectFactory;
+        $this->pdfBuilder = $pdfBuilder;
         $this->resourcesDict = $resourcesDict;
+        parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
         $this->defaultPageInfo = new PageInfo([
             'orientation' => PageOrientationInfo::getPortrait(),
             'size' => PageSizeInfo::getA4(),
@@ -50,79 +48,54 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
         ]);
     }
 
+    public function getPageInfo($page)
+    {
+        $mergedConfig = array_merge(
+            $this->defaultPageInfo->toDictionary(),
+            array_filter($page->info->toDictionary())
+        );
+        $mergedPageInfo = new PageInfo($mergedConfig);
+        return $mergedPageInfo;
+    }
+
     public function renderPageCollection($pageCollection, $catalogObj)
     {
         $defaultArraySize = $this->createArraySize($this->defaultPageInfo);
 
-        $pageCollectionObj = $this->objectFactory->create();
-        $pageCollectionObj->content = new PdfDictionary();
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Pages'])
-        );
-        $this->pageRefs = new PdfArray();
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'Kids']),
-            $this->pageRefs
-        );
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'Count']),
-            new PdfNumber(['value' => \count($pageCollection)])
-        );
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'Resources']),
-            $this->resourcesDict
-        );
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'MediaBox']),
-            $defaultArraySize
-        );
-        $catalogObj->content->addItem(
-            new PdfName(['value' => 'Pages']),
-            new PdfObjectReference(['object' => $pageCollectionObj])
-        );
-
-        $this->pageCollectionObj = $pageCollectionObj;
-        return $pageCollectionObj;
+        $this->pageCollectionObj = 
+            $this->pdfBuilder->createPageCollection($this->resourcesDict, $defaultArraySize);
+        $this->pdfBuilder->registerPageCollection($catalogObj, $this->pageCollectionObj);
+        return $this->pageCollectionObj;
     }
 
-    public function renderPage($page, $fontRender)
+    public function renderPage($pageInfo, $pageContents)
     {
-        $objects = [];
-
-        // PDF Page <n>
-        $pageObj = $this->objectFactory->create();
-        $pageObj->content = new PdfDictionary();
-        $pageObj->content->addItem(
-            new PdfName(['value' => 'Type']),
-            new PdfName(['value' => 'Page'])
-        );
-        $pageObj->content->addItem(
-            new PdfName(['value' => 'Parent']),
-            new PdfObjectReference(['object' => $this->pageCollectionObj])
-        );
-        $realPageInfo = $this->mergePageInfo($page->info, $this->defaultPageInfo);
-        $arraySize = $this->createArraySize($realPageInfo, $this->defaultPageInfo);
-        if ($arraySize != null) {
-            $pageObj->content->addItem(
-                new PdfName(['value' => 'MediaBox']),
-                $arraySize
-            );
+        foreach ($pageContents as $pageContent) {
+            $objects = $this->renderSinglePage($pageInfo, $pageContent);
+            foreach ($objects as $object) {
+                yield $object;
+            }
         }
-        $objects[] = $pageObj;
-        $this->pageRefs->addItem(new PdfObjectReference(['object' => $pageObj]));
+    }
+
+    private function renderSinglePage($pageInfo, $pageContent)
+    {
+        // PDF Page <n>
+        $pageObj = $this->pdfBuilder->createPage(
+            $this->pageCollectionObj
+        );
+        $arraySize = $this->createArraySize($pageInfo, $this->defaultPageInfo);
+        if ($arraySize != null) {
+            $this->pdfBuilder->registerMediaBox($pageObj, $arraySize);
+        }
+        $this->pdfBuilder->registerPage($this->pageCollectionObj, $pageObj);
+        yield $pageObj;
 
         // PDF Page <n> content
-        $pageContentObj = $this->objectFactory->create();
-        $pageContentObj->content = new PdfDictionary();
-        $this->writeContentStream($page, $pageContentObj, $realPageInfo, $fontRender);
-        $objects[] = $pageContentObj;
-        $pageObj->content->addItem(
-            new PdfName(['value' => 'Contents']),
-            new PdfObjectReference(['object' => $pageContentObj])
-        );
-
-        return $objects;
+        $pageContentObj = $this->pdfBuilder->createPageContent();
+        $this->writeContentStream($pageContentObj, $pageContent);
+        $this->pdfBuilder->registerPageContent($pageObj, $pageContentObj);
+        yield $pageContentObj;
     }
 
     public function createArraySize($pageInfo, $previousPageInfo = null)
@@ -136,50 +109,21 @@ class PageRender extends \trogon\otuspdf\base\BaseObject
                 return null;
         }
 
-        $pageSizeArray = new PdfArray();
-        $pageSizeArray->addItem(new PdfNumber(['value' => 0]));
-        $pageSizeArray->addItem(new PdfNumber(['value' => 0]));
-
         $unitInfo = $size->unitInfo;
         $width = $unitInfo->toInch($size->width) *72;
         $height = $unitInfo->toInch($size->height) *72;
 
         if ($orientation->isLandscape()) {
-            $pageSizeArray->addItem(new PdfNumber(['value' => $width]));
-            $pageSizeArray->addItem(new PdfNumber(['value' => $height]));
+            $pageSizeArray = $this->pdfBuilder->createMediaBox($width, $height);
         } else {
-            $pageSizeArray->addItem(new PdfNumber(['value' => $height]));
-            $pageSizeArray->addItem(new PdfNumber(['value' => $width]));
+            $pageSizeArray = $this->pdfBuilder->createMediaBox($height, $width);
         }
         return $pageSizeArray;
     }
 
-    public function mergePageInfo($pageInfo, $defautPageInfo)
+    private function writeContentStream($pageContentObj, $content)
     {
-        $mergedConfig = array_merge(
-            $defautPageInfo->toDictionary(),
-            array_filter($pageInfo->toDictionary())
-        );
-        $mergedPageInfo = new PageInfo($mergedConfig);
-        return $mergedPageInfo;
-    }
-
-    private function writeContentStream($page, $pageContentObj, $pageInfo, $fontRender)
-    {
-        $textRender = new TextRender();
-
-        $content = $textRender->renderTextItems($page->items, $pageInfo, $fontRender);
-
-        $contentStream = new PdfStream();
-        $contentStream->value = \gzcompress($content);
-        $pageContentObj->stream = $contentStream;
-        $pageContentObj->content->addItem(
-            new PdfName(['value' => 'Filter']),
-            new PdfName(['value' => 'FlateDecode'])
-        );
-        $pageContentObj->content->addItem(
-            new PdfName(['value' => 'Length']),
-            new PdfNumber(['value' => $contentStream->length])
-        );
+        $contentStream = \gzcompress($content);
+        $this->pdfBuilder->setStreamContent($pageContentObj, $contentStream);
     }
 }

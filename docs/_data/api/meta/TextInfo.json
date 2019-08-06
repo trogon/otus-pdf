@@ -2,8 +2,9 @@
     "$schema": "http://schema.trogon.eu/json/apidocs.json",
     "name": "TextInfo",
     "description": "Describes single text block information",
+    "basedOn": "meta.BlockInfo",
     "introduced": "0.2.0",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "properties": [
         {
             "name": "fontFamily",

@@ -16,28 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace trogon\otuspdf;
+namespace trogon\otuspdf\meta;
 
-use trogon\otuspdf\meta\TextInfo;
-
-class Text extends \trogon\otuspdf\base\BaseObject
+class BlockInfo extends TextElementInfo
 {
-    private $info;
-    private $text;
 
-    public function __construct($text, $config = [])
-    {
-        $this->text = $text;
-        $this->info = new TextInfo($config);
-    }
-
-    public function getInfo()
-    {
-        return $this->info;
-    }
-
-    public function getText()
-    {
-        return $this->text;
-    }
 }

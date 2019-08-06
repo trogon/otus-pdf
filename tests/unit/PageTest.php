@@ -10,7 +10,9 @@ final class PageTest extends TestCase
 {
     private $pageClass = 'trogon\otuspdf\Page';
     private $pageInfoClass = 'trogon\otuspdf\meta\PageInfo';
-    private $textClass = 'trogon\otuspdf\Text';
+    private $pagebreakClass = 'trogon\otuspdf\PageBreak';
+    private $paragraphClass = 'trogon\otuspdf\Paragraph';
+    private $textBlockClass = 'trogon\otuspdf\TextBlock';
     private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
@@ -51,12 +53,23 @@ final class PageTest extends TestCase
         );
     }
 
+    public function testGetsBlocksWhenEmpty()
+    {
+        $page = new Page();
+        $expectedItems = [];
+
+        $this->assertEquals(
+            $expectedItems,
+            iterator_to_array($page->blocks)
+        );
+    }
+
     public function testReturnAddedTextElement()
     {
         $page = new Page();
 
         $this->assertInstanceOf(
-            $this->textClass,
+            $this->textBlockClass,
             $page->addText('Example text to add')
         );
     }
@@ -69,11 +82,11 @@ final class PageTest extends TestCase
 
         $this->assertEquals(
             $textValue,
-            $text->text
+            $text->inlines[0]->text
         );
     }
 
-    public function testGetItemsOnEmpty()
+    public function testGetsBlocksWithAddedTextElement()
     {
         $page = new Page();
         $expectedItems = [];
@@ -81,7 +94,51 @@ final class PageTest extends TestCase
 
         $this->assertEquals(
             $expectedItems,
-            $page->items
+            iterator_to_array($page->blocks)
+        );
+    }
+
+    public function testReturnAddedPagebreak()
+    {
+        $page = new Page();
+
+        $this->assertInstanceOf(
+            $this->pagebreakClass,
+            $page->addPagebreak()
+        );
+    }
+
+    public function testGetsBlocksWithAddedPagebreak()
+    {
+        $page = new Page();
+        $expectedItems = [];
+        $expectedItems[] = $page->addPagebreak();
+
+        $this->assertEquals(
+            $expectedItems,
+            iterator_to_array($page->blocks)
+        );
+    }
+
+    public function testReturnAddedParagraph()
+    {
+        $page = new Page();
+
+        $this->assertInstanceOf(
+            $this->paragraphClass,
+            $page->addParagraph()
+        );
+    }
+
+    public function testGetsBlocksWithAddedParagraph()
+    {
+        $page = new Page();
+        $expectedItems = [];
+        $expectedItems[] = $page->addParagraph();
+
+        $this->assertEquals(
+            $expectedItems,
+            iterator_to_array($page->blocks)
         );
     }
 }

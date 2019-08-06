@@ -1,11 +1,11 @@
-simple_page_with_text:
-  title: Simple page with multiline text
+simple_page_with_paragraphs:
+  title: Simple page with multiple paragraphs
   description: 
   content: |-
     ```php
-    $page->addText("First line text");
-    $page->addText("Second line text");
-    $page->addText("Multi line text\nMany lines as one\nSeparated with new line character");
+    $page->addParagraph()->addRun("First line text");
+    $page->addParagraph()->addRun("Second line text");
+    $page->addParagraph()->addRun("Multi line text\nMany lines as one\nSeparated with new line character");
     ```
 
 format_page:
@@ -17,4 +17,32 @@ format_page:
       'orientation' => PageOrientationInfo::getPortrait(),
       'size' => PageSizeInfo::getA5()
     ]);
+    ```
+
+simple_page_with_paragraph_styles:
+  title: Simple page with styled paragraphs and text
+  description: 
+  content: |-
+    ```php
+    $page->addParagraph()->addRun("First line text");
+    $page->addParagraph()->addRun("Second line text", [
+      'fontFamily' => 'Courier',
+      'fontSize' => 10
+    ]);
+    $page->addParagraph([
+      'textIndent' => 1.10
+    ])->addRun("Multi line text\nMany lines as one\nSeparated with new line character", [
+      'fontSize' => 11
+    ]);
+    ```
+
+simple_page_with_text:
+  title: Simple page with multiline text
+  description: 
+  content: |-
+    ```php
+    // Legacy example, starting 0.4.0 the paragraph is recommended
+    $page->addText("First line text");
+    $page->addText("Second line text");
+    $page->addText("Multi line text\nMany lines as one\nSeparated with new line character");
     ```
