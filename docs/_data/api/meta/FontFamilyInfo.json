@@ -3,6 +3,7 @@
     "name": "FontFamilyInfo",
     "description": "Describes font family information",
     "introduced": "0.3.0",
+    "version": "0.4.0",
     "properties": [
         {
             "name": "isFixedPitch",
