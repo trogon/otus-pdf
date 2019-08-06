@@ -1,0 +1,22 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "BlockInfo",
+    "description": "Describes block element information",
+    "basedOn": "meta.TextElementInfo",
+    "introduced": "0.4.0",
+    "properties": [
+        {
+            "name": "fontFamily",
+            "type": "string",
+            "access": "Normal",
+            "description": "Stores font family name"
+        },
+        {
+            "name": "fontSize",
+            "type": "float",
+            "access": "Normal",
+            "description": "Stores font size"
+        }
+    ],
+    "methods": []
+}
