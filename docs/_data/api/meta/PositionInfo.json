@@ -3,6 +3,7 @@
     "name": "PositionInfo",
     "description": "Describes 2D position information (immutable type)",
     "introduced": "0.3.0",
+    "version": "0.4.0",
     "properties": [
         {
             "name": "x",

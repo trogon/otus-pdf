@@ -1,10 +1,7 @@
 ---
-layout: page
+layout: apidoc
 title: Document
 apiname: Document
 parent: API
+nav_order: Document
 ---
-
-{% include api_layout.md %}
-
-{% include examples_layout.md %}

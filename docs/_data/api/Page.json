@@ -3,8 +3,15 @@
     "name": "Page",
     "description": "Describes single page",
     "introduced": "0.2.0",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "properties": [
+        {
+            "name": "blocks",
+            "type": "BlockCollection",
+            "access": "Read Only",
+            "description": "Stores page content as list of block elements",
+            "introduced": "0.4.0"
+        },
         {
             "name": "info",
             "type": "PageInfo",
@@ -15,14 +22,28 @@
             "name": "items",
             "type": "Text[]",
             "access": "Read Only",
-            "description": "Stores page content"
+            "description": "Stores page content",
+            "deprecated": "0.4.0"
         }
     ],
     "methods": [
         {
+            "name": "addPagebreak",
+            "type": "PageBreak",
+            "description": "Append new PageBreak block",
+            "introduced": "0.4.0"
+        },
+        {
+            "name": "addParagraph",
+            "type": "Paragraph",
+            "description": "Append new Paragraph block",
+            "introduced": "0.4.0"
+        },
+        {
             "name": "addText",
-            "type": "Text",
-            "description": "Append new text entry"
+            "type": "TextBlock",
+            "description": "Append new text entry wrapped into TextBlock. Legacy method, use Paragraph instead.",
+            "deprecated": "0.5.0"
         }
     ]
 }

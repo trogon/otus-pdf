@@ -3,7 +3,7 @@
     "name": "PageSizeInfo",
     "description": "Describes page size information (immutable type)",
     "introduced": "0.2.0",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "properties": [
         {
             "name": "height",

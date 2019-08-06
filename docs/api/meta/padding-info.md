@@ -1,11 +1,8 @@
 ---
-layout: page
+layout: apidoc
 title: PaddingInfo
 apiname: meta.PaddingInfo
 parent: meta
 grand_parent: API
+nav_order: PaddingInfo
 ---
-
-{% include api_layout.md %}
-
-{% include examples_layout.md %}

@@ -16,9 +16,9 @@
 title: Otus PDF
 email: otuspdf@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Write an description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  OtusPDF library documentation pages. Website contains API documentation,
+  examples and guidelines for library usage. It contains installation
+  instructions.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  trogon/otus-pdf
@@ -28,6 +28,16 @@ markdown: kramdown
 theme: just-the-docs
 plugins:
   - jekyll-feed
+
+# Enable or disable the site search
+search_enabled: true
+
+# Aux links for the upper right navigation
+aux_links:
+  "Trogon":
+    - "https://trogon.eu"
+  "Go to GitHub":
+    - "https://github.com/trogon/otus-pdf"
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

@@ -1,0 +1,34 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "InlineCollection",
+    "description": "Describes collection of inlines",
+    "introduced": "0.4.0",
+    "properties": [],
+    "methods": [
+        {
+            "name": "add",
+            "type": "Inline",
+            "description": "Add inline at the end of collection"
+        },
+        {
+            "name": "contains",
+            "type": "boolean",
+            "description": "Check if inline exists in collection"
+        },
+        {
+            "name": "insertAfter",
+            "type": "boolean",
+            "description": "Insert inline into collection after given inline, returns true if inline was inserted"
+        },
+        {
+            "name": "insertBefore",
+            "type": "boolean",
+            "description": "Insert inline into collection before given inline, returns true if inline was inserted"
+        },
+        {
+            "name": "remove",
+            "type": "boolean",
+            "description": "Removes inline from the collection, returns true if inline was removed"
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "$schema": "http://schema.trogon.eu/json/apidocs.json",
+    "name": "RectInfo",
+    "description": "Describes 2D rectangle information (immutable type). The type does not determine origin of rectangle position.",
+    "introduced": "0.4.0",
+    "properties": [
+        {
+            "name": "height",
+            "type": "float",
+            "access": "Read Only",
+            "description": "Stores rectangle height"
+        },
+        {
+            "name": "width",
+            "type": "float",
+            "access": "Read Only",
+            "description": "Stores rectangle width"
+        },
+        {
+            "name": "x",
+            "type": "float",
+            "access": "Read Only",
+            "description": "Stores rectangle x position"
+        },
+        {
+            "name": "y",
+            "type": "float",
+            "access": "Read Only",
+            "description": "Stores rectangle y position"
+        }
+    ],
+    "methods": []
+}

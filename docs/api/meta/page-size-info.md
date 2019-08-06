@@ -1,11 +1,8 @@
 ---
-layout: page
+layout: apidoc
 title: PageSizeInfo
 apiname: meta.PageSizeInfo
 parent: meta
 grand_parent: API
+nav_order: PageSizeInfo
 ---
-
-{% include api_layout.md %}
-
-{% include examples_layout.md %}
