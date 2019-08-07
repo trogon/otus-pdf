@@ -16,22 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace trogon\otuspdf\meta;
+namespace trogon\otuspdf;
 
-class TextElementInfo extends \trogon\otuspdf\base\DependencyObject
+use trogon\otuspdf\meta\TableInfo;
+use trogon\otuspdf\TableColumnCollection;
+use trogon\otuspdf\TableRowGroupCollection;
+
+class Table extends \trogon\otuspdf\Block
 {
-    // public $background;
-    // public $contentEnd;
-    // public $contentStart;
-    // public $elementEnd;
-    // public $elementStart;
-    public $fontFamily;
-    public $fontSize;
-    public $fontStretch;
-    // public $fontStyle;
-    // public $fontWeight;
-    public $foreground;
-    // public $logicalChildren;
-    // public $textEffects;
-    // public $typography;
+    private $columns;
+    private $rowGroups;
+
+    public function init()
+    {
+        parent::init();
+        $this->columns = new TableColumnCollection();
+        $this->rowGroups = new TableRowGroupCollection();
+    }
+
+    protected function createInfo($config)
+    {
+        return new TableInfo($config);
+    }
+
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    public function getRowGroups()
+    {
+        return $this->rowGroups;
+    }
 }

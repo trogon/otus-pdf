@@ -18,20 +18,7 @@
  */
 namespace trogon\otuspdf\meta;
 
-class TextElementInfo extends \trogon\otuspdf\base\DependencyObject
+class TableCellInfo extends \trogon\otuspdf\meta\TextElementInfo
 {
-    // public $background;
-    // public $contentEnd;
-    // public $contentStart;
-    // public $elementEnd;
-    // public $elementStart;
-    public $fontFamily;
-    public $fontSize;
-    public $fontStretch;
-    // public $fontStyle;
-    // public $fontWeight;
-    public $foreground;
-    // public $logicalChildren;
-    // public $textEffects;
-    // public $typography;
+
 }
