@@ -60,6 +60,15 @@
             "problemMatcher": []
         },
         {
+            "label": "Build Docs for Publish",
+            "type": "shell",
+            "command": "bundle exec jekyll build --config _config_pub.yml",
+            "options": {
+                "cwd": "${workspaceRoot}/docs"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Run Docs DEV",
             "type": "shell",
             "command": "bundle exec jekyll serve --config _config_dev.yml",
