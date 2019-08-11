@@ -23,7 +23,7 @@ class RectInfo extends \trogon\otuspdf\base\DependencyObject
     const INVERT_NONE = 0;
     const INVERT_HORIZONTAL = 1;
     const INVERT_VERTICAL = 2;
-    const INVERT_ALL = self::INVERT_HORIZONTAL | self::INVERT_VERTICAL;
+    const INVERT_ALL = 3;
 
     private $x;
     private $y;
