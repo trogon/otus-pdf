@@ -24,6 +24,7 @@ use trogon\otuspdf\io\InlineRender;
 use trogon\otuspdf\io\PdfContentBuilder;
 use trogon\otuspdf\PageBreak;
 use trogon\otuspdf\Paragraph;
+use trogon\otuspdf\Table;
 use trogon\otuspdf\TextBlock;
 
 class BlockRender extends \trogon\otuspdf\base\DependencyObject
@@ -74,6 +75,11 @@ class BlockRender extends \trogon\otuspdf\base\DependencyObject
         return $pageContentBox;
     }
 
+    public function computeTableBox($tableInfo, $pageContentBox)
+    {
+        return $pageContentBox;
+    }
+
     public static function updateRemainingBox($box, $width, $height)
     {
         return new RectInfo(
@@ -111,6 +117,15 @@ class BlockRender extends \trogon\otuspdf\base\DependencyObject
                 $content = '';
                 $remainingBox = $pageContentBox;
                 $inlineRender->resetRemainingBox();
+            } elseif ($block instanceof Table) {
+                $tableRender = new TableRender(
+                    $this->contentBuilder,
+                    $this->fontRender,
+                    $pageContentBox
+                );
+                $blockBox = $this->computeTableBox($block->info, $remainingBox);
+                $content .= $tableRender->render($block, $blockBox);
+                $remainingBox = $tableRender->remainingBox;
             }
         }
         if (!empty($content)) {
