@@ -65,12 +65,24 @@ class BlockRender extends \trogon\otuspdf\base\DependencyObject
             ($height - $topMargin) * 72,
             ($width - $leftMargin - $rightMargin) * 72,
             ($height - $topMargin - $bottomMargin) * 72,
+            RectInfo::INVERT_VERTICAL
         );
     }
 
     public function computeParagraphBox($paragraphInfo, $pageContentBox)
     {
         return $pageContentBox;
+    }
+
+    public static function updateRemainingBox($box, $width, $height)
+    {
+        return new RectInfo(
+            $box->x + $width,
+            $box->y - $height,
+            $box->width - $width,
+            $box->height - $height,
+            $box->orientation
+        );
     }
 
     public function renderBlocks($blocks, $pageInfo)

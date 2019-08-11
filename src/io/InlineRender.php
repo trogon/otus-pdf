@@ -80,19 +80,19 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
         return $this->remainingBox;
     }
 
-    public function updateRemainingBox($fontSize)
+    public function updateRemainingBox($width, $height)
     {
-        $this->remainingBox = new RectInfo(
-            $this->remainingBox->x,
-            $this->remainingBox->y - $fontSize,
-            $this->remainingBox->width,
-            $this->remainingBox->height - $fontSize,
+        $this->remainingBox = BlockRender::updateRemainingBox(
+            $this->remainingBox,
+            $width,
+            $height
         );
     }
 
     public function renderInlines($inlines, $blockBox, $blockInfo)
     {
         $cb = $this->contentBuilder;
+        $this->remainingBox = $blockBox;
         $this->textRender->init();
 
         $fontSize = null;
@@ -120,7 +120,7 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
             if ($inlineNo == 0) {
                 $startPosition = $this->computeTextStartPosition($blockBox, $fontSize, $textIndent);
                 $content .= $cb->setTextPosition($startPosition->x, $startPosition->y);
-                $this->updateRemainingBox($fontSize);
+                $this->updateRemainingBox(0, $fontSize);
             }
             $content .= $this->renderInlineText($inline->text, $blockBox, $fontSize, $fontData, $textIndent);
         }
@@ -144,7 +144,7 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
                     $this->textRender->setMaxWidth($blockBox->width);
                     $textIndent = null;
                 }
-                $this->updateRemainingBox($fontSize);
+                $this->updateRemainingBox(0, $fontSize);
                 $content .= $cb->beginTextRender();
             }
             $content .= $subLine;
