@@ -1,11 +1,14 @@
 <?php
-namespace trogon\otuspdf\test\io;
+namespace trogon\otuspdf\test\unit\io;
 
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\base\InvalidCallException;
 use trogon\otuspdf\io\PdfBuilder;
 
+/**
+ * @covers \trogon\otuspdf\io\PdfBuilder
+ */
 final class PdfBuilderTest extends TestCase
 {
     private $pdfArrayClass = 'trogon\otuspdf\io\pdf\PdfArray';

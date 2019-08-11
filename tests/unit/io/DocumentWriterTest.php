@@ -1,5 +1,5 @@
 <?php
-namespace trogon\otuspdf\test\io;
+namespace trogon\otuspdf\test\unit\io;
 
 use PHPUnit\Framework\TestCase;
 
@@ -9,6 +9,9 @@ use trogon\otuspdf\io\DocumentWriter;
 
 use trogon\otuspdf\test\fixture\ProviderStub;
 
+/**
+ * @covers \trogon\otuspdf\io\DocumentWriter
+ */
 final class DocumentWriterTest extends TestCase
 {
     private $documentWriterClass = 'trogon\otuspdf\io\DocumentWriter';

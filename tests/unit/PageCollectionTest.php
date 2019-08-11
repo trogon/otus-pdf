@@ -1,11 +1,14 @@
 <?php
-namespace trogon\otuspdf\test;
+namespace trogon\otuspdf\test\unit;
 
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\PageCollection;
 use trogon\otuspdf\base\InvalidCallException;
 
+/**
+ * @covers \trogon\otuspdf\PageCollection
+ */
 final class PageCollectionTest extends TestCase
 {
     private $pageCollectionClass = 'trogon\otuspdf\PageCollection';

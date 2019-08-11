@@ -1,11 +1,14 @@
 <?php
-namespace trogon\otuspdf\test;
+namespace trogon\otuspdf\test\unit;
 
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Run;
 use trogon\otuspdf\base\InvalidCallException;
 
+/**
+ * @covers \trogon\otuspdf\Run
+ */
 final class RunTest extends TestCase
 {
     private $runClass = 'trogon\otuspdf\Run';
