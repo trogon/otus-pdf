@@ -48,4 +48,14 @@ class Table extends \trogon\otuspdf\Block
     {
         return $this->rowGroups;
     }
+
+    public function addColumn($config = [])
+    {
+        return $this->columns[] = new TableColumn($config);
+    }
+
+    public function addRowGroup($config = [])
+    {
+        return $this->rowGroups[] = new TableRowGroup($config);
+    }
 }

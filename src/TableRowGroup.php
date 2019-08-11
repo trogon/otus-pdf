@@ -34,4 +34,9 @@ class TableRowGroup extends \trogon\otuspdf\TextElement
     {
         return $this->rows;
     }
+
+    public function addRow($config = [])
+    {
+        return $this->rows[] = new TableRow($config);
+    }
 }

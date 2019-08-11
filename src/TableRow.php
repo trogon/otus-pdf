@@ -34,4 +34,9 @@ class TableRow extends \trogon\otuspdf\TextElement
     {
         return $this->cells;
     }
+
+    public function addCell($config = [])
+    {
+        return $this->cells[] = new TableCell($config);
+    }
 }
