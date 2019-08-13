@@ -29,6 +29,7 @@ class PdfTrailer extends \trogon\otuspdf\base\DependencyObject
     {
         parent::init();
         $this->content = new PdfDictionary();
+        $this->xrefOffset = 0;
     }
 
     public function getXrefOffset()
@@ -51,7 +52,7 @@ class PdfTrailer extends \trogon\otuspdf\base\DependencyObject
         $content = "trailer\n";
         $content .= $this->content->toString() . "\n";
         $content .= "startxref\n";
-        $content .= "$this->xrefOffset";
+        $content .= "{$this->xrefOffset}";
         return $content;
     }
 }
