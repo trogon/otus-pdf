@@ -3,24 +3,22 @@ namespace trogon\otuspdf\test\unit;
 
 use PHPUnit\Framework\TestCase;
 
-use trogon\otuspdf\TextElement;
 use trogon\otuspdf\base\InvalidCallException;
-
-use trogon\otuspdf\test\fixture\TextElementDummy;
+use trogon\otuspdf\io\FontInstaller;
 
 /**
- * @covers \trogon\otuspdf\TextElement
+ * @covers \trogon\otuspdf\io\FontInstaller
  */
-final class TextElementTest extends TestCase
+final class FontInstallerTest extends TestCase
 {
-    private $textElementClass = 'trogon\otuspdf\TextElement';
+    private $fontInstallerClass = 'trogon\otuspdf\io\FontInstaller';
     private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
         $this->assertInstanceOf(
-            $this->textElementClass,
-            new TextElementDummy()
+            $this->fontInstallerClass,
+            new FontInstaller()
         );
     }
 }

@@ -20,6 +20,8 @@ namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\ChainIterator;
 use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\FontRender;
+use trogon\otuspdf\io\PdfContentBuilder;
 use trogon\otuspdf\io\TextRender;
 use trogon\otuspdf\meta\PositionInfo;
 use trogon\otuspdf\meta\RectInfo;
@@ -34,7 +36,10 @@ class InlineRender extends \trogon\otuspdf\base\DependencyObject
     private $remainingBox;
     private $textRender;
 
-    public function __construct($contentBuilder, $fontRender, $pageContentBox)
+    public function __construct(
+        PdfContentBuilder $contentBuilder,
+        FontRender $fontRender,
+        RectInfo $pageContentBox)
     {
         $this->contentBuilder = $contentBuilder;
         $this->fontRender = $fontRender;

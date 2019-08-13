@@ -19,6 +19,8 @@
 namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\PdfBuilder;
+use trogon\otuspdf\io\pdf\PdfDictionary;
 use trogon\otuspdf\meta\PaddingInfo;
 use trogon\otuspdf\meta\PageInfo;
 use trogon\otuspdf\meta\PageOrientationInfo;
@@ -28,13 +30,13 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
 {
     private $defaultPageInfo;
     private $pageCollectionObj;
-    private $pdfBuilder;
-    private $resourcesDict;
+    private $builder;
+    private $resourceCatalog;
 
-    public function __construct($pdfBuilder, $resourcesDict)
+    public function __construct(PdfBuilder $builder, PdfDictionary $resourceCatalog)
     {
-        $this->pdfBuilder = $pdfBuilder;
-        $this->resourcesDict = $resourcesDict;
+        $this->builder = $builder;
+        $this->resourceCatalog = $resourceCatalog;
         parent::__construct();
     }
 
@@ -63,8 +65,8 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
         $defaultArraySize = $this->createArraySize($this->defaultPageInfo);
 
         $this->pageCollectionObj = 
-            $this->pdfBuilder->createPageCollection($this->resourcesDict, $defaultArraySize);
-        $this->pdfBuilder->registerPageCollection($catalogObj, $this->pageCollectionObj);
+            $this->builder->createPageCollection($this->resourceCatalog, $defaultArraySize);
+        $this->builder->registerPageCollection($catalogObj, $this->pageCollectionObj);
         return $this->pageCollectionObj;
     }
 
@@ -81,20 +83,21 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
     private function renderSinglePage($pageInfo, $pageContent)
     {
         // PDF Page <n>
-        $pageObj = $this->pdfBuilder->createPage(
+        $pageObj = $this->builder->createPage(
             $this->pageCollectionObj
         );
         $arraySize = $this->createArraySize($pageInfo, $this->defaultPageInfo);
         if ($arraySize != null) {
-            $this->pdfBuilder->registerMediaBox($pageObj, $arraySize);
+            $this->builder->registerCropBox($pageObj, $arraySize);
+            $this->builder->registerMediaBox($pageObj, $arraySize);
         }
-        $this->pdfBuilder->registerPage($this->pageCollectionObj, $pageObj);
+        $this->builder->registerPage($this->pageCollectionObj, $pageObj);
         yield $pageObj;
 
         // PDF Page <n> content
-        $pageContentObj = $this->pdfBuilder->createPageContent();
+        $pageContentObj = $this->builder->createPageContent();
         $this->writeContentStream($pageContentObj, $pageContent);
-        $this->pdfBuilder->registerPageContent($pageObj, $pageContentObj);
+        $this->builder->registerPageContent($pageObj, $pageContentObj);
         yield $pageContentObj;
     }
 
@@ -114,9 +117,9 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
         $height = $unitInfo->toInch($size->height) *72;
 
         if ($orientation->isLandscape()) {
-            $pageSizeArray = $this->pdfBuilder->createMediaBox($width, $height);
+            $pageSizeArray = $this->builder->createMediaBox($width, $height);
         } else {
-            $pageSizeArray = $this->pdfBuilder->createMediaBox($height, $width);
+            $pageSizeArray = $this->builder->createMediaBox($height, $width);
         }
         return $pageSizeArray;
     }
@@ -124,6 +127,6 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
     private function writeContentStream($pageContentObj, $content)
     {
         $contentStream = \gzcompress($content);
-        $this->pdfBuilder->setStreamContent($pageContentObj, $contentStream);
+        $this->builder->setStreamContent($pageContentObj, $contentStream);
     }
 }
