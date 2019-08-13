@@ -115,6 +115,22 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return new PdfDictionary();
     }
 
+    public function createExternalGraphicState()
+    {
+        $extGStateObj = $this->objectFactory->create();
+        $extGStateObj->content = new PdfDictionary();
+        $extGStateObj->content->addItem(
+            new PdfName(['value' => 'Type']),
+            new PdfName(['value' => 'ExtGState'])
+        );
+        return $extGStateObj;
+    }
+
+    public function createExternalGraphicStatesResource()
+    {
+        return new PdfDictionary();
+    }
+
     public function createMediaBox($width, $height, $x = 0, $y = 0)
     {
         $mediaBox = new PdfArray();
@@ -175,10 +191,7 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
             new PdfName(['value' => 'Resources']),
             $resourcesDict
         );
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'MediaBox']),
-            $mediaBox
-        );
+        self::registerMediaBox($pageCollectionObj, $mediaBox);
         return $pageCollectionObj;
     }
 
@@ -194,6 +207,7 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         $procSetObj = $this->objectFactory->create();
         $procSetObj->content = new PdfArray();
         $procSetObj->content->addItem(new PdfName(['value' => 'PDF']));
+        $procSetObj->content->addItem(new PdfName(['value' => 'Text']));
         return $procSetObj;
     }
 
@@ -202,7 +216,7 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return  new PdfDictionary();
     }
 
-    public function createTrailer($rootObject, $xrefOffset, $xrefSize, $documentInfoObject = null)
+    public function createTrailer($rootObject, $xrefOffset, $xrefSize, $documentInfoObject = null, $idHex = null)
     {
         $trailer = new PdfTrailer([
             'xrefOffset' => $xrefOffset
@@ -221,13 +235,39 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
                 new PdfObjectReference(['object' => $documentInfoObject])
             );
         }
+        if (!empty($idHex)) {
+            $idArray = new PdfArray();
+            $idArray->addItem(new PdfString([
+                'value' => $idHex,
+                'type' => PdfString::TYPE_HEX
+            ]));
+            $idArray->addItem(new PdfString([
+                'value' => $idHex,
+                'type' => PdfString::TYPE_HEX
+            ]));
+            $trailer->content->addItem(
+                new PdfName(['value' => 'ID']),
+                $idArray
+            );
+        }
         return $trailer;
     }
 
-    public static function registerFont($fontsDict, $fontObj)
+    public static function registerCropBox($pageObj, $cropBoxArray)
     {
+        $pageObj->content->addItem(
+            new PdfName(['value' => 'CropBox']),
+            $cropBoxArray
+        );
+    }
+
+    public static function registerFont($fontsDict, $fontObj, $alias = null)
+    {
+        if ($alias === null) {
+            $alias = $fontObj->content->getItem('Name')->value;
+        }
         $fontsDict->addItem(
-            new PdfName(['value' => $fontObj->content->getItem('Name')->value]),
+            new PdfName(['value' => $alias]),
             new PdfObjectReference(['object' => $fontObj])
         );
     }
@@ -237,6 +277,30 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         $resourcesDict->addItem(
             new PdfName(['value' => 'Font']),
             $fontsDict
+        );
+    }
+
+    public static function registerExternalGraphicState($extGStatesDict, $extGStateObj, $alias)
+    {
+        $extGStatesDict->addItem(
+            new PdfName(['value' => $alias]),
+            new PdfObjectReference(['object' => $extGStateObj])
+        );
+    }
+
+    public static function registerExternalGraphicStatesResource($resourcesDict, $extGStatesDict)
+    {
+        $resourcesDict->addItem(
+            new PdfName(['value' => 'ExtGState']),
+            $extGStatesDict
+        );
+    }
+
+    public static function registerMetadata($catalogObj, $metadataObj)
+    {
+        $catalogObj->content->addItem(
+            new PdfName(['Name' => 'Metadata']),
+            new PdfObjectReference(['object' => $metadataObj])
         );
     }
 

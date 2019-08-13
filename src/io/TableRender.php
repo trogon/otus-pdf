@@ -115,9 +115,9 @@ class TableRender extends \trogon\otuspdf\base\DependencyObject
                     if (array_key_exists($cn, $cellBoxes)) {
                         $cellBox = $cellBoxes[$cn];
                         $cellBorderBox = new RectInfo(
-                            $cellBox->x,
+                            $cellBox->x - self::TABLE_MARGIN / 2.0,
                             $cellBox->y,
-                            $cellBox->width,
+                            $cellBox->width + self::TABLE_MARGIN,
                             $cellBox->top - $minY,
                             $cellBox->orientation
                         );
@@ -128,11 +128,11 @@ class TableRender extends \trogon\otuspdf\base\DependencyObject
             }
         }
         $this->remainingBox = new RectInfo(
-            $columnBoxes[0]->x,
+            $tableBox->x,
             $columnBoxes[0]->y,
-            $remainingBox->width,
+            $tableBox->width,
             $columnBoxes[0]->height,
-            $remainingBox->orientation
+            $tableBox->orientation
         );
 
         return $content;
@@ -147,9 +147,9 @@ class TableRender extends \trogon\otuspdf\base\DependencyObject
         $boxes = [];
         foreach ($columns as $cn => $column) {
             $boxes[] = new RectInfo(
-                $x,
+                $x + self::TABLE_MARGIN / 2.0,
                 $tableBox->y - self::TABLE_MARGIN,
-                $width,
+                $width - self::TABLE_MARGIN,
                 $tableBox->height - self::TABLE_MARGIN,
                 $tableBox->orientation
             );
