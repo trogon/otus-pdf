@@ -32,7 +32,7 @@ use trogon\otuspdf\TextBlock;
 
 class TableRender extends \trogon\otuspdf\base\DependencyObject
 {
-    const TABLE_MARGIN = 72 / 8;
+    const TABLE_MARGIN = 9; // exp (72 / 8)
 
     private $contentBuilder;
     private $defaultInlineInfo;
