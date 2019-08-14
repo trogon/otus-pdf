@@ -87,11 +87,11 @@ for ($i=0; $i < 1; $i++) {
     $row = $rowGroup->addRow();
 
     $par = new Paragraph();
-    $par->addRun(' Table content G1 A1');
+    $par->addRun('Table content G1 A1');
     $cell = $row->addCell()->blocks->add($par);
 
     $par = new Paragraph();
-    $par->addRun(' Table content G1 B1');
+    $par->addRun('Table content G1 B1');
     $cell = $row->addCell()->blocks->add($par);
 
     $row = $rowGroup->addRow();

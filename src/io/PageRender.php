@@ -88,8 +88,8 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
         );
         $arraySize = $this->createArraySize($pageInfo, $this->defaultPageInfo);
         if ($arraySize != null) {
-            $this->builder->registerCropBox($pageObj, $arraySize);
-            $this->builder->registerMediaBox($pageObj, $arraySize);
+            $this->builder->setCropBox($pageObj, $arraySize);
+            $this->builder->setMediaBox($pageObj, $arraySize);
         }
         $this->builder->registerPage($this->pageCollectionObj, $pageObj);
         yield $pageObj;
@@ -127,6 +127,7 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
     private function writeContentStream($pageContentObj, $content)
     {
         $contentStream = \gzcompress($content);
-        $this->builder->setStreamContent($pageContentObj, $contentStream);
+        $stream = $this->builder->createStreamContent($contentStream);
+        $this->builder->setStream($pageContentObj, $stream);
     }
 }
