@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 use trogon\otuspdf\io\pdf\PdfObjectFactory;
 use trogon\otuspdf\base\InvalidCallException;
 
+/**
+ * @covers \trogon\otuspdf\io\pdf\PdfObjectFactory
+ */
 final class PdfObjectFactoryTest extends TestCase
 {
     private $pdfObjectClass = 'trogon\otuspdf\io\pdf\PdfObject';

@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 use trogon\otuspdf\io\pdf\PdfTrailer;
 use trogon\otuspdf\base\InvalidCallException;
 
+/**
+ * @covers \trogon\otuspdf\io\pdf\PdfTrailer
+ */
 final class PdfTrailerTest extends TestCase
 {
     private $pdfDictionaryClass = 'trogon\otuspdf\io\pdf\PdfDictionary';
