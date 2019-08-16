@@ -20,23 +20,66 @@ namespace trogon\otuspdf\meta;
 
 class RectInfo extends \trogon\otuspdf\base\DependencyObject
 {
+    const INVERT_NONE = 0;
+    const INVERT_HORIZONTAL = 1;
+    const INVERT_VERTICAL = 2;
+    const INVERT_ALL = 3;
+
     private $x;
     private $y;
     private $width;
     private $height;
+    private $orientation;
+    private $horizontalInvert;
+    private $verticalInvert;
 
-    public function __construct($x, $y, $width, $height)
+    public function __construct($x, $y, $width, $height, $orientation = self::INVERT_NONE)
     {
         $this->x = $x;
         $this->y = $y;
         $this->width = $width;
         $this->height = $height;
+        $this->orientation = $orientation;
         parent::__construct();
+    }
+
+    public function init()
+    {
+        parent::init();
+        $hasHorizontalInvert = (self::INVERT_HORIZONTAL & $this->orientation) !== 0;
+        $hasVerticalInvert = (self::INVERT_VERTICAL & $this->orientation) !== 0;
+        $this->horizontalInvert = $hasHorizontalInvert ? -1.0 : 1.0;
+        $this->verticalInvert = $hasVerticalInvert ? -1.0 : 1.0;
+    }
+
+    public function getBottom()
+    {
+        return $this->y + $this->height * $this->verticalInvert;
     }
 
     public function getHeight()
     {
         return $this->height;
+    }
+
+    public function getOrientation()
+    {
+        return $this->orientation;
+    }
+
+    public function getLeft()
+    {
+        return $this->x;
+    }
+
+    public function getRight()
+    {
+        return $this->x + $this->width * $this->horizontalInvert;
+    }
+
+    public function getTop()
+    {
+        return $this->y;
     }
 
     public function getWidth()

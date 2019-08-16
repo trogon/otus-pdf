@@ -29,7 +29,9 @@ class PdfString extends \trogon\otuspdf\base\DependencyObject
     public function init()
     {
         parent::init();
-        $this->type = self::TYPE_LITERAL;
+        if (!in_array($this->type, [self::TYPE_LITERAL, self::TYPE_HEX])) {
+            $this->type = self::TYPE_LITERAL;
+        }
     }
 
     public function getType()

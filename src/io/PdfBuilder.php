@@ -41,11 +41,17 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         $this->objectFactory = new PdfObjectFactory();
     }
 
+    /**
+     * @return PdfObjectFactory
+     */
     public function getObjectFactory()
     {
         return $this->objectFactory;
     }
 
+    /**
+     * @return PdfObject
+     */
     public function createBasicFont($name, $family)
     {
         $fontObj = $this->objectFactory->create();
@@ -73,6 +79,9 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return $fontObj;
     }
 
+    /**
+     * @return PdfObject
+     */
     public function createCatalog()
     {
         $catalogObj = $this->objectFactory->create();
@@ -84,11 +93,17 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return $catalogObj;
     }
 
+    /**
+     * @return PdfCrossReference
+     */
     public function createCrossReference()
     {
         return new PdfCrossReference();
     }
 
+    /**
+     * @return PdfDictionary
+     */
     public function createDocumentInfo($config = [])
     {
         $dictionary = new PdfDictionary();
@@ -110,11 +125,39 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return null;
     }
 
+    /**
+     * @return PdfDictionary
+     */
     public function createFontsResource()
     {
         return new PdfDictionary();
     }
 
+    /**
+     * @return PdfObject
+     */
+    public function createExternalGraphicState()
+    {
+        $extGStateObj = $this->objectFactory->create();
+        $extGStateObj->content = new PdfDictionary();
+        $extGStateObj->content->addItem(
+            new PdfName(['value' => 'Type']),
+            new PdfName(['value' => 'ExtGState'])
+        );
+        return $extGStateObj;
+    }
+
+    /**
+     * @return PdfDictionary
+     */
+    public function createExternalGraphicStatesResource()
+    {
+        return new PdfDictionary();
+    }
+
+    /**
+     * @return PdfArray
+     */
     public function createMediaBox($width, $height, $x = 0, $y = 0)
     {
         $mediaBox = new PdfArray();
@@ -125,6 +168,9 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return $mediaBox;
     }
 
+    /**
+     * @return PdfObject
+     */
     public function createOutlines()
     {
         $outlinesObj = $this->objectFactory->create();
@@ -140,7 +186,10 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return $outlinesObj;
     }
 
-    public function createPage($pageCollectionObj)
+    /**
+     * @return PdfObject
+     */
+    public function createPage(PdfObject $pageCollectionObj)
     {
         $pageObj = $this->objectFactory->create();
         $pageObj->content = new PdfDictionary();
@@ -155,6 +204,9 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return $pageObj;
     }
 
+    /**
+     * @return PdfObject
+     */
     public function createPageCollection($resourcesDict, $mediaBox)
     {
         $pageCollectionObj = $this->objectFactory->create();
@@ -175,13 +227,14 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
             new PdfName(['value' => 'Resources']),
             $resourcesDict
         );
-        $pageCollectionObj->content->addItem(
-            new PdfName(['value' => 'MediaBox']),
-            $mediaBox
-        );
+        self::setCropBox($pageCollectionObj, $mediaBox);
+        self::setMediaBox($pageCollectionObj, $mediaBox);
         return $pageCollectionObj;
     }
 
+    /**
+     * @return PdfObject
+     */
     public function createPageContent()
     {
         $pageContentObj = $this->objectFactory->create();
@@ -189,20 +242,40 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         return $pageContentObj;
     }
 
+    /**
+     * @return PdfObject
+     */
     public function createProcSet()
     {
         $procSetObj = $this->objectFactory->create();
         $procSetObj->content = new PdfArray();
         $procSetObj->content->addItem(new PdfName(['value' => 'PDF']));
+        $procSetObj->content->addItem(new PdfName(['value' => 'Text']));
         return $procSetObj;
     }
 
+    /**
+     * @return PdfDictionary
+     */
     public function createResourceCatalog()
     {
         return  new PdfDictionary();
     }
 
-    public function createTrailer($rootObject, $xrefOffset, $xrefSize, $documentInfoObject = null)
+    /**
+     * @return PdfStream
+     */
+    public static function createStreamContent($streamContent)
+    {
+        $stream = new PdfStream();
+        $stream->value = $streamContent;
+        return $stream;
+    }
+
+    /**
+     * @return PdfTrailer
+     */
+    public function createTrailer($rootObject, $xrefOffset, $xrefSize, $documentInfoObject = null, $idHex = null)
     {
         $trailer = new PdfTrailer([
             'xrefOffset' => $xrefOffset
@@ -221,77 +294,204 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
                 new PdfObjectReference(['object' => $documentInfoObject])
             );
         }
+        if (!empty($idHex)) {
+            $idArray = new PdfArray();
+            $idArray->addItem(new PdfString([
+                'value' => $idHex,
+                'type' => PdfString::TYPE_HEX
+            ]));
+            $idArray->addItem(new PdfString([
+                'value' => $idHex,
+                'type' => PdfString::TYPE_HEX
+            ]));
+            $trailer->content->addItem(
+                new PdfName(['value' => 'ID']),
+                $idArray
+            );
+        }
         return $trailer;
     }
 
-    public static function registerFont($fontsDict, $fontObj)
+    /**
+     * @return void
+     */
+    public static function registerCropBox(PdfObject $page, PdfObject $cropBox)
     {
-        $fontsDict->addItem(
-            new PdfName(['value' => $fontObj->content->getItem('Name')->value]),
-            new PdfObjectReference(['object' => $fontObj])
+        $page->content->addItem(
+            new PdfName(['value' => 'CropBox']),
+            new PdfObjectReference(['object' => $cropBox])
         );
     }
 
-    public static function registerFontsResource($resourcesDict, $fontsDict)
+    /**
+     * @return void
+     */
+    public static function registerFont(PdfDictionary $fonts, PdfObject $font, $alias = null)
     {
-        $resourcesDict->addItem(
-            new PdfName(['value' => 'Font']),
-            $fontsDict
+        if ($alias === null) {
+            $alias = $font->content->getItem('Name')->value;
+        }
+        $fonts->addItem(
+            new PdfName(['value' => $alias]),
+            new PdfObjectReference(['object' => $font])
         );
     }
 
-    public static function registerMediaBox($pageObj, $mediaBoxArray)
+    /**
+     * @return void
+     */
+    public static function registerExternalGraphicState(
+        PdfDictionary $extGStates,
+        PdfObject $extGState,
+        $alias)
     {
-        $pageObj->content->addItem(
+        $extGStates->addItem(
+            new PdfName(['value' => $alias]),
+            new PdfObjectReference(['object' => $extGState])
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public static function registerExternalGraphicStatesResource(
+        PdfDictionary $resources,
+        PdfObject $extGStates)
+    {
+        $resources->addItem(
+            new PdfName(['value' => 'ExtGState']),
+            new PdfObjectReference(['object' => $extGStates])
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public static function registerMetadata(PdfObject $catalog, PdfObject $metadata)
+    {
+        $catalog->content->addItem(
+            new PdfName(['value' => 'Metadata']),
+            new PdfObjectReference(['object' => $metadata])
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public static function registerMediaBox(PdfObject $page, PdfObject $mediaBox)
+    {
+        $page->content->addItem(
             new PdfName(['value' => 'MediaBox']),
-            $mediaBoxArray
+            new PdfObjectReference(['object' => $mediaBox])
         );
     }
 
-    public static function registerOutlines($catalogObj, $outlinesObj)
+    /**
+     * @return void
+     */
+    public static function registerOutlines(PdfObject $catalog, PdfObject $outlines)
     {
-        $catalogObj->content->addItem(
+        $catalog->content->addItem(
             new PdfName(['value' => 'Outlines']),
-            new PdfObjectReference(['object' => $outlinesObj])
+            new PdfObjectReference(['object' => $outlines])
         );
     }
 
-    public static function registerPage($pageCollectionObj, $pageObj)
+    /**
+     * @return void
+     */
+    public static function registerPage(PdfObject $pageCollection, PdfObject $page)
     {
-        $pageCollectionObj->content->getItem('Kids')->addItem(
-            new PdfObjectReference(['object' => $pageObj])
+        $pageCollection->content->getItem('Kids')->addItem(
+            new PdfObjectReference(['object' => $page])
         );
-        $pageCollectionObj->content->getItem('Count')->value++;
+        $pageCollection->content->getItem('Count')->value++;
     }
 
-    public static function registerPageCollection($catalogObj, $pageCollectionObj)
+    /**
+     * @return void
+     */
+    public static function registerPageCollection(PdfObject $catalog, PdfObject $pageCollection)
     {
-        $catalogObj->content->addItem(
+        $catalog->content->addItem(
             new PdfName(['value' => 'Pages']),
-            new PdfObjectReference(['object' => $pageCollectionObj])
+            new PdfObjectReference(['object' => $pageCollection])
         );
     }
 
-    public static function registerPageContent($pageObj, $pageContentObj)
+    /**
+     * @return void
+     */
+    public static function registerPageContent(PdfObject $page, PdfObject $pageContent)
     {
-        $pageObj->content->addItem(
+        $page->content->addItem(
             new PdfName(['value' => 'Contents']),
-            new PdfObjectReference(['object' => $pageContentObj])
+            new PdfObjectReference(['object' => $pageContent])
         );
     }
 
-    public static function registerProcSetResource($resourcesDict, $procSetObj)
+    /**
+     * @return void
+     */
+    public static function registerProcSetResource(PdfDictionary $resources, PdfObject $procSet)
     {
-        $resourcesDict->addItem(
+        $resources->addItem(
             new PdfName(['value' => 'ProcSet']),
-            new PdfObjectReference(['object' => $procSetObj])
+            new PdfObjectReference(['object' => $procSet])
         );
     }
 
-    public static function setStreamContent($object, $streamContent)
+    /**
+     * @return void
+     */
+    public static function setCropBox(PdfObject $page, PdfArray $cropBox)
     {
-        $stream = new PdfStream();
-        $stream->value = $streamContent;
+        $page->content->addItem(
+            new PdfName(['value' => 'CropBox']),
+            $cropBox
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public static function setExternalGraphicStatesResource(
+        PdfDictionary $resources,
+        PdfDictionary $extGStates)
+    {
+        $resources->addItem(
+            new PdfName(['value' => 'ExtGState']),
+            $extGStates
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public static function setFontsResource(PdfDictionary $resources, PdfDictionary $fonts)
+    {
+        $resources->addItem(
+            new PdfName(['value' => 'Font']),
+            $fonts
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public static function setMediaBox(PdfObject $page, PdfArray $mediaBox)
+    {
+        $page->content->addItem(
+            new PdfName(['value' => 'MediaBox']),
+            $mediaBox
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public static function setStream(PdfObject $object, PdfStream $stream)
+    {
         $object->stream = $stream;
         $object->content->addItem(
             new PdfName(['value' => 'Filter']),

@@ -1,11 +1,14 @@
 <?php
-namespace trogon\otuspdf\test\io\pdf;
+namespace trogon\otuspdf\test\unit\io\pdf;
 
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\io\pdf\PdfDictionary;
 use trogon\otuspdf\base\InvalidCallException;
 
+/**
+ * @covers \trogon\otuspdf\io\pdf\PdfDictionary
+ */
 final class PdfDictionaryTest extends TestCase
 {
     private $pdfDictionaryClass = 'trogon\otuspdf\io\pdf\PdfDictionary';

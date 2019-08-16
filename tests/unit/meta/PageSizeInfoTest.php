@@ -1,11 +1,14 @@
 <?php
-namespace trogon\otuspdf\test\meta;
+namespace trogon\otuspdf\test\unit\meta;
 
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\meta\PageSizeInfo;
 use trogon\otuspdf\base\InvalidCallException;
 
+/**
+ * @covers \trogon\otuspdf\meta\PageSizeInfo
+ */
 final class PageSizeInfoTest extends TestCase
 {
     private $pageSizeInfoClass = 'trogon\otuspdf\meta\PageSizeInfo';

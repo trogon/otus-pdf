@@ -138,11 +138,21 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
                     }
                     $lineWidth += $wordWidth;
                     if ($lineWidth > $this->maxWidth) {
-                        $this->lineWidth = $lineWidth - $wordWidth;
-                        $this->lineNumber++;
-                        yield $content;
-                        $lineWidth = $wordWidth;
-                        $content = $word;
+                        if ($wordWidth <= $this->maxWidth) {
+                            $this->lineNumber++;
+                            yield $content;
+                            $this->lineWidth = $lineWidth - $wordWidth;
+                            $lineWidth = $wordWidth;
+                            $content = $word;
+                        } else {
+                            foreach($this->splitWord($word, $this->maxWidth, $fontSize, $fontData) as $subwidth => $subword) {
+                                $this->lineNumber++;
+                                yield $content;
+                                $this->lineWidth = $lineWidth - $wordWidth;
+                                $lineWidth = $subwidth;
+                                $content = $subword;
+                            }
+                        }
                     } else {
                         $content .= $word;
                     }
@@ -161,6 +171,27 @@ class TextRender extends \trogon\otuspdf\base\DependencyObject
             $this->lineWidth = $lineWidth;
             $this->lineNumber++;
             yield $content;
+        }
+    }
+
+    public function splitWord($word, $maxWidth, $fontSize, $fontData)
+    {
+        $chars = mb_split(self::REGEX_SPLIT_CHARS, $word);
+        $width = 0;
+        $subword = '';
+        foreach ($chars as $char) {
+            $charCode = self::mb_ord($char); // Method available since PHP 7.0 :(
+            $charWidth = self::characterWidth($charCode, $fontSize, $fontData);
+            $width += $charWidth;
+            if ($width > $maxWidth) {
+                yield ($width - $charWidth) => $subword;
+                $width = $charWidth;
+                $subword = '';
+            }
+            $subword .= $char;
+        }
+        if ($width > 0) {
+            yield $width => $subword;
         }
     }
 

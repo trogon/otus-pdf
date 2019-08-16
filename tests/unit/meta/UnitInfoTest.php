@@ -1,11 +1,14 @@
 <?php
-namespace trogon\otuspdf\test\meta;
+namespace trogon\otuspdf\test\unit\meta;
 
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\meta\UnitInfo;
 use trogon\otuspdf\base\InvalidCallException;
 
+/**
+ * @covers \trogon\otuspdf\meta\UnitInfo
+ */
 final class UnitInfoTest extends TestCase
 {
     private $unitInfoClass = 'trogon\otuspdf\meta\UnitInfo';
