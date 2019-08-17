@@ -72,11 +72,20 @@ class PageRender extends \trogon\otuspdf\base\DependencyObject
 
     public function renderPage($pageInfo, $pageContents)
     {
+        $isEmpty = true;
         foreach ($pageContents as $pageContent) {
             $objects = $this->renderSinglePage($pageInfo, $pageContent);
             foreach ($objects as $object) {
                 yield $object;
+                $isEmpty = false;
             }
+        }
+        if ($isEmpty) {
+            $emptyContent = '';
+            $objects = $this->renderSinglePage($pageInfo, $emptyContent);
+            foreach ($objects as $object) {
+                yield $object;
+            }  
         }
     }
 
