@@ -54,7 +54,9 @@ class PdfCrossReference extends \trogon\otuspdf\base\DependencyObject
         $blockSize = 0;
         $currentBlock = 0;
         $currentObjectId = -1;
-        foreach ($this->objects as $id => $pdfObject) {
+        $keys = array_keys($this->objects);
+        sort($keys);
+        foreach ($keys as $id) {
             if ($id != $currentObjectId) {
                 $blocks[$currentBlock] = $blockSize;
                 $blockSize = 1;
@@ -73,17 +75,20 @@ class PdfCrossReference extends \trogon\otuspdf\base\DependencyObject
     {
         $content = "xref";
         $currentObjectId = -1;
-        foreach ($this->objects as $id => $pdfObject) {
+        $keys = array_keys($this->objects);
+        sort($keys);
+        foreach ($keys as $id) {
+            $pdfObject = $this->objects[$id];
             if ($id != $currentObjectId) {
                 $currentObjectId = $id;
                 $content .= "\n{$id} {$this->refBlocks[$id]}";
             }
-            if ($pdfObject instanceof PdfObject) {
+            if ($pdfObject instanceof PdfObject && !$pdfObject->isNull) {
                 $offset = $this->objectLocations[$id];
                 $version = $pdfObject->version;
-                $content .= "\n" . substr('00000000' . $offset, -8) . ' ' . substr('00000' . $version, -5) . " n ";
+                $content .= "\n" . substr('0000000000' . $offset, -10) . ' ' . substr('00000' . $version, -5) . " n ";
             } else {
-                $content .= "\n00000000 65535 f ";
+                $content .= "\n0000000000 65535 f ";
             }
             $currentObjectId++;
         }
