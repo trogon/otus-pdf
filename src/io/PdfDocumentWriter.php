@@ -155,6 +155,12 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
         return $encodedContent;
     }
 
+    private function write($text)
+    {
+        $this->content .= $text;
+        return \strlen($text);
+    }
+
     private function writeBegin()
     {
         $this->writeLine('%PDF-1.7');
@@ -169,8 +175,7 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
             } else {
                 $text = $object->toString();
                 $crossReference->registerObject($object, $offset);
-                $this->writeLine($text);
-                $offset += \strlen($text);
+                $offset += $this->writeLine($text);
             }
         }
         return $offset;
@@ -183,12 +188,13 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
 
     private function writeEnd()
     {
-        $this->writeLine('%%EOF');
+        $this->write('%%EOF');
     }
 
     private function writeLine($line)
     {
-        $this->content .= $line. "\n";
+        $line .= "\n";
+        return $this->write($line);
     }
 
     private function encodeContent($data)
