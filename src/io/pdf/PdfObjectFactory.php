@@ -27,7 +27,7 @@ class PdfObjectFactory extends \trogon\otuspdf\base\DependencyObject
     public function init()
     {
         parent::init();
-        $this->nextId = 1;
+        $this->nextId = 0;
     }
 
     public function create()

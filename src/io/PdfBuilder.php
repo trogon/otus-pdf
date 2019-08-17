@@ -23,6 +23,7 @@ use trogon\otuspdf\io\pdf\PdfArray;
 use trogon\otuspdf\io\pdf\PdfCrossReference;
 use trogon\otuspdf\io\pdf\PdfDictionary;
 use trogon\otuspdf\io\pdf\PdfName;
+use trogon\otuspdf\io\pdf\PdfNull;
 use trogon\otuspdf\io\pdf\PdfNumber;
 use trogon\otuspdf\io\pdf\PdfObject;
 use trogon\otuspdf\io\pdf\PdfObjectFactory;
@@ -166,6 +167,16 @@ class PdfBuilder extends \trogon\otuspdf\base\DependencyObject
         $mediaBox->addItem(new PdfNumber(['value' => $width]));
         $mediaBox->addItem(new PdfNumber(['value' => $height]));
         return $mediaBox;
+    }
+
+    /**
+     * @return PdfObject
+     */
+    public function createNullObject()
+    {
+        $nullObj = $this->objectFactory->create();
+        $nullObj->content = new PdfNull();
+        return $nullObj;
     }
 
     /**

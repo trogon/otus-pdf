@@ -50,6 +50,10 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
         $pdfBuilder = $this->pdfBuilder;
         $baseObjects = new ArrayIterator();
 
+        // PDF Null Object
+        $nullObj = $pdfBuilder->createNullObject();
+        $baseObjects->append($nullObj);
+
         // PDF catalog
         $catalogObj = $pdfBuilder->createCatalog();
         $baseObjects->append($catalogObj);
@@ -160,10 +164,14 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
     {
         $offset = \strlen($this->content);
         foreach ($objects as $object) {
-            $text = $object->toString();
-            $crossReference->registerObject($object, $offset);
-            $this->writeLine($text);
-            $offset += \strlen($text);
+            if ($object->isNull) {
+                $crossReference->registerObject($object, $offset);
+            } else {
+                $text = $object->toString();
+                $crossReference->registerObject($object, $offset);
+                $this->writeLine($text);
+                $offset += \strlen($text);
+            }
         }
         return $offset;
     }
