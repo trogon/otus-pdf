@@ -22,13 +22,16 @@ use trogon\otuspdf\io\pdf\PdfDictionary;
 
 class PdfTrailer extends \trogon\otuspdf\base\DependencyObject
 {
-    private $xrefOffset;
     private $content;
+    private $xrefOffset;
 
     public function init()
     {
         parent::init();
         $this->content = new PdfDictionary();
+        if (is_null($this->xrefOffset)) {
+            $this->xrefOffset = 0;
+        }
     }
 
     public function getXrefOffset()
