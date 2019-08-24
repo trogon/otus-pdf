@@ -20,6 +20,9 @@ namespace trogon\otuspdf;
 
 use trogon\otuspdf\meta\TableColumnInfo;
 
+/**
+ * @property-read TableColumnInfo $info
+ */
 class TableColumn extends \trogon\otuspdf\base\ContentElement
 {
     protected function createInfo($config)

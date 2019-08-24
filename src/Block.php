@@ -20,6 +20,9 @@ namespace trogon\otuspdf;
 
 use trogon\otuspdf\meta\BlockInfo;
 
+/**
+ * @property-read BlockInfo $info
+ */
 abstract class Block extends \trogon\otuspdf\TextElement
 {
     protected function createInfo($config)

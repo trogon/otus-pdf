@@ -21,8 +21,12 @@ namespace trogon\otuspdf;
 use trogon\otuspdf\meta\PageInfo;
 use trogon\otuspdf\PageBreak;
 use trogon\otuspdf\Paragraph;
-use trogon\otuspdf\Text;
+use trogon\otuspdf\TextBlock;
 
+ /**
+  * @property-read BlockCollection $blocks
+  * @property-read PageInfo $info
+  */
 class Page extends \trogon\otuspdf\base\ContentElement
 {
     private $blocks;

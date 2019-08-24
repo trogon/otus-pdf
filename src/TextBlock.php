@@ -21,6 +21,9 @@ namespace trogon\otuspdf;
 use trogon\otuspdf\InlineCollection;
 use trogon\otuspdf\Run;
 
+/**
+ * @property-read InlineCollection $inlines
+ */
 class TextBlock extends \trogon\otuspdf\Block
 {
     private $inlines;

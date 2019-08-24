@@ -22,6 +22,10 @@ use trogon\otuspdf\meta\ParagraphInfo;
 use trogon\otuspdf\InlineCollection;
 use trogon\otuspdf\Run;
 
+/**
+ * @property-read ParagraphInfo $info
+ * @property-read InlineCollection $inlines
+ */
 class Paragraph extends \trogon\otuspdf\Block
 {
     private $inlines;
