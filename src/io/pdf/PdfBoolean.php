@@ -20,5 +20,23 @@ namespace trogon\otuspdf\io\pdf;
 
 class PdfBoolean extends \trogon\otuspdf\base\DependencyObject
 {
+    private $value;
 
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function setValue($value)
+    {
+        if (is_bool($value)) {
+            $this->value = $value;
+        }
+    }
+
+    public function toString()
+    {
+        $content = $this->value ? 'true' : 'false';
+        return $content;
+    }
 }

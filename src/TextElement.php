@@ -20,6 +20,9 @@ namespace trogon\otuspdf;
 
 use trogon\otuspdf\meta\TextElementInfo;
 
+/**
+ * @property-read TextElementInfo $info
+ */
 abstract class TextElement extends \trogon\otuspdf\base\ContentElement
 {
     protected function createInfo($config)

@@ -22,6 +22,11 @@ use trogon\otuspdf\meta\TableInfo;
 use trogon\otuspdf\TableColumnCollection;
 use trogon\otuspdf\TableRowGroupCollection;
 
+/**
+ * @property-read TableColumnCollection $columns
+ * @property-read TableInfo $info
+ * @property-read TableRowGroupCollection $rowGroups
+ */
 class Table extends \trogon\otuspdf\Block
 {
     private $columns;

@@ -19,6 +19,7 @@
 namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\io\PdfContentState;
 
 class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
 {
@@ -33,12 +34,20 @@ class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
     const IMAGE_STATE = 32;
     const ALL_STATE = 2147483647;
 
+    /**
+     * @var int
+     */
     private $currentState;
+    /**
+     * @var PdfContentState
+     */
+    private $contentState;
 
     public function init()
     {
         parent::init();
         $this->currentState = self::NONE_STATE;
+        $this->contentState = new PdfContentState();
     }
 
     /**
@@ -168,11 +177,33 @@ class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
         return "\t T*\n";
     }
 
-    public function setFont($fontKey, $fontSize)
+    /**
+     * Character spacing
+     * @param $value Value in font unit
+     */
+    public function setCharacterSpacing($value)
     {
         $this->verifyState(self::TEXT_STATE,
-            'SetFont requires TEXT state. Start new text block with BeginText.');
-        return "\t /$fontKey $fontSize Tf\n";
+            'SetCharacterSpacing requires TEXT state. Start new text block with BeginText.');
+        $this->contentState->characterSpacing = $value;
+        return "\t $value Tc\n";
+    }
+
+    /**
+     * Horizontal scaling
+     * @param $value Value procetage (100 = 100%)
+     */
+    public function setHorizontalScaling($value)
+    {
+        $this->verifyState(self::TEXT_STATE,
+            'SetHorizontalScaling requires TEXT state. Start new text block with BeginText.');
+        $this->contentState->horizontalScaling = $value;
+        return "\t $value Tz\n";
+    }
+
+    public function setFont($fontKey, $fontSize)
+    {
+        return $this->setTextFont($fontKey, $fontSize);
     }
 
     public function setState($newState)
@@ -200,11 +231,30 @@ class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
         return "\t $r $g $b rg\n";
     }
 
-    public function setTextLeading($fontSize)
+    /**
+     * Text font and size
+     * @param $fontKey Key defined in font dictionary
+     * @param $fontSize Size in font unit
+     */
+    public function setTextFont($fontKey, $fontSize)
+    {
+        $this->verifyState(self::TEXT_STATE,
+            'SetTextFont requires TEXT state. Start new text block with BeginText.');
+        $this->contentState->textFont = $fontKey;
+        $this->contentState->textFontSize = $fontSize;
+        return "\t /$fontKey $fontSize Tf\n";
+    }
+
+    /**
+     * Text leading
+     * @param $value Value in font unit
+     */
+    public function setTextLeading($value)
     {
         $this->verifyState(self::TEXT_STATE,
             'SetTextLeading requires TEXT state. Start new text block with BeginText.');
-        return "\t $fontSize TL\n";
+        $this->contentState->textLeading = $value;
+        return "\t $value TL\n";
     }
 
     public function setTextPosition($x, $y, $isRelative = true)
@@ -216,6 +266,42 @@ class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
         } else {
             return "\t $x $y TD\n";
         }
+    }
+
+    /**
+     * Text render mode
+     * @param $value Value in font unit
+     */
+    public function setTextRenderingMode($value)
+    {
+        $this->verifyState(self::TEXT_STATE,
+            'SetTextRenderingMode requires TEXT state. Start new text block with BeginText.');
+        $this->contentState->textRenderingMode = $value;
+        return "\t $value Tr\n";
+    }
+
+    /**
+     * Text rise
+     * @param $value Value in font unit
+     */
+    public function setTextRise($value)
+    {
+        $this->verifyState(self::TEXT_STATE,
+            'SetTextRise requires TEXT state. Start new text block with BeginText.');
+        $this->contentState->textRise = $value;
+        return "\t $value Ts\n";
+    }
+
+    /**
+     * Word spacing
+     * @param $value Value in font unit
+     */
+    public function setWordSpacing($value)
+    {
+        $this->verifyState(self::TEXT_STATE,
+            'SetWordSpacing requires TEXT state. Start new text block with BeginText.');
+        $this->contentState->wordSpacing = $value;
+        return "\t $value Tw\n";
     }
 
     public function verifyState($expectedState = null, $errorMessage = null)

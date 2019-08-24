@@ -18,9 +18,13 @@
  */
 namespace trogon\otuspdf;
 
-use trogon\otuspdf\meta\TableInfo;
+use trogon\otuspdf\meta\TableCellInfo;
 use trogon\otuspdf\BlockCollection;
 
+/**
+ * @property-read BlockCollection $blocks
+ * @property-read TableCellInfo $info
+ */
 class TableCell extends \trogon\otuspdf\TextElement
 {
     private $blocks;
@@ -33,7 +37,7 @@ class TableCell extends \trogon\otuspdf\TextElement
 
     protected function createInfo($config)
     {
-        return new TableInfo($config);
+        return new TableCellInfo($config);
     }
 
     public function getBlocks()

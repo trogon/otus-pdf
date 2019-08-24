@@ -71,20 +71,17 @@ class TableRender extends \trogon\otuspdf\base\DependencyObject
 
     public function render(Table $tableBlock, RectInfo $tableBox)
     {
+        $this->remainingBox = $tableBox;
         $inlineRender = new InlineRender(
             $this->contentBuilder,
             $this->fontRender,
-            $tableBox
+            $this->remainingBox
         );
-
+        
         $cb = $this->contentBuilder;
-        $columnBoxes = $this->computeColumnBoxes($tableBlock->columns, $tableBox);
-        $columnCount = count($columnBoxes);
+        $columnBoxes = $this->computeColumnBoxes($tableBlock->columns, $this->remainingBox);
 
         $content = '';
-        $content .= $cb->setStrokeColorRgb(24, 16, 182);
-
-        $remainingBox = $tableBox;
         foreach ($tableBlock->rowGroups as $grn => $rowGroup) {
             foreach ($rowGroup->rows as $rn => $row) {
                 $cellBoxes = [];

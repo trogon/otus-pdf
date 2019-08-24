@@ -20,6 +20,9 @@ namespace trogon\otuspdf;
 
 use trogon\otuspdf\TableCellCollection;
 
+/**
+ * @property-read TableCellCollection $cells
+ */
 class TableRow extends \trogon\otuspdf\TextElement
 {
     private $cells;

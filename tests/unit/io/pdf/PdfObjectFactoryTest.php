@@ -33,14 +33,14 @@ final class PdfObjectFactoryTest extends TestCase
         );
     }
 
-    public function testCreateReturnsFirstObjectsIdEqualsOne()
+    public function testCreateReturnsFirstObjectsIdEqualsZero()
     {
         $pdfObjectFactory = new PdfObjectFactory();
 
         $firstObject = $pdfObjectFactory->create();
 
         $this->assertEquals(
-            1,
+            0,
             $firstObject->id
         );
     }
@@ -50,7 +50,7 @@ final class PdfObjectFactoryTest extends TestCase
         $pdfObjectFactory = new PdfObjectFactory();
         $pdfObjectFactory->create();
 
-        for ($i = 2; $i < 5; $i++) {
+        for ($i = 1; $i < 5; $i++) {
             $nextObject = $pdfObjectFactory->create();
 
             $this->assertEquals(

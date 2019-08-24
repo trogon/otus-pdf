@@ -18,6 +18,8 @@
  */
 namespace trogon\otuspdf\io\pdf;
 
+use trogon\otuspdf\io\pdf\PdfNull;
+
 class PdfObject extends \trogon\otuspdf\base\DependencyObject
 {
     private $id;
@@ -60,6 +62,11 @@ class PdfObject extends \trogon\otuspdf\base\DependencyObject
     public function setStream($stream)
     {
         $this->streamObject = $stream;
+    }
+
+    public function getIsNull()
+    {
+        return $this->content instanceof PdfNull;
     }
 
     public function toString()

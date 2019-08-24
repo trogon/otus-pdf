@@ -20,5 +20,9 @@ namespace trogon\otuspdf\io\pdf;
 
 class PdfNull extends \trogon\otuspdf\base\DependencyObject
 {
-
+    public function toString()
+    {
+        $content = 'null';
+        return $content;
+    }
 }

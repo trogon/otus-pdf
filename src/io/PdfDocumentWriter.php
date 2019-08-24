@@ -50,6 +50,10 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
         $pdfBuilder = $this->pdfBuilder;
         $baseObjects = new ArrayIterator();
 
+        // PDF Null Object
+        $nullObj = $pdfBuilder->createNullObject();
+        $baseObjects->append($nullObj);
+
         // PDF catalog
         $catalogObj = $pdfBuilder->createCatalog();
         $baseObjects->append($catalogObj);
@@ -151,6 +155,12 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
         return $encodedContent;
     }
 
+    private function write($text)
+    {
+        $this->content .= $text;
+        return \strlen($text);
+    }
+
     private function writeBegin()
     {
         $this->writeLine('%PDF-1.7');
@@ -160,10 +170,13 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
     {
         $offset = \strlen($this->content);
         foreach ($objects as $object) {
-            $text = $object->toString();
-            $crossReference->registerObject($object, $offset);
-            $this->writeLine($text);
-            $offset += \strlen($text);
+            if ($object->isNull) {
+                $crossReference->registerObject($object, $offset);
+            } else {
+                $text = $object->toString();
+                $crossReference->registerObject($object, $offset);
+                $offset += $this->writeLine($text);
+            }
         }
         return $offset;
     }
@@ -175,12 +188,13 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
 
     private function writeEnd()
     {
-        $this->writeLine('%%EOF');
+        $this->write('%%EOF');
     }
 
     private function writeLine($line)
     {
-        $this->content .= $line. "\n";
+        $line .= "\n";
+        return $this->write($line);
     }
 
     private function encodeContent($data)
