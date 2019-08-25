@@ -29,7 +29,13 @@ use trogon\otuspdf\TableRowGroupCollection;
  */
 class Table extends \trogon\otuspdf\Block
 {
+    /**
+     * @var TableColumnCollection
+     */
     private $columns;
+    /**
+     * @var TableRowGroupCollection
+     */
     private $rowGroups;
 
     public function init()
@@ -44,21 +50,35 @@ class Table extends \trogon\otuspdf\Block
         return new TableInfo($config);
     }
 
+    /**
+     * @return TableColumnCollection
+     */
     public function getColumns()
     {
         return $this->columns;
     }
 
+    /**
+     * @return TableRowGroupCollection
+     */
     public function getRowGroups()
     {
         return $this->rowGroups;
     }
 
+    /**
+     * @param array $config
+     * @return TableColumn
+     */
     public function addColumn($config = [])
     {
         return $this->columns[] = new TableColumn($config);
     }
 
+    /**
+     * @param array $config
+     * @return TableRowGroup
+     */
     public function addRowGroup($config = [])
     {
         return $this->rowGroups[] = new TableRowGroup($config);

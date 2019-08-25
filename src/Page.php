@@ -29,6 +29,9 @@ use trogon\otuspdf\TextBlock;
   */
 class Page extends \trogon\otuspdf\base\ContentElement
 {
+    /**
+     * @var BlockCollection
+     */
     private $blocks;
 
     public function init()
@@ -42,21 +45,37 @@ class Page extends \trogon\otuspdf\base\ContentElement
         return new PageInfo($config);
     }
 
+    /**
+     * @return BlockCollection
+     */
     public function getBlocks()
     {
         return $this->blocks;
     }
 
+    /**
+     * @param array $config
+     * @return PageBreak
+     */
     public function addPagebreak($config = [])
     {
         return $this->blocks[] = new PageBreak($config);
     }
 
+    /**
+     * @param array $config
+     * @return Paragraph
+     */
     public function addParagraph($config = [])
     {
         return $this->blocks[] = new Paragraph($config);
     }
 
+    /**
+     * @param string $text
+     * @param array $config
+     * @return TextBlock
+     */
     public function addText($text, $config = [])
     {
         return $this->blocks[] = new TextBlock($text, $config);

@@ -25,6 +25,9 @@ use trogon\otuspdf\TableCellCollection;
  */
 class TableRow extends \trogon\otuspdf\TextElement
 {
+    /**
+     * @var TableCellCollection
+     */
     private $cells;
 
     public function init()
@@ -33,11 +36,18 @@ class TableRow extends \trogon\otuspdf\TextElement
         $this->cells = new TableCellCollection();
     }
 
+    /**
+     * @return TableCellCollection
+     */
     public function getCells()
     {
         return $this->cells;
     }
 
+    /**
+     * @param array $config
+     * @return TableCell
+     */
     public function addCell($config = [])
     {
         return $this->cells[] = new TableCell($config);

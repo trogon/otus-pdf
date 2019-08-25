@@ -34,12 +34,20 @@ class TableRowGroupCollection extends \trogon\otuspdf\base\DependencyObject
         $this->container = [];
     }
 
+    /**
+     * @param TableRowGroup $item
+     * @return TableRowGroup
+     */
     public function add(TableRowGroup $item)
     {
         $this->container[] = $item;
         return $item;
     }
 
+    /**
+     * @param TableRowGroup $item
+     * @return boolean
+     */
     public function contains(TableRowGroup $item)
     {
         $key = array_search($item, $this->container, true);
@@ -50,6 +58,10 @@ class TableRowGroupCollection extends \trogon\otuspdf\base\DependencyObject
         }
     }
 
+    /**
+     * @param TableRowGroup $item
+     * @return boolean
+     */
     public function remove(TableRowGroup $item)
     {
         $key = array_search($item, $this->container, true);

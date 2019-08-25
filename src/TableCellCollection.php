@@ -34,12 +34,20 @@ class TableCellCollection extends \trogon\otuspdf\base\DependencyObject
         $this->container = [];
     }
 
+    /**
+     * @param TableCell $item
+     * @return TableCell
+     */
     public function add(TableCell $item)
     {
         $this->container[] = $item;
         return $item;
     }
 
+    /**
+     * @param TableCell $item
+     * @return boolean
+     */
     public function contains(TableCell $item)
     {
         $key = array_search($item, $this->container, true);
@@ -50,6 +58,10 @@ class TableCellCollection extends \trogon\otuspdf\base\DependencyObject
         }
     }
 
+    /**
+     * @param TableCell $item
+     * @return boolean
+     */
     public function remove(TableCell $item)
     {
         $key = array_search($item, $this->container, true);
