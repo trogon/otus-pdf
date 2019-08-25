@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\meta;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\meta\DocumentInfo;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\meta\DocumentInfo
@@ -12,7 +12,7 @@ use trogon\otuspdf\base\InvalidCallException;
 final class DocumentInfoTest extends TestCase
 {
     private $documentInfoClass = 'trogon\otuspdf\meta\DocumentInfo';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
     private $pdfDateFormat = "/D:([0-9]{4})([0-1][0-9])([0-2][0-9]|3[0-1])([0-2][0-9])([0-5][0-9])([0-5][0-9])([\+\-]\d{2}'\d{2})'/";
 
     public function testCanBeCreatedFromEmptyConfig()
@@ -37,7 +37,7 @@ final class DocumentInfoTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\ArgumentException
      */
     public function testCannotBeCreatedFromCreationDate()
     {
@@ -45,7 +45,7 @@ final class DocumentInfoTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\ArgumentException
      */
     public function testCannotBeCreatedFromModificationDate()
     {

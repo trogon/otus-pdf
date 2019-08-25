@@ -19,7 +19,7 @@
 namespace trogon\otuspdf\io;
 
 use trogon\otuspdf\base\ChainIterator;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\io\FontRender;
 use trogon\otuspdf\io\PdfContentBuilder;
 use trogon\otuspdf\io\TextRender;

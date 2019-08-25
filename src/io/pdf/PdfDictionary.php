@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io\pdf;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\IndexOutOfRangeException;
 
 class PdfDictionary extends \trogon\otuspdf\base\DependencyObject
 {
@@ -40,7 +40,7 @@ class PdfDictionary extends \trogon\otuspdf\base\DependencyObject
         if (array_key_exists($key, $this->items)) {
             return $this->items[$key][1];
         }
-        throw new InvalidCallException("Undefined index: {$key}'");
+        throw new IndexOutOfRangeException("Undefined index: {$key}'");
     }
 
     public function addItem($key, $value)

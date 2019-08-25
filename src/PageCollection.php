@@ -21,6 +21,7 @@ namespace trogon\otuspdf;
 use ArrayIterator;
 
 use trogon\otuspdf\Page;
+use trogon\otuspdf\base\ArgumentException;
 
 class PageCollection extends \trogon\otuspdf\base\DependencyObject
     implements \ArrayAccess, \Countable, \IteratorAggregate
@@ -47,7 +48,7 @@ class PageCollection extends \trogon\otuspdf\base\DependencyObject
             $this->container[] = $page;
             return $page;
         } else {
-            throw new InvalidCallException("Invalid type. Page or array expected.");
+            throw new ArgumentException("Invalid type. Page or array expected.");
         }
     }
 

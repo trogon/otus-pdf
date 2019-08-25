@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Document;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\Document
@@ -14,7 +14,7 @@ final class DocumentTest extends TestCase
     private $documentClass = 'trogon\otuspdf\Document';
     private $documentInfoClass = 'trogon\otuspdf\meta\DocumentInfo';
     private $pageCollectionClass = 'trogon\otuspdf\PageCollection';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
@@ -38,7 +38,7 @@ final class DocumentTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\ArgumentException
      */
     public function testCannotBeCreatedFromCreationDate()
     {
@@ -46,7 +46,7 @@ final class DocumentTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\ArgumentException
      */
     public function testCannotBeCreatedFromModificationDate()
     {

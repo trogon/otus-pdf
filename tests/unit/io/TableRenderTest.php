@@ -3,7 +3,7 @@ namespace trogon\otuspdf\test\unit;
 
 use PHPUnit\Framework\TestCase;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\io\FontRender;
 use trogon\otuspdf\io\PdfBuilder;
 use trogon\otuspdf\io\PdfContentBuilder;
@@ -16,7 +16,7 @@ use trogon\otuspdf\meta\RectInfo;
 final class TableRenderTest extends TestCase
 {
     private $tableRenderClass = 'trogon\otuspdf\io\TableRender';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

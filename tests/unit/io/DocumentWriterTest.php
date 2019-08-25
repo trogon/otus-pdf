@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\io;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Document;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\io\DocumentWriter;
 
 use trogon\otuspdf\test\fixture\ProviderStub;
@@ -15,7 +15,7 @@ use trogon\otuspdf\test\fixture\ProviderStub;
 final class DocumentWriterTest extends TestCase
 {
     private $documentWriterClass = 'trogon\otuspdf\io\DocumentWriter';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function setUp()
     {

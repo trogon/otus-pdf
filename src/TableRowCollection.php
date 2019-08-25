@@ -21,7 +21,7 @@ namespace trogon\otuspdf;
 use ArrayIterator;
 
 use trogon\otuspdf\TableRow;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\ArgumentException;
 
 class TableRowCollection extends \trogon\otuspdf\base\DependencyObject
     implements \ArrayAccess, \Countable, \IteratorAggregate
@@ -93,7 +93,7 @@ class TableRowCollection extends \trogon\otuspdf\base\DependencyObject
                 $this->container[$offset] = $value;
             }
         } else {
-            throw new InvalidCallException("Only TableRow type elements can be set");
+            throw new ArgumentException("Only TableRow type elements can be set");
         }
     }
 

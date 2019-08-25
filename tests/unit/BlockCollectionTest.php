@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Block;
 use trogon\otuspdf\BlockCollection;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 use trogon\otuspdf\test\fixture\BlockStub;
 
@@ -16,7 +16,7 @@ final class BlockCollectionTest extends TestCase
 {
     private $blockCollectionClass = 'trogon\otuspdf\BlockCollection';
     private $blockClass = 'trogon\otuspdf\Block';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

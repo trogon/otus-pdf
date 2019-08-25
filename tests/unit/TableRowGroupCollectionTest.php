@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\TableRowGroup;
 use trogon\otuspdf\TableRowGroupCollection;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\TableRowGroupCollection
@@ -14,7 +14,7 @@ final class TableRowGroupCollectionTest extends TestCase
 {
     private $tableRowGroupCollectionClass = 'trogon\otuspdf\TableRowGroupCollection';
     private $tableRowGroupClass = 'trogon\otuspdf\TableRowGroup';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

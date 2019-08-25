@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Inline;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 use trogon\otuspdf\test\fixture\InlineDummy;
 
@@ -15,7 +15,7 @@ final class InlineTest extends TestCase
 {
     private $inlineClass = 'trogon\otuspdf\Inline';
     private $inlineInfoClass = 'trogon\otuspdf\meta\InlineInfo';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\meta\InlineInfo;
 use trogon\otuspdf\meta\PositionInfo;
 use trogon\otuspdf\meta\RectInfo;

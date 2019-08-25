@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\meta;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\meta\PageSizeInfo;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\meta\PageSizeInfo
@@ -12,7 +12,7 @@ use trogon\otuspdf\base\InvalidCallException;
 final class PageSizeInfoTest extends TestCase
 {
     private $pageSizeInfoClass = 'trogon\otuspdf\meta\PageSizeInfo';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromWidthAndHeight()
     {
@@ -23,7 +23,7 @@ final class PageSizeInfoTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\ArgumentException
      */
     public function testCanNotBeCreatedForPortraitOrientation()
     {

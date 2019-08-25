@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\base;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\base\DependencyObject;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 use trogon\otuspdf\test\fixture\DependencyObjectDummy;
 
@@ -14,7 +14,7 @@ use trogon\otuspdf\test\fixture\DependencyObjectDummy;
 final class DependencyObjectTest extends TestCase
 {
     private $dependencyObjectClass = 'trogon\otuspdf\base\DependencyObject';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
@@ -103,7 +103,7 @@ final class DependencyObjectTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidOperationException
      */
     public function testCanNotUnsetOnReadOnlyProperty()
     {
@@ -113,7 +113,7 @@ final class DependencyObjectTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidOperationException
      */
     public function testCanNotSetValueOnReadOnlyProperty()
     {
@@ -123,7 +123,7 @@ final class DependencyObjectTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\InvalidOperationException
      */
     public function testCanNotGetValueOnWriteOnlyProperty()
     {

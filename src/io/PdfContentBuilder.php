@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\io\PdfContentState;
 
 class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
@@ -311,7 +311,7 @@ class PdfContentBuilder extends \trogon\otuspdf\base\DependencyObject
             if (is_string($errorMessage)) {
                 $message .= ' ' . $errorMessage;
             }
-            throw new InvalidCallException($message);
+            throw new InvalidOperationException($message);
         }
         return true;
     }

@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 class TextRender extends \trogon\otuspdf\base\DependencyObject
 {

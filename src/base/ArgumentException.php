@@ -19,10 +19,10 @@
 namespace trogon\otuspdf\base;
 
 /**
- * The exception that is thrown when a requested method or 
- * operation is not implemented.
+ * The exception that is thrown when one of the arguments provided 
+ * to a method is not valid.
  */
-class NotImplementedException extends SystemException
+class ArgumentException extends SystemException
 {
 
 }

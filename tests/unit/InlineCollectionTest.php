@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Inline;
 use trogon\otuspdf\InlineCollection;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 use trogon\otuspdf\test\fixture\InlineStub;
 
@@ -16,7 +16,7 @@ final class InlineCollectionTest extends TestCase
 {
     private $inlineCollectionClass = 'trogon\otuspdf\InlineCollection';
     private $inlineClass = 'trogon\otuspdf\Inline';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

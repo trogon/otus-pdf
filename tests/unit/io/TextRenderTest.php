@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Document;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\io\TextRender;
 
 /**
@@ -12,7 +12,7 @@ use trogon\otuspdf\io\TextRender;
 final class TextRenderTest extends TestCase
 {
     private $textRenderClass = 'trogon\otuspdf\io\TextRender';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
