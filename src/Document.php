@@ -27,6 +27,9 @@ use trogon\otuspdf\PageCollection;
  */
 class Document extends \trogon\otuspdf\base\ContentElement
 {
+    /**
+     * @var PageCollection
+     */
     private $pages;
 
     public function init()
@@ -40,8 +43,20 @@ class Document extends \trogon\otuspdf\base\ContentElement
         return new DocumentInfo($config);
     }
 
+    /**
+     * @return PageCollection
+     */
     public function getPages()
     {
         return $this->pages;
+    }
+
+    /**
+     * @param array $config
+     * @return Page
+     */
+    public function addPage($config = [])
+    {
+        return $this->pages->add($config);
     }
 }

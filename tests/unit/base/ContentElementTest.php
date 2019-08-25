@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\base;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\base\ContentElement;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 use trogon\otuspdf\test\fixture\ContentElementDummy;
 use trogon\otuspdf\test\fixture\InvalidContentElementDummy;
@@ -15,7 +15,7 @@ use trogon\otuspdf\test\fixture\InvalidContentElementDummy;
 final class ContentElementTest extends TestCase
 {
     private $contentElementClass = 'trogon\otuspdf\base\ContentElement';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

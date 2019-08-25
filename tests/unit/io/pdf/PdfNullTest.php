@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\io\pdf;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\io\pdf\PdfNull;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\io\pdf\PdfNull
@@ -12,7 +12,7 @@ use trogon\otuspdf\base\InvalidCallException;
 final class PdfNullTest extends TestCase
 {
     private $pdfNullClass = 'trogon\otuspdf\io\pdf\PdfNull';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

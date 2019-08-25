@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\meta;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\meta\PaddingInfo;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\meta\PaddingInfo
@@ -12,7 +12,7 @@ use trogon\otuspdf\base\InvalidCallException;
 final class PaddingInfoTest extends TestCase
 {
     private $paddingInfoClass = 'trogon\otuspdf\meta\PaddingInfo';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCreateArgsOrder()
     {

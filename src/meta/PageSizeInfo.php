@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\meta;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\ArgumentException;
 use trogon\otuspdf\meta\UnitInfo;
 
 class PageSizeInfo extends \trogon\otuspdf\base\DependencyObject
@@ -30,7 +30,7 @@ class PageSizeInfo extends \trogon\otuspdf\base\DependencyObject
     public function __construct($width, $height, UnitInfo $unitInfo = null)
     {
         if ($width < $height) {
-            throw new InvalidCallException('Width is shorter than height. Page size defines a size for landscape orientation.');
+            throw new ArgumentException('Width is shorter than height. Page size defines a size for landscape orientation.');
         }
         $this->height = $height;
         $this->width = $width;

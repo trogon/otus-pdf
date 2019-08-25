@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Block;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 use trogon\otuspdf\test\fixture\BlockDummy;
 
@@ -15,7 +15,7 @@ final class BlockTest extends TestCase
 {
     private $blockClass = 'trogon\otuspdf\Block';
     private $blockInfoClass = 'trogon\otuspdf\meta\BlockInfo';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

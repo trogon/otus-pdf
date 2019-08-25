@@ -19,7 +19,7 @@
 namespace trogon\otuspdf\io;
 
 use ReflectionClass;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 class DocumentWriter extends \trogon\otuspdf\base\DependencyObject
 {

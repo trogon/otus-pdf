@@ -3,7 +3,7 @@ namespace trogon\otuspdf\test\unit\io;
 
 use PHPUnit\Framework\TestCase;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\io\PdfBuilder;
 use trogon\otuspdf\io\pdf\PdfArray;
 use trogon\otuspdf\io\pdf\PdfDictionary;
@@ -25,7 +25,7 @@ final class PdfBuilderTest extends TestCase
     private $pdfNumberClass = 'trogon\otuspdf\io\pdf\PdfNumber';
     private $pdfObjectClass = 'trogon\otuspdf\io\pdf\PdfObject';
     private $pdfObjectFactoryClass = 'trogon\otuspdf\io\pdf\PdfObjectFactory';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreated()
     {

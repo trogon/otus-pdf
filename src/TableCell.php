@@ -27,6 +27,9 @@ use trogon\otuspdf\BlockCollection;
  */
 class TableCell extends \trogon\otuspdf\TextElement
 {
+    /**
+     * @var BlockCollection
+     */
     private $blocks;
 
     public function init()
@@ -40,6 +43,9 @@ class TableCell extends \trogon\otuspdf\TextElement
         return new TableCellInfo($config);
     }
 
+    /**
+     * @return BlockCollection
+     */
     public function getBlocks()
     {
         return $this->blocks;

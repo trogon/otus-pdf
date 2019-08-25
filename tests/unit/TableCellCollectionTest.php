@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\TableCell;
 use trogon\otuspdf\TableCellCollection;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\TableCellCollection
@@ -14,7 +14,7 @@ final class TableCellCollectionTest extends TestCase
 {
     private $tableCellCollectionClass = 'trogon\otuspdf\TableCellCollection';
     private $tableCellClass = 'trogon\otuspdf\TableCell';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {

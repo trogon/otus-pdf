@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\meta;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\meta\PageOrientationInfo;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\meta\PageOrientationInfo
@@ -12,7 +12,7 @@ use trogon\otuspdf\base\InvalidCallException;
 final class PageOrientationInfoTest extends TestCase
 {
     private $pageOrientationInfoClass = 'trogon\otuspdf\meta\PageOrientationInfo';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     /**
      * @requires PHP >= 7.1

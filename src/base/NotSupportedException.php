@@ -16,40 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace trogon\otuspdf;
-
-use trogon\otuspdf\TableCellCollection;
+namespace trogon\otuspdf\base;
 
 /**
- * @property-read TableCellCollection $cells
+ * The exception that is thrown when an invoked method is not supported, 
+ * or when there is an attempt to read, seek, or write to a stream that 
+ * does not support the invoked functionality.
  */
-class TableRow extends \trogon\otuspdf\TextElement
+class NotSupportedException extends SystemException
 {
-    /**
-     * @var TableCellCollection
-     */
-    private $cells;
 
-    public function init()
-    {
-        parent::init();
-        $this->cells = new TableCellCollection();
-    }
-
-    /**
-     * @return TableCellCollection
-     */
-    public function getCells()
-    {
-        return $this->cells;
-    }
-
-    /**
-     * @param array $config
-     * @return TableCell
-     */
-    public function addCell($config = [])
-    {
-        return $this->cells[] = new TableCell($config);
-    }
 }

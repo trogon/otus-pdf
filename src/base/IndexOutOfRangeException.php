@@ -18,7 +18,12 @@
  */
 namespace trogon\otuspdf\base;
 
-class InvalidCallException extends \Exception
+/**
+ * The exception that is thrown when an attempt is made to access 
+ * an element of an array or collection with an index that is outside 
+ * its bounds.
+ */
+class IndexOutOfRangeException extends SystemException
 {
 
 }

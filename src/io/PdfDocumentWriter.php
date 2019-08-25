@@ -20,7 +20,7 @@ namespace trogon\otuspdf\io;
 
 use ArrayIterator;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\io\BlockRender;
 use trogon\otuspdf\io\FontRender;
 use trogon\otuspdf\io\PdfBuilder;
@@ -65,7 +65,7 @@ class PdfDocumentWriter extends \trogon\otuspdf\base\DependencyObject
 
         // Check if there are any pages
         if (count($this->document->pages) === 0) {
-            throw new InvalidCallException('Document does not contain pages.');
+            throw new InvalidOperationException('Document does not contain pages.');
         }
 
         // PDF pages collection

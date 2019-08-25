@@ -16,40 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace trogon\otuspdf;
+namespace trogon\otuspdf\base;
 
-use trogon\otuspdf\TableCellCollection;
-
-/**
- * @property-read TableCellCollection $cells
- */
-class TableRow extends \trogon\otuspdf\TextElement
+class ApplicationException extends \Exception
 {
-    /**
-     * @var TableCellCollection
-     */
-    private $cells;
 
-    public function init()
-    {
-        parent::init();
-        $this->cells = new TableCellCollection();
-    }
-
-    /**
-     * @return TableCellCollection
-     */
-    public function getCells()
-    {
-        return $this->cells;
-    }
-
-    /**
-     * @param array $config
-     * @return TableCell
-     */
-    public function addCell($config = [])
-    {
-        return $this->cells[] = new TableCell($config);
-    }
 }

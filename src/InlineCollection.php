@@ -21,7 +21,7 @@ namespace trogon\otuspdf;
 use ArrayIterator;
 
 use trogon\otuspdf\Inline;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\ArgumentException;
 
 class InlineCollection extends \trogon\otuspdf\base\DependencyObject
     implements \ArrayAccess, \Countable, \IteratorAggregate
@@ -103,7 +103,7 @@ class InlineCollection extends \trogon\otuspdf\base\DependencyObject
                 $this->container[$offset] = $value;
             }
         } else {
-            throw new InvalidCallException("Only Inline type elements can be set");
+            throw new ArgumentException("Only Inline type elements can be set");
         }
     }
 

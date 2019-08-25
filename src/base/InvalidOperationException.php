@@ -16,40 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace trogon\otuspdf;
-
-use trogon\otuspdf\TableCellCollection;
+namespace trogon\otuspdf\base;
 
 /**
- * @property-read TableCellCollection $cells
+ * The exception that is thrown when a method call is invalid 
+ * for the object's current state.
  */
-class TableRow extends \trogon\otuspdf\TextElement
+class InvalidOperationException extends SystemException
 {
-    /**
-     * @var TableCellCollection
-     */
-    private $cells;
 
-    public function init()
-    {
-        parent::init();
-        $this->cells = new TableCellCollection();
-    }
-
-    /**
-     * @return TableCellCollection
-     */
-    public function getCells()
-    {
-        return $this->cells;
-    }
-
-    /**
-     * @param array $config
-     * @return TableCell
-     */
-    public function addCell($config = [])
-    {
-        return $this->cells[] = new TableCell($config);
-    }
 }

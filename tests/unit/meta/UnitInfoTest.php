@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test\unit\meta;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\meta\UnitInfo;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\meta\UnitInfo
@@ -12,7 +12,7 @@ use trogon\otuspdf\base\InvalidCallException;
 final class UnitInfoTest extends TestCase
 {
     private $unitInfoClass = 'trogon\otuspdf\meta\UnitInfo';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedForMm()
     {
@@ -120,7 +120,7 @@ final class UnitInfoTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\NotSupportedException
      */
     public function testConvertCustomToMm()
     {
@@ -129,7 +129,7 @@ final class UnitInfoTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\NotSupportedException
      */
     public function testConvertCustomToCm()
     {
@@ -138,7 +138,7 @@ final class UnitInfoTest extends TestCase
     }
 
     /**
-     * @expectedException trogon\otuspdf\base\InvalidCallException
+     * @expectedException trogon\otuspdf\base\NotSupportedException
      */
     public function testConvertCustomToInch()
     {

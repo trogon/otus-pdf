@@ -21,7 +21,7 @@ namespace trogon\otuspdf;
 use ArrayIterator;
 
 use trogon\otuspdf\TableColumn;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\ArgumentException;
 
 class TableColumnCollection extends \trogon\otuspdf\base\DependencyObject
     implements \ArrayAccess, \Countable, \IteratorAggregate
@@ -34,12 +34,20 @@ class TableColumnCollection extends \trogon\otuspdf\base\DependencyObject
         $this->container = [];
     }
 
+    /**
+     * @param TableColumn $item
+     * @return TableColumn
+     */
     public function add(TableColumn $item)
     {
         $this->container[] = $item;
         return $item;
     }
 
+    /**
+     * @param TableColumn $item
+     * @return boolean
+     */
     public function contains(TableColumn $item)
     {
         $key = array_search($item, $this->container, true);
@@ -50,6 +58,10 @@ class TableColumnCollection extends \trogon\otuspdf\base\DependencyObject
         }
     }
 
+    /**
+     * @param TableColumn $item
+     * @return boolean
+     */
     public function remove(TableColumn $item)
     {
         $key = array_search($item, $this->container, true);
@@ -81,7 +93,7 @@ class TableColumnCollection extends \trogon\otuspdf\base\DependencyObject
                 $this->container[$offset] = $value;
             }
         } else {
-            throw new InvalidCallException("Only TableColumn type elements can be set");
+            throw new ArgumentException("Only TableColumn type elements can be set");
         }
     }
 

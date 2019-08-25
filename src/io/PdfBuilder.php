@@ -18,7 +18,7 @@
  */
 namespace trogon\otuspdf\io;
 
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 use trogon\otuspdf\io\pdf\PdfArray;
 use trogon\otuspdf\io\pdf\PdfCrossReference;
 use trogon\otuspdf\io\pdf\PdfDictionary;

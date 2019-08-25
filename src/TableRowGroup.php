@@ -25,6 +25,9 @@ use trogon\otuspdf\TableRowCollection;
  */
 class TableRowGroup extends \trogon\otuspdf\TextElement
 {
+    /**
+     * @var TableRowCollection
+     */
     private $rows;
 
     public function init()
@@ -33,11 +36,18 @@ class TableRowGroup extends \trogon\otuspdf\TextElement
         $this->rows = new TableRowCollection();
     }
 
+    /**
+     * @return TableRowCollection
+     */
     public function getRows()
     {
         return $this->rows;
     }
 
+    /**
+     * @param array $config
+     * @return TableRow
+     */
     public function addRow($config = [])
     {
         return $this->rows[] = new TableRow($config);

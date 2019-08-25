@@ -4,7 +4,7 @@ namespace trogon\otuspdf\test;
 use PHPUnit\Framework\TestCase;
 
 use trogon\otuspdf\Paragraph;
-use trogon\otuspdf\base\InvalidCallException;
+use trogon\otuspdf\base\InvalidOperationException;
 
 /**
  * @covers \trogon\otuspdf\Paragraph
@@ -14,7 +14,7 @@ final class ParagraphTest extends TestCase
     private $paragraphClass = 'trogon\otuspdf\Paragraph';
     private $paragraphInfoClass = 'trogon\otuspdf\meta\ParagraphInfo';
     private $runClass = 'trogon\otuspdf\Run';
-    private $invalidCallExceptionClass = 'trogon\otuspdf\base\InvalidCallException';
+    private $invalidOperationExceptionClass = 'trogon\otuspdf\base\InvalidOperationException';
 
     public function testCanBeCreatedFromEmptyConfig()
     {
